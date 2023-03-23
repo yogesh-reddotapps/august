@@ -53,14 +53,14 @@ export const HeaderNav = props => {
   })
 
   return (
-    <Header className={`app-header ${navMode}`} style={{backgroundColor: headerNavColor}}>
+    <Header className={`app-header ${navMode}`} style={{backgroundColor: "#111118"}}>
       <div className={`app-header-wrapper ${isNavTop ? 'layout-top-nav' : ''}`}>
         <Logo logoType={navMode}/>
         <div className="nav" style={{width: `calc(100% - ${getNavWidth()})`}}>
           <div className="nav-left">
             <ul className="ant-menu ant-menu-root ant-menu-horizontal">          
               {
-                isNavTop && !isMobile ?
+                 !isMobile ?
                 null
                 :
                 <li className="ant-menu-item ant-menu-item-only-child" onClick={() => {onToggle()}}>

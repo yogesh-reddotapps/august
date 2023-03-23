@@ -17,7 +17,7 @@ import Icon from '@ant-design/icons'
 
 function FacilityBooking() {
 
-  const [facilityBookingData, setFacilityBookingData] = useState([])
+  const [facilityBooking, setFacilityBooking] = useState(membershipFacilityBooking)
 
   const onDeleteData = (record, dataSet, Id) => {
     // console.log(Id)
@@ -34,53 +34,51 @@ function FacilityBooking() {
 
   const facilityBookingColumns = [
     {
-      title: 'Booking Id',
+      title: 'Id',
       dataIndex: 'id',
     },
     {
-      title: 'Name',
-      // dataIndex: 'name',
-      render: (record) => {
-        return <div className='font-weight-bold text-dark' >{capitalizeFirstLetter(record.first_name)} {capitalizeFirstLetter(record.last_name)}</div>
+      dataIndex:'avatar',
+      render:avatar=>{
+        return <img src={`${avatar}`}/>
       }
     },
     {
-      title: "Facility Name",
-      dataIndex: 'facility_name',
+      title: "Course Name",
+      dataIndex: 'name',
     },
     {
-      title: "Facility Type",
-      dataIndex: 'facility_type',
+      title: "Course Category",
+      dataIndex: 'Course_category',
     },
     {
-      title: "Booking Time",
-      // dataIndex: 'booking_timing',
-      render: (record) => {
-        return <div>{new Date(record.date_time).toLocaleTimeString()}, for {record.booking_hours} hrs</div>
-      }
+      title: "Date/Time",
+      dataIndex: 'date',
+      
     },
     {
-      title: "Date of Booking",
-      dataIndex: 'date_time',
-      render: text => {
-        return <div>{new Date(text).toLocaleDateString(0, 10)}</div>
-      }
-    },
-    {
-      title: "No of Guest",
-      dataIndex: 'no_of_pax',
+      title: "Venue",
+      dataIndex: 'venue',
     },
 
-    {
-      title: "Amount Paid",
-      dataIndex: 'amount',
-    },
 
+    {
+      title: "Students Enroll",
+      dataIndex: 'enroll',
+    },
+    {
+      title: "Assignments",
+      dataIndex: 'assignment',
+    },
+    {
+      title: "Assesment",
+      dataIndex: 'assesment',
+    },
     {
       title: "Status",
       dataIndex: 'status',
       render: text => {
-        return <p className={`${text === "Cancel" ? 'text-danger membershipPaymentPending' : "text-success membershipPaymentPaid"} font-weight-semibold`}>{text}</p>
+        return <div className={`${text !== "Active" ? 'text-danger' : "text-success"} font-weight-semibold`}>{text}</div>
       }
     },
     {
@@ -95,7 +93,7 @@ function FacilityBooking() {
                   <Link to='facility_booking' > <EyeOutlined className='mr-2 ' />View Details</Link >
                 </Menu.Item>
                 <Menu.Item>
-                  <span onClick={() => onDeleteData(record, setFacilityBookingData, 'id')}> <DeleteOutlined className='mr-2 ' />Delete</span>
+                  <span onClick={() => onDeleteData(record)}> <DeleteOutlined className='mr-2 ' />Delete</span>
                 </Menu.Item>
               </Menu>
             } />
@@ -106,16 +104,7 @@ function FacilityBooking() {
     },
   ]
 
-  const getFacilityBookings = () => {
-    axios.get("http://127.0.0.1:3333/bookings?type=facility").then((response) => {
-      console.log(response)  
-      if (response.data.status) {
-        setFacilityBookingData(response.data.result);
-      } else {
-        console.log(response)
-      }
-    })
-  }
+ 
 
   const deleteFacilityBooking = (record, dataSet, Id) => {
     axios.delete("http://127.0.0.1:3333/bookings/delete", { data: { id: record[Id] } }).then((response) => {
@@ -131,22 +120,24 @@ function FacilityBooking() {
     });
   }
 
-  useEffect(() => {
-    getFacilityBookings();
-  }, [])
+
 
   return (
     <div>
-      <div className='membershipPlanTableSearchFilter'>
+        <div className='d-flex justify-content-between mb-3'>
+      <div className='' style={{display:"flex"}}>
         <SearchBox />
         <Filter>
           <Button icon={<Icon component={FilterIcon} />} className="d-flex align-items-center ml-2">Filters
           </Button>
         </Filter>
         <Button icon={<Icon component={ExportIcon} />} className="d-flex align-items-center ml-2" >Export</Button>
+       
+      </div>
+      <Link to='staffManagement/add_new' className='bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4'>Add New Staff</Link>
       </div>
       <div>
-        <Helper clients={facilityBookingData} attribiue={facilityBookingColumns} />
+        <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />
       </div>
 
     </div>

@@ -18,7 +18,7 @@ import Filter from 'components/shared-components/Filter'
 
 
 export default function Events() {
-
+  const [membershipRequestData, setmembershipRequestData] = useState(membershipEventBooking)
   const [eventsData, setEventsData] = useState([])
 
 
@@ -35,50 +35,54 @@ export default function Events() {
     })
   }
 
-  const membershipBookingColumns = [
+  const membershipRequestColumns= [
     {
-      title: 'Event Id',
+      title: 'User ID',
       dataIndex: 'id',
     },
     {
-      title: "Event Name",
-      dataIndex: 'name',
+      dataIndex:'avatar',
+      render:avatar=>{
+        return <img src={`${avatar}`}/>
+      }
+    },
+    {
+      title: "Student Name",
+      dataIndex: 'applicant_name',
+    },
+    {
+      title: "Date of Birth",
+      dataIndex: 'event_time',
+    },
+    {
+      title: "Age",
+      dataIndex: 'age',
+    },
+    {
+      title:"Gender",
+      dataIndex:'gender',
       render: text => {
-        return <p className='font-weight-bold text-dark' >{text.length > 18 ? `${text.slice(0, 18)}...` : text}</p>
+        return <img src={`${text!=='male'?'/img/female.png':'/img/male.png'}`} ></img>
       }
     },
     {
-      title: "Event Date",
-      // dataIndex: 'event_date',
-      render: (record) => {
-        return (
-          <div>{new Date(record.date_time).toLocaleDateString()}</div>
-        )
+      title:'Nationality',
+      dataIndex:'nationality',
+      render:flag=>{
+        return <img width="20px"src={`${flag==='Singapore'?'/img/flag.jpg':''}`}></img>
       }
     },
     {
-      title: "Event Time",
-      // dataIndex: 'event_time',
-      render: (record) => {
-        return (
-          <div>{new Date(record.date_time).toLocaleTimeString()}</div>
-        )
-      }
+      title: "Mobile Number",
+      dataIndex: 'phone',
     },
     {
-      title: "Event Address",
-      dataIndex: 'address',
+      title: "Email ID",
+      dataIndex: 'email',
     },
     {
-      title: "Event Fee/Pax",
-      dataIndex: 'fee_for_member',
-    },
-    {
-      title: "Status",
-      dataIndex: 'status',
-      render: text => {
-        return <p className={`${text === "Cancel" ? 'text-danger membershipPaymentPending' : "text-success membershipPaymentPaid"} font-weight-semibold`}>{text}</p>
-      }
+      title:"Course Enrolled",
+      dataIndex:'course_role'
     },
     {
       title: "Action",
@@ -146,10 +150,10 @@ export default function Events() {
         </Filter>
         <Button icon={<Icon component={ExportIcon} />} className="d-flex align-items-center ml-2" >Export</Button>
       </div>
-        <Link to='event_list/add_new' className='bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4'>Add New</Link>
+        <Link to='Student_management/add_new' className='bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4'>Add New Student</Link>
       </div>
       <div>
-        <Helper clients={eventsData} attribiue={membershipBookingColumns} />
+        <Helper  clients={membershipRequestData} attribiue={membershipRequestColumns}  />
       </div>
 
     </div>

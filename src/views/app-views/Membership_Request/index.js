@@ -236,7 +236,7 @@ export default function MembershipRequest() {
         </Filter>
         <Button icon={<Icon component={ExportIcon} />} className="d-flex align-items-center ml-2" >Export</Button>
       </div>
-      <Link to='/staffManagement/add_new' className='bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4'>Add New Staff</Link>
+      <Link to='staffManagement/add_new' className='bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4'>Add New Staff</Link>
       </div>
       <div>
         <Helper clients={membershipRequestData} attribiue={membershipRequestColumns} />

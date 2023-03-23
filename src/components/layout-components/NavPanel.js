@@ -30,24 +30,14 @@ export class NavPanel extends Component {
           <Menu.Item key="noto" >
             <span><BellOutlined className="nav-icon mr-0" /></span>
           </Menu.Item>
-          <Menu.Item key="setting" onClick={this.showDrawer}>
-            <span><SettingOutlined className="nav-icon mr-0" /></span>
-          </Menu.Item>
+        
           <Menu.Item key="avatar" >
             <Badge dot >
               <Avatar size={30} className="nav-icon mr-0" style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
             </Badge>
           </Menu.Item>
         </Menu>
-        <Drawer
-          title="Theme Config"
-          placement={this.props.direction === DIR_RTL ? 'left' : 'right'}
-          width={350}
-          onClose={this.onClose}
-          visible={this.state.visible}
-        >
-          <ThemeConfigurator />
-        </Drawer>
+       
       </>
     );
   }

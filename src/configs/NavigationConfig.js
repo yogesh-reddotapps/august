@@ -65,64 +65,52 @@ const dashBoardNavTree = [{
         ]
     },
     {
-      key: 'event_management',
-        path: `${APP_PREFIX_PATH}/events/event_booking`,
-        title: 'event_management',
+      key: 'Student_management',
+        path: `${APP_PREFIX_PATH}/Student_management`,
+        title: 'Student_management',
         icon: EventsActiveIcon,
         breadcrumb: true,
         submenu: [
-          {
-            key: 'event_booking',
-            path: `${APP_PREFIX_PATH}/events/event_booking`,
-            title: 'event_booking',
-            // icon: DashboardOutlined,
-            breadcrumb: true,
-            submenu: []
-          },
-          {
-            key: 'event_list',
-            path: `${APP_PREFIX_PATH}/events/event_list`,
-            title: 'event_list',
-            // icon: DashboardOutlined,
-            breadcrumb: true,
-            submenu: []
-          },
-          {
-            key: 'sport-event-funds',
-            path: `${APP_PREFIX_PATH}/events/sport-event-funds`,
-            title: 'Sport Event Funds',
-            // icon: DashboardOutlined,
-            breadcrumb: true,
-            submenu: []
-          },
+          // {
+          //   key: 'event_booking',
+          //   path: `${APP_PREFIX_PATH}/events/event_booking`,
+          //   title: 'event_booking',
+          //   // icon: DashboardOutlined,
+          //   breadcrumb: true,
+          //   submenu: []
+          // },
+          // {
+          //   key: 'event_list',
+          //   path: `${APP_PREFIX_PATH}/events/event_list`,
+          //   title: 'event_list',
+          //   // icon: DashboardOutlined,
+          //   breadcrumb: true,
+          //   submenu: []
+          // },
+          // {
+          //   key: 'sport-event-funds',
+          //   path: `${APP_PREFIX_PATH}/events/sport-event-funds`,
+          //   title: 'Sport Event Funds',
+          //   // icon: DashboardOutlined,
+          //   breadcrumb: true,
+          //   submenu: []
+          // },
         ]
     },
     {
       key: 'facility_management',
-        path: `${APP_PREFIX_PATH}/facilities/facility_booking`,
+        path: `${APP_PREFIX_PATH}/Course_Curriculum`,
         title: 'facility_management',
         icon: FacilityActiveIcon,
         breadcrumb: true,
         submenu: [
-          {
-            key: 'facility_booking',
-            path: `${APP_PREFIX_PATH}/facilities/facility_booking`,
-            title: 'facility_booking',
-            // icon: DashboardOutlined,
-            breadcrumb: true,
-            submenu: []
-          },
-          {
-            key: 'facility_list',
-            path: `${APP_PREFIX_PATH}/facilities/facility_list`,
-            title: 'facility_list',
-            // icon: DashboardOutlined,
-            breadcrumb: true,
-            submenu: []
-          },
+         
         ]
     },
     
+   
+   
+
 
   ]
 }]
