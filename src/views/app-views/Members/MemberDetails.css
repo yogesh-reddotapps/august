@@ -1,0 +1,145 @@
+.membershipDetailLayout {
+    display: flex;
+    gap: 20px
+}
+
+.membershipDetailNav {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    gap: 30px
+}
+
+.membershipDetailRight {
+    flex: 0.75
+}
+
+.membershipDetailLeft {
+    border: 1px solid #e6ebf1;
+    border-radius: 12px;
+    flex: 0.25;
+    padding: 20px 10px;
+    min-width: 300px;
+    max-width: 350px;
+    margin-top: 50px
+}
+
+.membershipNavTitle {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: fit-content;
+    font-weight: 400;
+    border-bottom: 1px solid #fff
+}
+
+.membershipNavTitle:hover {
+    color: #1e73be;
+    font-weight: 500;
+    border-bottom: 1px solid #1e73be
+}
+
+.membershipDetailTable {
+    border: 1px solid #e6ebf1;
+    border-radius: 12px
+}
+
+.membershipDetailProfile {
+    margin: 0 auto;
+    width: fit-content
+}
+
+.memberDetailProfileTitle {
+    font-weight: 500;
+    color: #1a3353;
+    margin-top: 20px
+}
+
+.membershipDetailText {
+    display: flex;
+    align-items: center;
+    gap: 10px
+}
+
+.membershipDetailName {
+    font-size: 18px;
+    text-align: center;
+    margin: 15px 0 0;
+    font-weight: 500;
+    color: #1a3353;
+    line-height: 14px
+}
+
+.membershipDetailStatus {
+    color: #00ab6f;
+    text-align: center;
+    margin: 0 0 10px
+}
+
+.memberDetailFilterText,
+.memberDetailSerachInput {
+    font-weight: 500;
+    color: #1a3353;
+    font-size: 14px;
+    letter-spacing: 1px
+}
+
+.memberDetailSearch {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e6ebf1;
+    border-radius: 12px;
+    padding-left: 10px;
+    max-width: 200px
+}
+
+.memberDetailFilter {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e6ebf1;
+    border-radius: 12px;
+    padding: 0 10px;
+    width: fit-content;
+    margin-left: 20px
+}
+
+.memberDetailSerachInput {
+    border: none;
+    padding: 6px 10px;
+    max-width: 80%
+}
+
+.membershipPaymentPaid,
+.membershipPaymentPending {
+    width: fit-content;
+    padding: 0 10px;
+    border-radius: 6px
+}
+
+.memberDetailSerachInput:focus {
+    outline: 0
+}
+
+.memberDetailTableSearchFilter {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.memberDetailFilterText {
+    margin-left: 12px;
+}
+
+.membershipPaymentPaid {
+    background-color: #edfff9
+}
+
+.membershipPaymentPending {
+    background: #ffe3e8
+}
+
+hr{
+    height: 1px;
+    border: none;
+    background-color: #e6ebf1;
+}
