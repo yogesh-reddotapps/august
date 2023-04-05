@@ -24,3 +24,9 @@
   display: flex;
   align-items: center;
 }
+
+.uploaddoc{
+  height: 230px;
+  border: 2px dashed rgb(161, 198, 239);
+  border-radius: 5px;
+}
