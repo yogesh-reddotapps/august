@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+.login_background{
+    background-size: cover;
+   
+}
+
+.login_container{
+    background-color: white;
+    padding-left: 43px;
+    padding-right: 43px;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border-radius: 12px;
+    width: 35vw;
+}
+
+.text-username{
+    font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    margin-bottom: 40px;
+}
+
+.belowloginbutton{
+    font-family: 'Poppins';
+font-style: normal;
+font-weight: 500;
+font-size: 12px;
+line-height: 14px;
+text-align: center;
+width: 60%;
+margin: auto;
+}
