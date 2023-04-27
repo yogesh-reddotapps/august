@@ -1,66 +1,150 @@
-import { Button, Dropdown, Menu, Space } from "antd";
-import React from "react";
-// const menu = (
-//   <Menu
-//     items={[
-//       {
-//         key: "1",
-//         label: (
-//           <a
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             href="https://www.antgroup.com"
-//           >
-//             1st menu item
-//           </a>
-//         ),
-//       },
-//       {
-//         key: "2",
-//         label: (
-//           <a
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             href="https://www.aliyun.com"
-//           >
-//             2nd menu item
-//           </a>
-//         ),
-//       },
-//       {
-//         key: "3",
-//         label: (
-//           <a
-//             target="_blank"
-//             rel="noopener noreferrer"
-//             href="https://www.luohanacademy.com"
-//           >
-//             3rd menu item
-//           </a>
-//         ),
-//       },
-//     ]}
-//   />
-// );
+import { Button, Dropdown, Menu, Checkbox } from "antd";
+import React, { useState } from "react";
 
-const menu = (
-  <Menu>
-    <Menu.Item>item 1</Menu.Item>
-    <Menu.Item>item 2</Menu.Item>
+const test = (
+  <Menu mode="horizontal">
+    {" "}
+    {/* Set the mode to "horizontal" or "vertical" */}
+    <Menu.SubMenu key="item1" title="Roles">
+      {" "}
+      {/* Use SubMenu component with a key and title */}
+      <Menu.Item key="subitem1">
+        <Checkbox>All</Checkbox>
+      </Menu.Item>{" "}
+      {/* Use Menu.Item components as submenu items */}
+      <Menu.Item key="subitem1">
+        <Checkbox>Crew</Checkbox>
+      </Menu.Item>{" "}
+      {/* Use Menu.Item components as submenu items */}
+      <Menu.Item key="subitem2">
+        <Checkbox>Ops Manager</Checkbox>
+      </Menu.Item>
+    </Menu.SubMenu>
+    <Menu.SubMenu key="item2" title="Status">
+      {" "}
+      {/* Use SubMenu component with a key and title */}
+      <Menu.Item key="subitem1">
+        <Checkbox>All</Checkbox>
+      </Menu.Item>{" "}
+      {/* Use Menu.Item components as submenu items */}
+      <Menu.Item key="subitem2">
+        <Checkbox>Active</Checkbox>
+      </Menu.Item>
+      <Menu.Item key="subitem2">
+        <Checkbox>Terminated</Checkbox>
+      </Menu.Item>
+    </Menu.SubMenu>
+    <Menu.SubMenu key="item3" title="Gender">
+      {" "}
+      {/* Use SubMenu component with a key and title */}
+      <Menu.Item key="subitem1">
+        <Checkbox>All</Checkbox>
+      </Menu.Item>{" "}
+      {/* Use Menu.Item components as submenu items */}
+      <Menu.Item key="subitem1">
+        <Checkbox>Male</Checkbox>
+      </Menu.Item>{" "}
+      {/* Use Menu.Item components as submenu items */}
+      <Menu.Item key="subitem2">
+        <Checkbox>Female</Checkbox>
+      </Menu.Item>
+    </Menu.SubMenu>
   </Menu>
 );
 
 const Filter = (props) => {
+  const [menu, setMenu] = useState(test);
+  const corse_curri = (
+    <Menu mode="horizontal">
+      <Menu.Item key="subitem1">
+        <>All</>
+      </Menu.Item>
+      <Menu.SubMenu key="item1" title="Category">
+       
+        <Menu.Item key="subitem1">
+          <Checkbox>All</Checkbox>
+        </Menu.Item>{" "}
+        {/* Use Menu.Item components as submenu items */}
+        <Menu.Item key="subitem1">
+          <Checkbox>Safety Course</Checkbox>
+        </Menu.Item>{" "}
+        {/* Use Menu.Item components as submenu items */}
+        <Menu.Item key="subitem2">
+          <Checkbox>Language Course</Checkbox>
+        </Menu.Item>
+      </Menu.SubMenu>
+      <Menu.SubMenu key="item2" title="Medium">
+        {" "}
+        {/* Use SubMenu component with a key and title */}
+        <Menu.Item key="subitem1">
+          <Checkbox>All</Checkbox>
+        </Menu.Item>{" "}
+        {/* Use Menu.Item components as submenu items */}
+        <Menu.Item key="subitem2">
+          <Checkbox>English</Checkbox>
+        </Menu.Item>
+        <Menu.Item key="subitem2">
+          <Checkbox>Hindi</Checkbox>
+        </Menu.Item>
+        <Menu.Item key="subitem2">
+          <Checkbox>Chinese</Checkbox>
+        </Menu.Item>
+        <Menu.Item key="subitem2">
+          <Checkbox>Tamil</Checkbox>
+        </Menu.Item>
+        <Menu.Item key="subitem2">
+          <Checkbox>Malay</Checkbox>
+        </Menu.Item>
+        <Menu.Item key="subitem2">
+          <Checkbox>Thai</Checkbox>
+        </Menu.Item>
+      </Menu.SubMenu>
+    </Menu>
+  );
+
+  const curriculam_det = (
+    <Menu>
+      <Menu.Item key="subitem1">
+        <>All</>
+      </Menu.Item>
+      <Menu.SubMenu key="item3" title="Gender">
+        <Menu.Item key="subitem1">
+          <Checkbox>All</Checkbox>
+        </Menu.Item>{" "}
+        <Menu.Item key="subitem1">
+          <Checkbox>Male</Checkbox>
+        </Menu.Item>{" "}
+        <Menu.Item key="subitem2">
+          <Checkbox>Female</Checkbox>
+        </Menu.Item>
+      </Menu.SubMenu>
+    </Menu>
+  );
+
+  if (props.type == "course_curriculam") {
+    return (
+      <Dropdown overlay={corse_curri} placement="bottomLeft">
+        {props.children}
+      </Dropdown>
+    );
+  }
+  if (props.type == "curriculam_det") {
+    return (
+      <Dropdown overlay={curriculam_det} placement="bottomLeft">
+        {props.children}
+      </Dropdown>
+    );
+  }
   return (
     <Dropdown overlay={menu} placement="bottomLeft">
       {props.children}
     </Dropdown>
   );
 
-//   return (
-//     <Dropdown overlay={menu}>
-//       <a>Hover me</a>
-//     </Dropdown>
-//   );
+  //   return (
+  //     <Dropdown overlay={menu}>
+  //       <a>Hover me</a>
+  //     </Dropdown>
+  //   );
 };
 export default Filter;

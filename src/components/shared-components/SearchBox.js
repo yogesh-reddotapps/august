@@ -15,7 +15,7 @@ const SearchBox = () => (
   <Space direction="vertical">
     
     <Search
-      placeholder="input search text"
+      placeholder="Search"
       allowClear
       onSearch={onSearch}
       style={{

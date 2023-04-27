@@ -3,7 +3,7 @@
   left: 50%;
   top: 50%;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
 .loading.cover-page {
   position: fixed;
@@ -12,21 +12,91 @@
   display: -webkit-flex;
   display: flex;
   -webkit-align-items: center;
-          align-items: center;
+  align-items: center;
   -webkit-justify-content: center;
-          justify-content: center;
+  justify-content: center;
 }
 .loading .ant-spin {
   color: #3e79f7;
 }
 
-.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content, .ant-menu-inline.ant-menu-root .ant-menu-submenu-title > .ant-menu-title-content{
+.ant-menu-inline.ant-menu-root .ant-menu-item > .ant-menu-title-content,
+.ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content {
   display: flex;
   align-items: center;
 }
 
-.uploaddoc{
+.uploaddoc {
   height: 230px;
   border: 2px dashed rgb(161, 198, 239);
   border-radius: 5px;
+}
+
+.notificationBox {
+  position: absolute;
+  top: 115%;
+  right: 0px;
+  background: white;
+  width: 450px;
+  height: 550px;
+  box-shadow: 1px 2px 17px 0px #80808047;
+}
+.notificationHover {
+  cursor: pointer;
+}
+
+.notiBox {
+  overflow: auto;
+  height: 480px;
+}
+
+.notificationHover:hover {
+  background-color: #ecf6ff;
+}
+
+.list-style-none {
+  padding: 0;
+}
+
+.list-style-none li {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.changeVideo .uploadFile {
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+.customAudio {
+  width: 80%; /* Set the width of the audio element */
+  /* Add other custom styles as needed */
+}
+
+.customAudio::-webkit-media-controls-panel {
+  /* Add custom styles for the media controls panel */
+  /* For example: */
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.customradioInput {
+  margin-right: 0;
+  display: flex;
+}
+.customradioInput > span:nth-child(2) {
+  padding-right: 0;
+  width: 100%;
+  display: flex;
+}
+
+.circleTeacherImage {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }

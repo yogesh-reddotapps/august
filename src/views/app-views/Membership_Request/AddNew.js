@@ -12,7 +12,7 @@ import {
   Col,Switch 
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { dollars, Verified } from "assets/svg/icon";
+import { dollars, UploadFileIcon, Verified } from "assets/svg/icon";
 import axios from "axios";
 import CustomIcon from "components/util-components/CustomIcon";
 import React from "react";
@@ -29,10 +29,30 @@ export default function AddNew() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [activeTab, setActiveTab] = useState("1");
+  const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
+  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false)
+  const [successModal, setSuccessModal] = useState(false)
+  const [succesmodaltext, setSuccesmodaltext] = useState({
+    title:'Status Change',text:'Student status changed to terminated.'
+  })
+
 
   function handleTabClick(key) {
     setActiveTab(key);
   }
+  const successOk = () => {
+    setSuccessModal(false)
+  }
+  const successCancel = () => {
+    setSuccessModal(false)
+  }
+
+  const changeStudHandleOk = () => {
+    setIsChangeStudModalOpen(false);
+  };
+  const DeactiveHandleOk = () => {
+    setIsDeactiveModalOpen(false);
+  };
 
   function handleNextClick() {
     if (activeTab >= 0 && activeTab <= 6) {
@@ -47,7 +67,17 @@ export default function AddNew() {
     }
   }
 
-  let styles = {
+  let styles = {files: {
+    listStyle: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: "13px",
+    border: "1px solid lightblue",
+    padding: "10px",
+    borderRadius: "9px",
+    background: "#0093ff0a",
+  },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -185,7 +215,23 @@ export default function AddNew() {
   );
 
   return (
-    <div>
+    <div className="">
+      <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
+        <Button
+          style={{ border: "1.6px solid #3e79f7" }}
+          className="px-4 font-weight-semibold text-info"
+          onClick={() => setIsChangeStudModalOpen(true)}
+        >
+          Change Employee Status
+        </Button>
+        <Button
+          style={{ border: "1.6px solid #3e79f7" }}
+          className="px-4 font-weight-semibold text-info"
+          onClick={() => setIsDeactiveModalOpen(true)}
+        >
+          Deactivate Account
+        </Button>
+      </div>
       <Form
         layout="vertical"
         onFinish={onFinish}
@@ -195,7 +241,7 @@ export default function AddNew() {
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
           <TabPane tab="Basic Details" key="1">
-            <Form.Item name="images">
+          <div className="border rounded p-3 bg-white"> <Form.Item name="images">
               <Upload
                 // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                 listType="picture-card"
@@ -204,7 +250,7 @@ export default function AddNew() {
                 {uploadButton}
               </Upload>
             </Form.Item>
-            <div className="border rounded p-3">
+           
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -370,7 +416,7 @@ export default function AddNew() {
                 </div>
               </div>
             </div>
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded p-3 mt-4 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -473,7 +519,7 @@ export default function AddNew() {
                 </div>
               </div>
             </div>
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded p-3 mt-4 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -539,7 +585,7 @@ export default function AddNew() {
             </div>
           </TabPane>
           <TabPane tab="Education Details" key="2">
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded p-3 bg-white mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item name="id" label="Highest Qualification">
@@ -609,7 +655,7 @@ export default function AddNew() {
             </div>
           </TabPane>
           <TabPane tab="Address Details" key="3">
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -707,7 +753,7 @@ export default function AddNew() {
                 </div>
               </div>
             </div>
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded bg-white p-3 mt-4">
               <div>
                 <h4>Alternative Contact Person</h4>
               </div>
@@ -767,7 +813,7 @@ export default function AddNew() {
             </div>
           </TabPane>
           <TabPane tab="Bank Details" key="4">
-            <div className="border rounded p-3 mt-4">
+            <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -845,7 +891,7 @@ export default function AddNew() {
             </div>
           </TabPane>
           <TabPane tab="Upload Documents" key="5">
-            <div className="border rounded p-3 mt-4">
+            <div className="border bg-white rounded p-3 mt-4">
               <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -898,8 +944,11 @@ export default function AddNew() {
                 {selectedFiles.length > 0 && (
                   <ul>
                     {selectedFiles.map((file) => (
-                      <li key={file.name}>{file.name}</li>
-                    ))}
+                    <li key={file.name} className="my-3" style={styles.files}>
+                      {" "}
+                      <UploadFileIcon /> {file.name}
+                    </li>
+                  ))}
                   </ul>
                 )}
               </div>
@@ -907,7 +956,7 @@ export default function AddNew() {
           </TabPane>
 
           <TabPane tab="App Access" key="6">
-            <div className="border rounded p-3 mt-4">
+            <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "40%",paddingLeft:"18px" }}>
                     <div className="d-flex justify-content-between font-weight-bold my-3">
@@ -936,7 +985,7 @@ export default function AddNew() {
           </TabPane>
           <TabPane tab="Assign Department" key="7">
 
-          <div className="border rounded p-3 mt-4">
+          <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -1039,20 +1088,101 @@ export default function AddNew() {
         </Form.Item>
       </Form>
       <Modal
-        width={400}
+        width={600}
         footer={null}
-        visible={isModalOpen}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        visible={deactiveModalOpen}
+        onOk={DeactiveHandleOk}
+        onCancel={() => setIsDeactiveModalOpen(false)}
+      >
+        <div className="d-flex my-3 flex-column w-75">
+          <h4 className="mb-4">Sure you want to deactivate staff?</h4>
+          <h5>Staff ID #TC-1234 will be deleted from system</h5>
+        </div>
+        <div
+            style={{ gap: "10px" }}
+            className="mt-5 d-flex justify-content-end"
+          >
+            <Button className="px-4 font-weight-semibold" onClick={()=>setIsDeactiveModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsDeactiveModalOpen(false); setSuccesmodaltext({title:'Staff Deactivated',text:'Staff ID #TC-1234 deleted.'});setSuccessModal(true)}}>
+              Yes, confirm
+            </Button>
+          </div>
+      </Modal>
+      <Modal
+        width={600}
+        footer={null}
+        visible={isChangeStudModalOpen}
+        onOk={changeStudHandleOk}
+        onCancel={() => setIsChangeStudModalOpen(false)}
+      >
+        <div className="d-flex my-3 flex-column w-75">
+          <h4 className="mb-4">Change Employee Status</h4>
+          <h5>Working Status</h5>
+          <Select
+            placeholder="Select"
+            optionFilterProp="children"
+            onChange={(val)=>console.log(`selected ${val}`)}
+            filterOption={(input, option) =>
+              (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+            }
+            options={[
+              {
+                value: "Resigned",
+                label: "Resigned",
+              },
+              {
+                value: "Resigned_without_notice",
+                label: "Resigned without notice",
+              },
+              {
+                value: "terminated",
+                label: "Terminated",
+              },
+              {
+                value: "Contract_end",
+                label: "Contract end",
+              },
+            ]}
+          />
+        </div>
+        <div
+            style={{ gap: "10px" }}
+            className="mt-5 d-flex justify-content-end"
+          >
+            <Button className="px-4 font-weight-semibold" onClick={()=>setIsChangeStudModalOpen(false)}>
+              Cancel
+            </Button>
+            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsChangeStudModalOpen(false);setSuccesmodaltext({title:'Employee Status Change',text:'Employee status changed to terminated.'});setSuccessModal(true)}}>
+              Save
+            </Button>
+          </div>
+      </Modal>
+      <Modal
+        width={500}
+        footer={null}
+        visible={successModal}
+        onOk={successOk}
+        onCancel={successCancel}
       >
         <div className="d-flex my-3 align-items-center flex-column justify-content-center">
           {/* <CustomIcon svg={Verified} /> */}
-          <svg width="65" height="64" viewBox="0 0 65 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32.5 0C37.4636 0 42.1609 1.13082 46.358 3.14781C44.64 4.50697 43.0471 5.81176 41.5629 7.06762C38.7358 6.04009 35.6859 5.48012 32.5054 5.48012C25.1823 5.48012 18.5496 8.44852 13.7545 13.2491C8.95396 18.0496 5.98556 24.6769 5.98556 32C5.98556 39.3231 8.95396 45.9504 13.7545 50.7509C18.555 55.5515 25.1823 58.5199 32.5054 58.5199C39.8286 58.5199 46.4613 55.5515 51.2564 50.7509C56.0569 45.9504 59.0253 39.3231 59.0253 32C59.0253 30.2603 58.8568 28.5532 58.536 26.9059C59.9115 25.1118 61.3196 23.3231 62.7603 21.5508C63.8911 24.8236 64.5054 28.3411 64.5054 32C64.5054 40.8345 60.9227 48.8372 55.1327 54.6273C49.3427 60.4173 41.34 64 32.5054 64C23.6709 64 15.6682 60.4173 9.87819 54.6273C4.08274 48.8372 0.5 40.8345 0.5 32C0.5 23.1655 4.08274 15.1628 9.87275 9.37275C15.6628 3.58274 23.6655 0 32.5 0ZM17.5928 26.7428L25.3998 26.6395L25.9815 26.7917C27.5581 27.6996 29.0423 28.738 30.4286 29.9123C31.429 30.7604 32.3858 31.6847 33.2938 32.685C36.0936 28.178 39.0783 24.0408 42.2316 20.2351C45.6838 16.0652 49.3481 12.2813 53.1973 8.82909L53.9584 8.53551H62.4776L60.7596 10.4438C55.4806 16.3099 50.691 22.3717 46.3634 28.6239C42.0359 34.8814 38.165 41.3401 34.7236 47.9891L33.6526 50.055L32.6685 47.9511C30.8527 44.053 28.6781 40.4757 26.0848 37.279C23.4915 34.0822 20.4742 31.2443 16.9567 28.8304L17.5928 26.7428Z" fill="#00AB6F" />
-  </svg>
-          <h3 className="font-weight-bold mt-4">MembershipPlan Created!</h3>
+          <svg
+            width="65"
+            height="64"
+            viewBox="0 0 65 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M32.5 0C37.4636 0 42.1609 1.13082 46.358 3.14781C44.64 4.50697 43.0471 5.81176 41.5629 7.06762C38.7358 6.04009 35.6859 5.48012 32.5054 5.48012C25.1823 5.48012 18.5496 8.44852 13.7545 13.2491C8.95396 18.0496 5.98556 24.6769 5.98556 32C5.98556 39.3231 8.95396 45.9504 13.7545 50.7509C18.555 55.5515 25.1823 58.5199 32.5054 58.5199C39.8286 58.5199 46.4613 55.5515 51.2564 50.7509C56.0569 45.9504 59.0253 39.3231 59.0253 32C59.0253 30.2603 58.8568 28.5532 58.536 26.9059C59.9115 25.1118 61.3196 23.3231 62.7603 21.5508C63.8911 24.8236 64.5054 28.3411 64.5054 32C64.5054 40.8345 60.9227 48.8372 55.1327 54.6273C49.3427 60.4173 41.34 64 32.5054 64C23.6709 64 15.6682 60.4173 9.87819 54.6273C4.08274 48.8372 0.5 40.8345 0.5 32C0.5 23.1655 4.08274 15.1628 9.87275 9.37275C15.6628 3.58274 23.6655 0 32.5 0ZM17.5928 26.7428L25.3998 26.6395L25.9815 26.7917C27.5581 27.6996 29.0423 28.738 30.4286 29.9123C31.429 30.7604 32.3858 31.6847 33.2938 32.685C36.0936 28.178 39.0783 24.0408 42.2316 20.2351C45.6838 16.0652 49.3481 12.2813 53.1973 8.82909L53.9584 8.53551H62.4776L60.7596 10.4438C55.4806 16.3099 50.691 22.3717 46.3634 28.6239C42.0359 34.8814 38.165 41.3401 34.7236 47.9891L33.6526 50.055L32.6685 47.9511C30.8527 44.053 28.6781 40.4757 26.0848 37.279C23.4915 34.0822 20.4742 31.2443 16.9567 28.8304L17.5928 26.7428Z"
+              fill="#00AB6F"
+            />
+          </svg>
+          <h3 className="font-weight-bold mt-4">{succesmodaltext.title} Successfully!</h3>
           <span className="text-center font-size-sm w-75 font-weight-semibold">
-            Membership Plan 1 crested successfully
+          {succesmodaltext.text}
           </span>
         </div>
       </Modal>

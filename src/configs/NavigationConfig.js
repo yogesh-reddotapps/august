@@ -107,6 +107,38 @@ const dashBoardNavTree = [{
          
         ]
     },
+    {
+      key: 'notification',
+        path: `${APP_PREFIX_PATH}/notification`,
+        title: 'Notifications',
+        icon: FacilityActiveIcon,
+        breadcrumb: true,
+        submenu: []
+    },
+    {
+      key: 'teacher_management',
+        path: `${APP_PREFIX_PATH}/teacher_management`,
+        title: 'Teacher Management',
+        icon: FacilityActiveIcon,
+        breadcrumb: true,
+        submenu: []
+    },
+    {
+      key: 'upcoming_classes',
+        path: `${APP_PREFIX_PATH}/upcoming_classes`,
+        title: 'Upcoming Classes',
+        icon: FacilityActiveIcon,
+        breadcrumb: true,
+        submenu: []
+    },
+    {
+      key: 'masters',
+        path: `${APP_PREFIX_PATH}/masters`,
+        title: 'Masters',
+        icon: FacilityActiveIcon,
+        breadcrumb: false,
+        submenu: []
+    },
     
    
    
