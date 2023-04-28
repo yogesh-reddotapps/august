@@ -1,9 +1,21 @@
 import React,{useState} from "react";
-import { Button} from "antd";
+import { Button, Input} from "antd";
+import { UploadFileIcon } from "assets/svg/icon";
 
 const AddNew = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   let styles = {
+    files: {
+      listStyle: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: "13px",
+      border: "1px solid lightblue",
+      padding: "10px",
+      borderRadius: "9px",
+      background: "#0093ff0a",
+    },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -44,6 +56,10 @@ const AddNew = () => {
   return (
     <>
       <div className="border rounded p-3 mt-4 bg-white">
+        <div className="w-50 mb-4 mt-3">
+            <h5>Title</h5>
+            <Input placeholder="Type here" />
+        </div>
         <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -93,8 +109,11 @@ const AddNew = () => {
           {selectedFiles.length > 0 && (
             <ul>
               {selectedFiles.map((file) => (
-                <li key={file.name}>{file.name}</li>
-              ))}
+                    <li key={file.name} className="my-3" style={styles.files}>
+                      {" "}
+                      <UploadFileIcon /> {file.name}
+                    </li>
+                  ))}
             </ul>
           )}
         </div>

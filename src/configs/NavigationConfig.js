@@ -1,33 +1,47 @@
-import {
-  DashboardOutlined
-} from '@ant-design/icons';
-import { APP_PREFIX_PATH } from 'configs/AppConfig'
+import { DashboardOutlined } from "@ant-design/icons";
+import { APP_PREFIX_PATH } from "configs/AppConfig";
 // import Icon from '@ant-design/icons-svg'
 
-import {DashboardActiveIcon, EventsActiveIcon, FacilityActiveIcon, MembershipActiveIcon} from './SideBarIcons'
+import {
+  DashboardActiveIcon,
+  EventsActiveIcon,
+  FacilityActiveIcon,
+  MembershipActiveIcon,
+} from "./SideBarIcons";
+import {
+  Masters,
+  TeacherManage,
+  Notification,
+  UpcomingClass,
+  Dashboard,
+  StaffManage,
+  StudentManage,
+  CourseAndCurriculam
+} from "assets/svg/icon";
 
-const dashBoardNavTree = [{
-  key: "d",
-  // path: `${APP_PREFIX_PATH}/dashboard`,
-  path: "",
-  title: " ",
-  icon: "",
-  breadcrumb: false,
-  submenu: [
-    {
-      key: "dashboard",
-      // path: `${APP_PREFIX_PATH}/dashboard`,
-      path: `${APP_PREFIX_PATH}/dashboard`,
-      title: "dashboard",
-      icon: DashboardActiveIcon,
-      breadcrumb: true,
-      submenu: []
-    },
-    {
-      key: 'staff_management',
+const dashBoardNavTree = [
+  {
+    key: "d",
+    // path: `${APP_PREFIX_PATH}/dashboard`,
+    path: "",
+    title: " ",
+    icon: "",
+    breadcrumb: false,
+    submenu: [
+      {
+        key: "dashboard",
+        // path: `${APP_PREFIX_PATH}/dashboard`,
+        path: `${APP_PREFIX_PATH}/dashboard`,
+        title: "dashboard",
+        icon: Dashboard,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
+        key: "staff_management",
         path: `${APP_PREFIX_PATH}/staffManagement`,
-        title: 'staff_management',
-        icon: MembershipActiveIcon,
+        title: "staff_management",
+        icon: StaffManage,
         breadcrumb: true,
         submenu: [
           // {
@@ -62,13 +76,13 @@ const dashBoardNavTree = [{
           //   breadcrumb: true,
           //   submenu: []
           // },
-        ]
-    },
-    {
-      key: 'Student_management',
+        ],
+      },
+      {
+        key: "Student_management",
         path: `${APP_PREFIX_PATH}/Student_management`,
-        title: 'Student_management',
-        icon: EventsActiveIcon,
+        title: "Student_management",
+        icon: StudentManage,
         breadcrumb: true,
         submenu: [
           // {
@@ -95,60 +109,52 @@ const dashBoardNavTree = [{
           //   breadcrumb: true,
           //   submenu: []
           // },
-        ]
-    },
-    {
-      key: 'facility_management',
+        ],
+      },
+      {
+        key: "facility_management",
         path: `${APP_PREFIX_PATH}/Course_Curriculum`,
-        title: 'facility_management',
-        icon: FacilityActiveIcon,
+        title: "facility_management",
+        icon: CourseAndCurriculam,
         breadcrumb: true,
-        submenu: [
-         
-        ]
-    },
-    {
-      key: 'notification',
+        submenu: [],
+      },
+      {
+        key: "notification",
         path: `${APP_PREFIX_PATH}/notification`,
-        title: 'Notifications',
-        icon: FacilityActiveIcon,
+        title: "Notifications",
+        icon: Notification,
         breadcrumb: true,
-        submenu: []
-    },
-    {
-      key: 'teacher_management',
+        submenu: [],
+      },
+      {
+        key: "teacher_management",
         path: `${APP_PREFIX_PATH}/teacher_management`,
-        title: 'Teacher Management',
-        icon: FacilityActiveIcon,
+        title: "Teacher Management",
+        icon: TeacherManage,
         breadcrumb: true,
-        submenu: []
-    },
-    {
-      key: 'upcoming_classes',
+        submenu: [],
+      },
+      {
+        key: "upcoming_classes",
         path: `${APP_PREFIX_PATH}/upcoming_classes`,
-        title: 'Upcoming Classes',
-        icon: FacilityActiveIcon,
+        title: "Upcoming Classes",
+        icon: UpcomingClass,
         breadcrumb: true,
-        submenu: []
-    },
-    {
-      key: 'masters',
+        submenu: [],
+      },
+      {
+        key: "masters",
         path: `${APP_PREFIX_PATH}/masters`,
-        title: 'Masters',
-        icon: FacilityActiveIcon,
+        title: "Masters",
+        icon: Masters,
         breadcrumb: false,
-        submenu: []
-    },
-    
-   
-   
+        submenu: [],
+      },
+    ],
+  },
+];
 
-
-  ]
-}]
-
-const navigationConfig = [
-  ...dashBoardNavTree
-]
+const navigationConfig = [...dashBoardNavTree];
 
 export default navigationConfig;

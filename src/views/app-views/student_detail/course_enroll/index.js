@@ -1,5 +1,5 @@
 import { Button, Divider, Menu, Modal, Select } from "antd";
-import { Export, ExportIcon, FilterIcon, CsvIcon, Edit } from "assets/svg/icon";
+import { Export, ExportIcon, FilterIcon, CsvIcon, Edit, ViewCourseMaterial, CertificationsIcon, AssessmentIco } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
 import React, { useEffect } from "react";
@@ -360,7 +360,7 @@ function FacilityBooking() {
   ];
   const items = [
     {
-      label: `Assignments`,
+      label: (<div className="d-flex align-items-center" ><ViewCourseMaterial color={"#0068B3"} /><span className="ml-2">Assignments</span></div>),
       key: 1,
       children: (
         <div>
@@ -389,7 +389,7 @@ function FacilityBooking() {
       ),
     },
     {
-      label: `Assessments`,
+      label: (<div className="d-flex align-items-center" ><AssessmentIco color={"#0068B3"} /><span className="ml-2">Assessments</span></div>),
       key: 2,
       children: (
         <div>
@@ -418,7 +418,7 @@ function FacilityBooking() {
       ),
     },
     {
-        label: `Certifications`,
+        label: (<div className="d-flex align-items-center" ><CertificationsIcon color={"#0068B3"} /><span className="ml-2">Certifications</span></div>),
         key: 3,
         children: (
           <div>
@@ -473,7 +473,7 @@ function FacilityBooking() {
             </div>
             <div>
                 <h5 className="m-0">Student</h5>
-                <h5 className="m-0">jane Cooper</h5>
+                <h5 className="m-0">jane Cooper <img src="/img/female.png" alt="img" /> </h5>
             </div>
           </div>
           <Divider style={{height:'60px'}} type="vertical" />

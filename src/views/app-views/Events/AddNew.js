@@ -10,7 +10,7 @@ import {
   Upload,
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { dollars, Verified } from "assets/svg/icon";
+import { AddressDetail, BasicDetail, dollars, StudentDet, UploadDocument, Verified } from "assets/svg/icon";
 import axios from "axios";
 import CustomIcon from "components/util-components/CustomIcon";
 import React from "react";
@@ -19,6 +19,7 @@ import { useState } from "react";
 import { Tabs } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
+import { UploadFileIcon } from "assets/svg/icon";
 
 export default function AddNew() {
   const { TabPane } = Tabs;
@@ -64,7 +65,17 @@ export default function AddNew() {
     }
   }
 
-  let styles = {
+  let styles = {files: {
+    listStyle: "none",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: "13px",
+    border: "1px solid lightblue",
+    padding: "10px",
+    borderRadius: "9px",
+    background: "#0093ff0a",
+  },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -227,7 +238,11 @@ export default function AddNew() {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab="Basic Details" key="1">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <BasicDetail /> <span className="ml-2">Basic Details</span>
+        </div>
+      )} key="1">
             <Form.Item name="images">
               <Upload
                 // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -555,7 +570,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Education Details" key="2">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <StudentDet /> <span className="ml-2">Education Details</span>
+        </div>
+      )} key="2">
             <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -625,7 +644,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Address Details" key="3">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AddressDetail /> <span className="ml-2">Address Details</span>
+        </div>
+      )} key="3">
             <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -784,7 +807,11 @@ export default function AddNew() {
             </div>
           </TabPane>
 
-          <TabPane tab="Upload Documents" key="4">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <UploadDocument /> <span className="ml-2">Upload Document</span>
+        </div>
+      )} key="4">
             <div className="border bg-white rounded p-3 mt-4">
               <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
                 <svg
@@ -838,8 +865,11 @@ export default function AddNew() {
                 {selectedFiles.length > 0 && (
                   <ul>
                     {selectedFiles.map((file) => (
-                      <li key={file.name}>{file.name}</li>
-                    ))}
+                    <li key={file.name} className="my-3" style={styles.files}>
+                      {" "}
+                      <UploadFileIcon /> {file.name}
+                    </li>
+                  ))}
                   </ul>
                 )}
               </div>

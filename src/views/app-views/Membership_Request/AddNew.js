@@ -12,7 +12,7 @@ import {
   Col,Switch 
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import { dollars, UploadFileIcon, Verified } from "assets/svg/icon";
+import { AddressDetail, AppAccessIco, AssignDepart, BankDetailIco, BasicDetail, dollars, StudentDet, UploadDocument, UploadFileIcon, Verified } from "assets/svg/icon";
 import axios from "axios";
 import CustomIcon from "components/util-components/CustomIcon";
 import React from "react";
@@ -21,7 +21,64 @@ import { useState } from "react";
 import { Tabs } from "antd";
 import { useLocation, useParams } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
-
+const managArray = [
+  {
+    value: "Manager 1",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-1.jpg" alt="img" />
+        Manager 1
+      </div>
+    ),
+  },
+  {
+    value: "Manager 2",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-2.jpg" alt="img" />
+        Manager 2
+      </div>
+    ),
+  },
+  {
+    value: "Manager 3",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-3.jpg" alt="img" />
+        Manager 3
+      </div>
+    ),
+  },
+  {
+    value: "Manager 4",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-4.jpg" alt="img" />
+        Manager 4
+      </div>
+    ),
+  },
+  // Add more objects with similar format here
+  // ...
+  {
+    value: "Manager 5",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-5.jpg" alt="img" />
+        Manager 5
+      </div>
+    ),
+  },
+  {
+    value: "Manager 6",
+    label: (
+      <div>
+        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-6.jpg" alt="img" />
+        Manager 6
+      </div>
+    ),
+  },
+];
 export default function AddNew() {
   const { TabPane } = Tabs;
   const param = useParams();
@@ -240,7 +297,11 @@ export default function AddNew() {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab="Basic Details" key="1">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <BasicDetail /> <span className="ml-2">Basic Details</span>
+        </div>
+      )} key="1">
           <div className="border rounded p-3 bg-white"> <Form.Item name="images">
               <Upload
                 // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
@@ -584,7 +645,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Education Details" key="2">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <StudentDet /> <span className="ml-2">Education Details</span>
+        </div>
+      )} key="2">
             <div className="border rounded p-3 bg-white mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -654,7 +719,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Address Details" key="3">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AddressDetail /> <span className="ml-2">Address Details</span>
+        </div>
+      )} key="3">
             <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -812,7 +881,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Bank Details" key="4">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <BankDetailIco /> <span className="ml-2">Bank Details</span>
+        </div>
+      )} key="4">
             <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -890,7 +963,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Upload Documents" key="5">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <UploadDocument /> <span className="ml-2">Upload Documents</span>
+        </div>
+      )} key="5">
             <div className="border bg-white rounded p-3 mt-4">
               <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
                 <svg
@@ -955,7 +1032,11 @@ export default function AddNew() {
             </div>
           </TabPane>
 
-          <TabPane tab="App Access" key="6">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AppAccessIco /> <span className="ml-2">App Access</span>
+        </div>
+      )} key="6">
             <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "40%",paddingLeft:"18px" }}>
@@ -983,7 +1064,11 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Assign Department" key="7">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AssignDepart /> <span className="ml-2">Assign Department</span>
+        </div>
+      )} key="7">
 
           <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
@@ -1039,11 +1124,7 @@ export default function AddNew() {
                       placeholder="Select Manager"
                       style={{ width: "100%" }}
                       onChange={handleChange}
-                      options={[
-                        { value: "test1", label: "test1" },
-                        { value: "test2", label: "test2" },
-                        { value: "test3", label: "test3" },
-                      ]}
+                      options={managArray}
                     />
                   </Form.Item>
                 </div>

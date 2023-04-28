@@ -10,6 +10,7 @@ import {
   ViewCourseMaterial,
   CertificationsIcon,
   FileTypeUsingProp,
+  AlertTick,
 } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
@@ -771,7 +772,7 @@ function FacilityBooking() {
           className="d-flex align-items-center justify-content-center"
           style={alertstyle}
         >
-          {alertText}
+         <AlertTick/> {alertText}
         </div>
       ) : (
         ""

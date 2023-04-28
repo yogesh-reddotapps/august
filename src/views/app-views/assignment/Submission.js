@@ -1,5 +1,5 @@
 import { Button, Menu, Modal, Select } from "antd";
-import { Export, ExportIcon, FilterIcon, History, Edit } from "assets/svg/icon";
+import { Export, ExportIcon, FilterIcon, History, Edit, AssessQue } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
 import React, { useEffect } from "react";
@@ -78,8 +78,12 @@ function Submission() {
                   <Menu.Item>
                     <Link to="/app/assignment/view-submission">
                       {" "}
-                      <EyeOutlined className="mr-2 " />
+                      <div className="d-flex align-items-center">
+                      <AssessQue color={"#455560"} className="mr-2 " />
+                <span className="ml-2">
                       View Details
+                </span>
+                      </div>
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -201,33 +205,7 @@ function Submission() {
       </Button>
     </div>
   );
-  const items = [
-    {
-      label: `Enrolled Students`,
-      key: 1,
-      children: (
-        <div>
-          <Helper
-            clients={facilityBooking}
-            attribiue={facilityBookingColumns}
-          />
-        </div>
-      ),
-    },
-    {
-      label: `Id Verified Students`,
-      key: 2,
-      children: (
-        <div>
-          <Helper
-            clients={membershipRequestData}
-            attribiue={membershipRequestColumns}
-          />
-        </div>
-      ),
-    },
-  ];
-
+ 
   const onDeleteData = (record, dataSet, Id) => {
     // console.log(Id)
     // console.log(record)

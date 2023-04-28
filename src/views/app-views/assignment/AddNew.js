@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import "./assignment.css";
+import { AssessQue, BasicDet, UploadFileIcon } from "assets/svg/icon";
 
 const AddNew = () => {
   const [form] = Form.useForm();
@@ -38,6 +39,17 @@ const AddNew = () => {
   ]);
 
   let styles = {
+    files: {
+      listStyle: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: "13px",
+      border: "1px solid lightblue",
+      padding: "10px",
+      borderRadius: "9px",
+      background: "#0093ff0a",
+    },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -199,7 +211,12 @@ const AddNew = () => {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab="Basic Details" key="1">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <BasicDet className="mr-2 " />
+          <span className="ml-2">Basic Details</span>
+        </div>
+      )} key="1">
             <div className="border rounded p-3 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -223,7 +240,12 @@ const AddNew = () => {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Assignment Questions" key="2">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AssessQue className="mr-2 " />
+          <span className="ml-2">Assignment Questions</span>
+        </div>
+      )} key="2">
             <div className="border rounded p-3 mt-4 bg-white">
               <div className="my-3 w-50">
                 <Form.Item
@@ -338,8 +360,11 @@ const AddNew = () => {
                     {selectedFiles.length > 0 && (
                       <ul>
                         {selectedFiles.map((file) => (
-                          <li key={file.name}>{file.name}</li>
-                        ))}
+                    <li key={file.name} className="my-3" style={styles.files}>
+                      {" "}
+                      <UploadFileIcon /> {file.name}
+                    </li>
+                  ))}
                       </ul>
                     )}
                   </div>

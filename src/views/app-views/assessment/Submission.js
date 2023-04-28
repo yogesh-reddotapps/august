@@ -1,5 +1,14 @@
 import { Button, Menu, Modal, Select } from "antd";
-import { Export, ExportIcon, FilterIcon, History, Edit } from "assets/svg/icon";
+import {
+  Export,
+  ExportIcon,
+  FilterIcon,
+  History,
+  Edit,
+  AcceptTick,
+  CancelCross,
+  AssessQue,
+} from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
 import React, { useEffect } from "react";
@@ -52,18 +61,14 @@ function Submission() {
       title: "Result",
       dataIndex: "result",
       render: (text) => {
-        return (
-          <div>20/25</div>
-        );
+        return <div>20/25</div>;
       },
     },
     {
       title: "Status",
       dataIndex: "result",
       render: (text) => {
-        return (
-          <div>Pending</div>
-        );
+        return <div>Pending</div>;
       },
     },
     {
@@ -78,8 +83,10 @@ function Submission() {
                   <Menu.Item>
                     <Link to="/app/assessment/view-submission">
                       {" "}
-                      <EyeOutlined className="mr-2 " />
-                      View Details
+                      <div className="d-flex align-items-center">
+                        <AssessQue color={"#455560"} className="mr-2 " />
+                        <span className="ml-2">View Result</span>
+                      </div>
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -141,7 +148,7 @@ function Submission() {
       title: "Id Upload",
       dataIndex: "nationality",
       render: (avatar) => {
-        return <img src='/img/idcard.png' />;
+        return <img src="/img/idcard.png" />;
       },
     },
     {
@@ -163,15 +170,19 @@ function Submission() {
                   <Menu.Item>
                     <Link to="facility_booking">
                       {" "}
-                      <EyeOutlined className="mr-2 " />
-                      Accept
+                      <div className="d-flex align-items-center">
+                        <AcceptTick />
+                        Accept
+                      </div>
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <span onClick={() => onDeleteData(record)}>
                       {" "}
-                      <DeleteOutlined className="mr-2 " />
-                      Reject
+                      <div className="d-flex align-items-center">
+                        <CancelCross />
+                        Reject
+                      </div>
                     </span>
                   </Menu.Item>
                 </Menu>

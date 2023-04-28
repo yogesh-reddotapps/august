@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Divider, Tabs, Menu } from "antd";
-import { AndroidOutlined } from "@ant-design/icons";
-import { Mobileicon, AddressIcon, MailIcon } from "assets/svg/icon";
+import { EyeOutlined } from "@ant-design/icons";
+import { Mobileicon, AddressIcon, MailIcon, CourseAccess } from "assets/svg/icon";
 import Helper from "../Helper";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import { Link } from "react-router-dom";
@@ -103,10 +103,10 @@ const index = () => {
                   <Menu.Item>
                     <Link to="student_detail/course_enroll">
                       {" "}
-                      View Details
+                     <EyeOutlined /> View Details
                     </Link>
                   </Menu.Item>
-                  <Menu.Item>
+                  {/* <Menu.Item>
                     <span> Delete</span>
                   </Menu.Item>
                   <Menu.Item>
@@ -116,7 +116,7 @@ const index = () => {
                     >
                       Edit
                     </Link>
-                  </Menu.Item>
+                  </Menu.Item> */}
                 </Menu>
               }
             />
@@ -135,7 +135,7 @@ const index = () => {
           >
             <div className="d-flex justify-content-center flex-column align-items-center">
               <img width={80} src="/img/Avatar.png" alt="img" />
-              <h4 className="mt-3 mb-0">Jane Cooper</h4>
+              <h4 className="mt-3 mb-0">Jane Cooper <img src="/img/female.png" alt="img" /> </h4>
               <h5 className="mt-0 mb-2">#21</h5>
               <Button className="px-5">Edit Details</Button>
               <Divider />
@@ -168,9 +168,9 @@ const index = () => {
             <Tabs activeKey={"1"}>
               <TabPane
                 tab={
-                  <span>
-                    <AndroidOutlined /> Course Enroll{" "}
-                  </span>
+                  <div className="d-flex align-items-center">
+                    <CourseAccess /> <span className="ml-2"> Course Enroll{" "}</span>
+                  </div>
                 }
                 key="1"
               >

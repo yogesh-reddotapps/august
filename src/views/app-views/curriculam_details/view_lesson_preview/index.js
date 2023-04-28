@@ -1,5 +1,6 @@
 import React from "react";
 import { Divider } from "antd";
+import { LessonTypeText } from "assets/svg/icon";
 const Viewl = () => {
   return (
     <div>
@@ -50,7 +51,7 @@ const Viewl = () => {
         </div>
       </div>
       <div className="border rounded p-3 mb-4 bg-white">
-        <h5>Text</h5>
+        <h5 className="d-flex align-items-center"> <LessonTypeText/> Text</h5>
         <p style={{color:"black"}}>
           Lorem Ipsum is simply dummy text of the printing and typesetting
           industry. Lorem Ipsum has been the industry's standard Lorem Ipsum is

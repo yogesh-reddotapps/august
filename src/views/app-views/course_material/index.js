@@ -1,5 +1,5 @@
 import { Button, Menu, Modal, Select } from "antd";
-import { Export, ExportIcon, FilterIcon, History, Edit } from "assets/svg/icon";
+import { Export, ExportIcon, FilterIcon, History, Edit, PdfType, VideoType } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
 import React, { useEffect } from "react";
@@ -19,21 +19,21 @@ function FacilityBooking() {
     {
       id: 1,
       Assessment: "Safety Manual",
-      Assessment_Questions: "--",
+      Assessment_Questions: "pdf",
       Attended_By: "Admin",
       Created_By: "2023-04-16",
     },
     {
       id: 2,
       Assessment: "Safety Manual",
-      Assessment_Questions: "--",
+      Assessment_Questions: "video",
       Attended_By: "Admin",
       Created_By: "2023-04-16",
     },
     {
       id: 3,
       Assessment: "Safety Manual",
-      Assessment_Questions: "--",
+      Assessment_Questions: "pdf",
       Attended_By: "Admin",
       Created_By: "2023-04-16",
     },
@@ -51,6 +51,18 @@ function FacilityBooking() {
     {
       title: "File Type",
       dataIndex: "Assessment_Questions",
+      render: (text) => {
+        return (
+          <div>
+            {
+              text == 'pdf' && <PdfType/>
+            }
+            {
+              text == 'video' && <VideoType/>
+            }
+          </div>
+        );
+      },
     },
     {
       title: "Uploaded By",

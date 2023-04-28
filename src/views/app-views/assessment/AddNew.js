@@ -10,8 +10,9 @@ import {
   DatePicker,
   Switch,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { FileUnknownOutlined,PlusOutlined } from "@ant-design/icons";
 import "./assessment.css";
+import { AssessQue, BasicDet } from "assets/svg/icon";
 
 const AddNew = () => {
   const [form] = Form.useForm();
@@ -152,7 +153,12 @@ const AddNew = () => {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab="Basic Details" key="1">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <BasicDet className="mr-2 " />
+          <span className="ml-2">Basic Details</span>
+        </div>
+      )} key="1">
             <div className="border rounded p-3 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -176,7 +182,12 @@ const AddNew = () => {
               </div>
             </div>
           </TabPane>
-          <TabPane tab="Assessment Questions" key="2">
+          <TabPane tab={(
+        <div className="d-flex justify-content-center">
+          <AssessQue className="mr-2 " />
+          <span className="ml-2">Assessment Questions</span>
+        </div>
+      )} key="2">
             {addQue.map((elem, ind) => {
               return (
                 <>
