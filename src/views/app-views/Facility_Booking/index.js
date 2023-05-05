@@ -207,12 +207,12 @@ function FacilityBooking() {
             Export
           </Button>
         </div>
-        <Link
+        {/* <Link
           to="staffManagement/add_new"
           className="bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
         >
           Add New Staff
-        </Link>
+        </Link> */}
       </div>
       <div>
         <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />

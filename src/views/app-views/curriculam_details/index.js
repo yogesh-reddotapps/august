@@ -11,6 +11,7 @@ import {
   CertificationsIcon,
   FileTypeUsingProp,
   AlertTick,
+  AwardCerti,
 } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
@@ -27,6 +28,7 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
+import AwardCert from "./award_certificate";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -256,7 +258,7 @@ function FacilityBooking() {
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
-    }, 10000);
+    }, 1000);
   };
 
   const handleCancel = () => {
@@ -372,14 +374,14 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link to="curriculam_details/award_certificate">
                       {" "}
-                      <EyeOutlined className="mr-2 " />
-                      Award Certificate
+                    <div className="d-flex align-items-center"><span className="mr-1"> <AwardCerti /></span>
+                      Award Certificate</div> 
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="curriculam_details/view_lesson_preview">
                       {" "}
-                      <EyeOutlined className="mr-2 " />
+                      <DeleteOutlined className="mr-2 " />
                       Delete
                     </Link>
                   </Menu.Item>
@@ -619,7 +621,7 @@ function FacilityBooking() {
       label: (
         <div className="d-flex justify-content-center">
           <ViewCourseMaterial color={"#3e79f7"} />{" "}
-          <span className="ml-2">Lessons</span>
+          <span className="ml-2">Subjects</span>
         </div>
       ),
       key: 3,
@@ -627,7 +629,7 @@ function FacilityBooking() {
         <div>
           <div className="membershipPlanTableSearchFilter d-flex mb-3">
             <SearchBox />
-            <Filter>
+            <Filter type={'subjects'}>
               <Button
                 icon={<Icon component={FilterIcon} />}
                 className="d-flex align-items-center ml-2"
@@ -892,7 +894,6 @@ function FacilityBooking() {
                   width: 300,
                   marginBottom:'5px'
                 }}
-                mode="multiple"
                 placeholder="Select"
                 onChange={(value) => console.log(`selected ${value}`)}
                 options={teacherArray}
@@ -900,7 +901,7 @@ function FacilityBooking() {
               <br />
           <div className="d-flex justify-content-end">
             <Button className="w-25 text-black">Cancel</Button>
-            <Button className="ml-3 w-25 bg-info text-white">Save</Button>
+            <Button onClick={handleOk} className="ml-3 w-25 bg-info text-white">Save</Button>
           </div>
         </div>
       </Modal>

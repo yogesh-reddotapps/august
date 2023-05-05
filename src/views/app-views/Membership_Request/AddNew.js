@@ -2,31 +2,40 @@ import {
   Button,
   Form,
   Input,
-  InputNumber,
   Radio,
   Select,
   Modal,
   DatePicker,
   Upload,
-  Row,
-  Col,Switch 
+  Switch,
 } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { AddressDetail, AppAccessIco, AssignDepart, BankDetailIco, BasicDetail, dollars, StudentDet, UploadDocument, UploadFileIcon, Verified } from "assets/svg/icon";
+import {
+  AddressDetail,
+  AppAccessIco,
+  AssignDepart,
+  BankDetailIco,
+  BasicDetail,
+  StudentDet,
+  UploadDocument,
+  UploadFileIcon,
+} from "assets/svg/icon";
 import axios from "axios";
-import CustomIcon from "components/util-components/CustomIcon";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Tabs } from "antd";
 import { useLocation, useParams } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined,CloseCircleOutlined } from "@ant-design/icons";
 const managArray = [
   {
     value: "Manager 1",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-1.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-1.jpg"
+          alt="img"
+        />
         Manager 1
       </div>
     ),
@@ -35,7 +44,11 @@ const managArray = [
     value: "Manager 2",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-2.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-2.jpg"
+          alt="img"
+        />
         Manager 2
       </div>
     ),
@@ -44,7 +57,11 @@ const managArray = [
     value: "Manager 3",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-3.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-3.jpg"
+          alt="img"
+        />
         Manager 3
       </div>
     ),
@@ -53,7 +70,11 @@ const managArray = [
     value: "Manager 4",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-4.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-4.jpg"
+          alt="img"
+        />
         Manager 4
       </div>
     ),
@@ -64,7 +85,11 @@ const managArray = [
     value: "Manager 5",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-5.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-5.jpg"
+          alt="img"
+        />
         Manager 5
       </div>
     ),
@@ -73,7 +98,11 @@ const managArray = [
     value: "Manager 6",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-6.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-6.jpg"
+          alt="img"
+        />
         Manager 6
       </div>
     ),
@@ -87,22 +116,22 @@ export default function AddNew() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [activeTab, setActiveTab] = useState("1");
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
-  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false)
-  const [successModal, setSuccessModal] = useState(false)
+  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [succesmodaltext, setSuccesmodaltext] = useState({
-    title:'Status Change',text:'Student status changed to terminated.'
-  })
-
+    title: "Status Change",
+    text: "Student status changed to terminated.",
+  });
 
   function handleTabClick(key) {
     setActiveTab(key);
   }
   const successOk = () => {
-    setSuccessModal(false)
-  }
+    setSuccessModal(false);
+  };
   const successCancel = () => {
-    setSuccessModal(false)
-  }
+    setSuccessModal(false);
+  };
 
   const changeStudHandleOk = () => {
     setIsChangeStudModalOpen(false);
@@ -124,17 +153,18 @@ export default function AddNew() {
     }
   }
 
-  let styles = {files: {
-    listStyle: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-start",
-    gap: "13px",
-    border: "1px solid lightblue",
-    padding: "10px",
-    borderRadius: "9px",
-    background: "#0093ff0a",
-  },
+  let styles = {
+    files: {
+      listStyle: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "13px",
+      border: "1px solid lightblue",
+      padding: "10px",
+      borderRadius: "9px",
+      background: "#0093ff0a",
+    },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -248,6 +278,12 @@ export default function AddNew() {
 
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
+  const delUplFile = (i) => {
+    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
+      return index!==i
+    })
+    setSelectedFiles(AfterDeleteFile);
+  }
 
   useEffect(() => {
     if (
@@ -297,21 +333,25 @@ export default function AddNew() {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <BasicDetail /> <span className="ml-2">Basic Details</span>
-        </div>
-      )} key="1">
-          <div className="border rounded p-3 bg-white"> <Form.Item name="images">
-              <Upload
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                onChange={handleChange}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-           
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <BasicDetail /> <span className="ml-2">Basic Details</span>
+              </div>
+            }
+            key="1"
+          >
+            <div className="border rounded p-3 bg-white">
+              {" "}
+              <Form.Item name="images">
+                <Upload
+                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  onChange={handleChange}
+                >
+                  {uploadButton}
+                </Upload>
+              </Form.Item>
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
@@ -361,7 +401,7 @@ export default function AddNew() {
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="id"
+                    name="Nationality"
                     label="Nationality"
                     rules={[
                       { required: true, message: "Please enter Nationality" },
@@ -391,7 +431,7 @@ export default function AddNew() {
                 </div>
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="name"
+                    name="Residency"
                     label="Residency Status"
                     rules={[
                       {
@@ -400,7 +440,19 @@ export default function AddNew() {
                       },
                     ]}
                   >
-                    <Input placeholder="Residency Status" />
+                    <Select
+                      placeholder="Residency"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "Permeant_Resident",
+                          label: "Permeant Resident",
+                        },
+                        { value: "Citizen", label: "Citizen" },
+                        { value: "Non_native", label: "Non-native" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item
                     name="phone number"
@@ -433,16 +485,27 @@ export default function AddNew() {
                     </Radio.Group>
                   </Form.Item>
                   <Form.Item
-                    name="period"
+                    name="Race"
                     label="Race"
                     rules={[{ required: true, message: "Please enter Race" }]}
                   >
-                    <Input min={1} placeholder="Race" />
+                    <Select
+                      placeholder="Race"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        { value: "Chinese", label: "Chinese" },
+                        { value: "Malay", label: "Malay" },
+                        { value: "Indian", label: "Indian" },
+                        { value: "Myanmarese", label: "Myanmarese" },
+                        { value: "Burmese", label: "Burmese" },
+                      ]}
+                    />
                   </Form.Item>
                 </div>
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="name"
+                    name="Married"
                     label="Married Status"
                     rules={[
                       {
@@ -456,8 +519,11 @@ export default function AddNew() {
                       style={{ width: "100%" }}
                       onChange={handleChange}
                       options={[
-                        { value: "Singapore", label: "Married" },
-                        { value: "Singapore", label: "Unmarried" },
+                        { value: "Married", label: "Married" },
+                        { value: "Single", label: "Single" },
+                        { value: "Widowed", label: "Widowed" },
+                        { value: "Separated", label: "Separated" },
+                        { value: "Divorced", label: "Divorced" },
                       ]}
                     />
                   </Form.Item>
@@ -481,13 +547,21 @@ export default function AddNew() {
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="id"
+                    name="Role"
                     label="Role"
                     rules={[
                       { required: true, message: "Please enter Staff Role" },
                     ]}
                   >
-                    <Input placeholder="Role" />
+                    <Select
+                      placeholder="Role"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        { value: "Ops_Manager", label: "Ops Manager" },
+                        { value: "Crew", label: "Crew" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item
                     name="period"
@@ -504,13 +578,21 @@ export default function AddNew() {
                 </div>
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="name"
+                    name="Department"
                     label="Department"
                     rules={[
-                      { required: true, message: "Please enter Full Name" },
+                      { required: true, message: "Please enter Department" },
                     ]}
                   >
-                    <Input placeholder="Department" />
+                    <Select
+                      placeholder="Department"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        { value: "Operations", label: "Operations" },
+                        { value: "Services", label: "Services" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item
                     name="phone number"
@@ -529,7 +611,7 @@ export default function AddNew() {
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="id"
+                    name="Working"
                     label="Working Status"
                     rules={[
                       { required: true, message: "Please enter Nationality" },
@@ -539,7 +621,15 @@ export default function AddNew() {
                       placeholder="Working Status"
                       style={{ width: "100%" }}
                       onChange={handleChange}
-                      options={[]}
+                      options={[
+                        { value: "Resigned", label: "Resigned" },
+                        {
+                          value: "Resign_without_notice",
+                          label: "Resign without notice",
+                        },
+                        { value: "Terminated", label: "Terminated" },
+                        { value: "Contract_end", label: "Contract end" },
+                      ]}
                     />
                   </Form.Item>
                   <Form.Item
@@ -589,8 +679,59 @@ export default function AddNew() {
                   >
                     <Input placeholder="Work Permit Number" />
                   </Form.Item>
-                  <Form.Item name="period" label="Type of Work Permit">
-                    <Input placeholder="Type of Work Permit" />
+                  <Form.Item
+                    name="type_work_permit"
+                    label="Type of Work Permit"
+                  >
+                    <Select
+                      placeholder="Type of Work Permit"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          label: "Professional",
+                          options: [
+                            {
+                              label: "Employment Pass",
+                              value: "Employment_Pass",
+                            },
+                            {
+                              label: "Entre_Pass",
+                              value: "Entre Pass",
+                            },
+                            {
+                              label: "Personalized_Employment_Pass",
+                              value: "Personalized Employment Pass",
+                            },
+                          ],
+                        },
+                        {
+                          label: "Skilled & Semi skilled Workers",
+                          options: [
+                            {
+                              label: "S_Pass",
+                              value: "S Pass",
+                            },
+                            {
+                              label: "Work_Permit_for_migrant_worker",
+                              value: "Work Permit for migrant worker",
+                            },
+                            {
+                              label: "Work_Permit_for_migrant_domestic_worker",
+                              value: "Work Permit for migrant domestic worker",
+                            },
+                            {
+                              label: "Work_Permit_for_confinement_nanny",
+                              value: "Work Permit for confinement nanny",
+                            },
+                            {
+                              label: "Work_Permit_for_performing_artiste",
+                              value: "Work Permit for performing artiste",
+                            },
+                          ],
+                        },
+                      ]}
+                    />
                   </Form.Item>
                 </div>
                 <div
@@ -602,7 +743,7 @@ export default function AddNew() {
                 >
                   <Form.Item
                     name="phone number"
-                    label="Expirty Date"
+                    label="Expiry Date"
                     style={{ flex: "1" }}
                     rules={[
                       { required: true, message: "Please enter Full Name" },
@@ -621,7 +762,10 @@ export default function AddNew() {
                     name="id"
                     label="Passport Number"
                     rules={[
-                      { required: true, message: "Please enter Nationality" },
+                      {
+                        required: true,
+                        message: "Please enter Passport Number",
+                      },
                     ]}
                   >
                     <Input placeholder="Passport Number" />
@@ -630,7 +774,7 @@ export default function AddNew() {
                 <div style={{ width: "45%" }}>
                   <Form.Item
                     name="phone number"
-                    label="Expirty Date"
+                    label="Expiry Date"
                     style={{ flex: "1" }}
                     rules={[
                       { required: true, message: "Please enter Full Name" },
@@ -645,11 +789,14 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <StudentDet /> <span className="ml-2">Education Details</span>
-        </div>
-      )} key="2">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <StudentDet /> <span className="ml-2">Education Details</span>
+              </div>
+            }
+            key="2"
+          >
             <div className="border rounded p-3 bg-white mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -677,7 +824,10 @@ export default function AddNew() {
                     name="id"
                     label="Field of study"
                     rules={[
-                      { required: true, message: "Please enter Nationality" },
+                      {
+                        required: true,
+                        message: "Please enter Field of study",
+                      },
                     ]}
                     style={{ width: "100%" }}
                   >
@@ -719,11 +869,14 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AddressDetail /> <span className="ml-2">Address Details</span>
-        </div>
-      )} key="3">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <AddressDetail /> <span className="ml-2">Address Details</span>
+              </div>
+            }
+            key="3"
+          >
             <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -881,11 +1034,14 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <BankDetailIco /> <span className="ml-2">Bank Details</span>
-        </div>
-      )} key="4">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <BankDetailIco /> <span className="ml-2">Bank Details</span>
+              </div>
+            }
+            key="4"
+          >
             <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -963,11 +1119,15 @@ export default function AddNew() {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <UploadDocument /> <span className="ml-2">Upload Documents</span>
-        </div>
-      )} key="5">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <UploadDocument />{" "}
+                <span className="ml-2">Upload Documents</span>
+              </div>
+            }
+            key="5"
+          >
             <div className="border bg-white rounded p-3 mt-4">
               <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
                 <svg
@@ -1019,64 +1179,91 @@ export default function AddNew() {
               </div>
               <div className="mt-4">
                 {selectedFiles.length > 0 && (
-                  <ul>
-                    {selectedFiles.map((file) => (
-                    <li key={file.name} className="my-3" style={styles.files}>
-                      {" "}
-                      <UploadFileIcon /> {file.name}
-                    </li>
-                  ))}
+                  <ul className="p-0" style={{width:'40%'}}>
+                    {selectedFiles.map((file,i) => (
+                      <li key={file.name} className="my-3" style={styles.files}>
+                        {" "}
+                        <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
+                      </li>
+                    ))}
                   </ul>
                 )}
               </div>
             </div>
           </TabPane>
 
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AppAccessIco /> <span className="ml-2">App Access</span>
-        </div>
-      )} key="6">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <AppAccessIco /> <span className="ml-2">App Access</span>
+              </div>
+            }
+            key="6"
+          >
             <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "40%",paddingLeft:"18px" }}>
-                    <div className="d-flex justify-content-between font-weight-bold my-3">
-                        <span>Type</span>
-                        <span className="d-flex justify-content-center" style={{ width: "90px"}}>Access</span>
-                    </div>
-                    <div className="d-flex justify-content-between my-3">
-                        <span>Mobile Application</span>
-                        <span className="d-flex justify-content-center" style={{ width: "90px"}}><Switch size="small" /></span>
-                    </div>
-                    <div className="d-flex justify-content-between my-3">
-                        <span>Web Application</span>
-                        <span className="d-flex justify-content-center" style={{ width: "90px"}}><Switch size="small" /></span>
-                    </div>
-                    <div className="d-flex justify-content-between my-3">
-                        <span>Zoom Meeting</span>
-                        <span className="d-flex justify-content-center" style={{ width: "90px"}}><Switch size="small" /></span>
-                    </div>
-                    <div className="d-flex justify-content-between my-3">
-                        <span>AR</span>
-                        <span className="d-flex justify-content-center" style={{ width: "90px"}}><Switch size="small" /></span>
-                    </div>
+                <div style={{ width: "40%", paddingLeft: "18px" }}>
+                  <div className="d-flex justify-content-between font-weight-bold my-3">
+                    <span>Type</span>
+                    <span
+                      className="d-flex justify-content-center"
+                      style={{ width: "90px" }}
+                    >
+                      Access
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between my-3">
+                    <span>Mobile Application</span>
+                    <span
+                      className="d-flex justify-content-center"
+                      style={{ width: "90px" }}
+                    >
+                      <Switch size="small" />
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between my-3">
+                    <span>Web Application</span>
+                    <span
+                      className="d-flex justify-content-center"
+                      style={{ width: "90px" }}
+                    >
+                      <Switch size="small" />
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between my-3">
+                    <span>Zoom Meeting</span>
+                    <span
+                      className="d-flex justify-content-center"
+                      style={{ width: "90px" }}
+                    >
+                      <Switch size="small" />
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between my-3">
+                    <span>AR</span>
+                    <span
+                      className="d-flex justify-content-center"
+                      style={{ width: "90px" }}
+                    >
+                      <Switch size="small" />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AssignDepart /> <span className="ml-2">Assign Department</span>
-        </div>
-      )} key="7">
-
-          <div className="border rounded bg-white p-3 mt-4">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <AssignDepart /> <span className="ml-2">Assign Department</span>
+              </div>
+            }
+            key="7"
+          >
+            <div className="border rounded bg-white p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="assign_department"
-                    label="Assign Department"
-                  >
+                  <Form.Item name="assign_department" label="Assign Department">
                     <Select
                       placeholder="Select Department"
                       style={{ width: "100%" }}
@@ -1116,10 +1303,7 @@ export default function AddNew() {
               </div>
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="manager"
-                    label="Manager"
-                  >
+                  <Form.Item name="manager" label="Manager">
                     <Select
                       placeholder="Select Manager"
                       style={{ width: "100%" }}
@@ -1128,7 +1312,6 @@ export default function AddNew() {
                     />
                   </Form.Item>
                 </div>
-                
               </div>
             </div>
           </TabPane>
@@ -1138,27 +1321,30 @@ export default function AddNew() {
             style={{ gap: "10px" }}
             className="mt-5 d-flex justify-content-end"
           >
-            {
-                activeTab>1 ? 
-                <Button
-                  className="px-4 font-weight-semibold"
-                  htmlType="button"
-                  onClick={handleBackClick}
-                >
-                  Back
-                </Button> : ''
-            }
+            {activeTab > 1 ? (
+              <Button
+                className="px-4 font-weight-semibold"
+                htmlType="button"
+                onClick={handleBackClick}
+              >
+                Back
+              </Button>
+            ) : (
+              ""
+            )}
             <Button className="px-4 font-weight-semibold" htmlType="button">
               Clear All
             </Button>
-            {
-                activeTab<7 ? <Button
+            {activeTab < 7 ? (
+              <Button
                 className="px-4 font-weight-semibold text-white bg-info"
                 onClick={handleNextClick}
               >
                 Next
-              </Button> : ''
-            }
+              </Button>
+            ) : (
+              ""
+            )}
             <Button
               className="px-4 font-weight-semibold text-white bg-info"
               htmlType="submit"
@@ -1180,16 +1366,29 @@ export default function AddNew() {
           <h5>Staff ID #TC-1234 will be deleted from system</h5>
         </div>
         <div
-            style={{ gap: "10px" }}
-            className="mt-5 d-flex justify-content-end"
+          style={{ gap: "10px" }}
+          className="mt-5 d-flex justify-content-end"
+        >
+          <Button
+            className="px-4 font-weight-semibold"
+            onClick={() => setIsDeactiveModalOpen(false)}
           >
-            <Button className="px-4 font-weight-semibold" onClick={()=>setIsDeactiveModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsDeactiveModalOpen(false); setSuccesmodaltext({title:'Staff Deactivated',text:'Staff ID #TC-1234 deleted.'});setSuccessModal(true)}}>
-              Yes, confirm
-            </Button>
-          </div>
+            Cancel
+          </Button>
+          <Button
+            className="px-4 font-weight-semibold text-white bg-info"
+            onClick={() => {
+              setIsDeactiveModalOpen(false);
+              setSuccesmodaltext({
+                title: "Staff Deactivated",
+                text: "Staff ID #TC-1234 deleted.",
+              });
+              setSuccessModal(true);
+            }}
+          >
+            Yes, confirm
+          </Button>
+        </div>
       </Modal>
       <Modal
         width={600}
@@ -1204,7 +1403,7 @@ export default function AddNew() {
           <Select
             placeholder="Select"
             optionFilterProp="children"
-            onChange={(val)=>console.log(`selected ${val}`)}
+            onChange={(val) => console.log(`selected ${val}`)}
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
@@ -1229,16 +1428,29 @@ export default function AddNew() {
           />
         </div>
         <div
-            style={{ gap: "10px" }}
-            className="mt-5 d-flex justify-content-end"
+          style={{ gap: "10px" }}
+          className="mt-5 d-flex justify-content-end"
+        >
+          <Button
+            className="px-4 font-weight-semibold"
+            onClick={() => setIsChangeStudModalOpen(false)}
           >
-            <Button className="px-4 font-weight-semibold" onClick={()=>setIsChangeStudModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsChangeStudModalOpen(false);setSuccesmodaltext({title:'Employee Status Change',text:'Employee status changed to terminated.'});setSuccessModal(true)}}>
-              Save
-            </Button>
-          </div>
+            Cancel
+          </Button>
+          <Button
+            className="px-4 font-weight-semibold text-white bg-info"
+            onClick={() => {
+              setIsChangeStudModalOpen(false);
+              setSuccesmodaltext({
+                title: "Employee Status Change",
+                text: "Employee status changed to terminated.",
+              });
+              setSuccessModal(true);
+            }}
+          >
+            Save
+          </Button>
+        </div>
       </Modal>
       <Modal
         width={500}
@@ -1261,9 +1473,11 @@ export default function AddNew() {
               fill="#00AB6F"
             />
           </svg>
-          <h3 className="font-weight-bold mt-4">{succesmodaltext.title} Successfully!</h3>
+          <h3 className="font-weight-bold mt-4">
+            {succesmodaltext.title} Successfully!
+          </h3>
           <span className="text-center font-size-sm w-75 font-weight-semibold">
-          {succesmodaltext.text}
+            {succesmodaltext.text}
           </span>
         </div>
       </Modal>

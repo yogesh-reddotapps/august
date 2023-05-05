@@ -5,7 +5,7 @@ import CustomIcon from 'components/util-components/CustomIcon'
 import SearchBox from "components/shared-components/SearchBox";
 import { Link } from "react-router-dom";
 import Filter from "components/shared-components/Filter";
-import { Edit, CsvIcon, AlertTick } from "assets/svg/icon";
+import { Edit, CsvIcon, AlertTick, LessonTypeText, LessonTypeVideo, LessonTypeMusic, LessonTypeQuestion } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import Helper from "../../../../Helper";
 import { useLocation, useHistory } from "react-router-dom";
@@ -32,6 +32,16 @@ const ClassAttend = () => {
     {
       title: "Lesson Type",
       dataIndex: "Lesson_Type",
+      render: (type) => {
+        return (
+          <> 
+          {type==='text' ? <LessonTypeText/> :''}
+          {type==='video' ? <LessonTypeVideo/> :''}
+          {type==='music' ? <LessonTypeMusic/> :''}
+          {type==='question' ? <LessonTypeQuestion/> :''}
+          </>
+        );
+      },
     },
     {
       title: "Estimated Time (Mins)",
@@ -69,19 +79,19 @@ const ClassAttend = () => {
     {
       Sr_No: 1,
       Lesson_Module: 'Module 1',
-      Lesson_Type: 'Video',
+      Lesson_Type: 'video',
       Estimated_Time: 20,
     },
     {
       Sr_No: 2,
       Lesson_Module: 'Module 2',
-      Lesson_Type: 'Quiz',
+      Lesson_Type: 'text',
       Estimated_Time: 10,
     },
     {
       Sr_No: 3,
       Lesson_Module: 'Module 3',
-      Lesson_Type: 'Text',
+      Lesson_Type: 'music',
       Estimated_Time: 15,
     },
   ];

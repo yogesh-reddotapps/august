@@ -120,6 +120,24 @@ const Filter = (props) => {
       </Menu.SubMenu>
     </Menu>
   );
+  const subjects = (
+    <Menu>
+      <Menu.Item key="subitem1">
+        <>All</>
+      </Menu.Item>
+      <Menu.SubMenu key="item3" title="Sections">
+        <Menu.Item key="subitem1">
+          <Checkbox>All</Checkbox>
+        </Menu.Item>{" "}
+        <Menu.Item key="subitem1">
+          <Checkbox>Section 1- Course Intro</Checkbox>
+        </Menu.Item>{" "}
+        <Menu.Item key="subitem2">
+          <Checkbox>Section 2- Course Intro</Checkbox>
+        </Menu.Item>
+      </Menu.SubMenu>
+    </Menu>
+  );
 
   if (props.type == "course_curriculam") {
     return (
@@ -131,6 +149,13 @@ const Filter = (props) => {
   if (props.type == "curriculam_det") {
     return (
       <Dropdown overlay={curriculam_det} placement="bottomLeft">
+        {props.children}
+      </Dropdown>
+    );
+  }
+  if (props.type == "subjects") {
+    return (
+      <Dropdown overlay={subjects} placement="bottomLeft">
         {props.children}
       </Dropdown>
     );

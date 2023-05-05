@@ -30,6 +30,7 @@ export class NavPanel extends Component {
   render() {
     return (
       <>
+      <div className="d-flex align-items-center">
         <Menu mode="horizontal">
           <Menu.Item key="search">
             <span>
@@ -116,6 +117,11 @@ export class NavPanel extends Component {
               </div>
           </Menu.SubMenu>
         </Menu>
+        <div className="">
+                    <h5 className="m-0 text-white">John Smith</h5>
+                    <h5 style={{color:'grey'}} className="m-0">System Admin</h5>
+                </div>
+      </div>
       </>
     );
   }

@@ -1,6 +1,7 @@
 import React,{useState} from "react";
 import { Button, Input} from "antd";
 import { UploadFileIcon } from "assets/svg/icon";
+import { CloseCircleOutlined } from "@ant-design/icons";
 
 const AddNew = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -9,7 +10,7 @@ const AddNew = () => {
       listStyle: "none",
       display: "flex",
       alignItems: "center",
-      justifyContent: "flex-start",
+      justifyContent: "space-between",
       gap: "13px",
       border: "1px solid lightblue",
       padding: "10px",
@@ -52,6 +53,12 @@ const AddNew = () => {
     //   console.log(selectedFiles)
 
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
+  }
+  const delUplFile = (i) => {
+    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
+      return index!==i
+    })
+    setSelectedFiles(AfterDeleteFile);
   }
   return (
     <>
@@ -107,14 +114,14 @@ const AddNew = () => {
         </div>
         <div className="mt-4">
           {selectedFiles.length > 0 && (
-            <ul>
-              {selectedFiles.map((file) => (
-                    <li key={file.name} className="my-3" style={styles.files}>
-                      {" "}
-                      <UploadFileIcon /> {file.name}
-                    </li>
-                  ))}
-            </ul>
+            <ul className="p-0" style={{width:'40%'}}>
+            {selectedFiles.map((file,i) => (
+              <li key={file.name} className="my-3" style={styles.files}>
+                {" "}
+                <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
+              </li>
+            ))}
+          </ul>
           )}
         </div>
       </div>

@@ -100,3 +100,6 @@
   height: 30px;
   border-radius: 50%;
 }
+th.ant-table-cell{
+  color: #3e79f7 !important;
+}

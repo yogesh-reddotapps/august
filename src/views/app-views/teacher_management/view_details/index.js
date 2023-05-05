@@ -400,7 +400,7 @@ function FacilityBooking() {
           <h5>Wade Smith</h5>
           <br/>
           <h5 className="font-weight-bold">Ratings</h5>
-          <Rate value={3} />
+          <Rate />
           <br/>
           <h5 className="font-weight-bold">Remarks</h5>
           <TextArea rows={4} />

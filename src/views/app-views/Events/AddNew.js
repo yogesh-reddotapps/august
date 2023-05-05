@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Tabs } from "antd";
 import { useLocation, useParams } from "react-router-dom";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined,CloseCircleOutlined } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
 
 export default function AddNew() {
@@ -69,7 +69,7 @@ export default function AddNew() {
     listStyle: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "space-between",
     gap: "13px",
     border: "1px solid lightblue",
     padding: "10px",
@@ -189,7 +189,12 @@ export default function AddNew() {
 
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
-
+  const delUplFile = (i) => {
+    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
+      return index!==i
+    })
+    setSelectedFiles(AfterDeleteFile);
+  }
   useEffect(() => {
     if (
       location.pathname ===
@@ -301,8 +306,8 @@ export default function AddNew() {
               </div>
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
+                <Form.Item
+                    name="Nationality"
                     label="Nationality"
                     rules={[
                       { required: true, message: "Please enter Nationality" },
@@ -331,8 +336,8 @@ export default function AddNew() {
                   </Form.Item>
                 </div>
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="name"
+                <Form.Item
+                    name="Residency"
                     label="Residency Status"
                     rules={[
                       {
@@ -341,7 +346,19 @@ export default function AddNew() {
                       },
                     ]}
                   >
-                    <Input placeholder="Residency Status" />
+                    <Select
+                      placeholder="Residency"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        {
+                          value: "Permeant_Resident",
+                          label: "Permeant Resident",
+                        },
+                        { value: "Citizen", label: "Citizen" },
+                        { value: "Non_native", label: "Non-native" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item
                     name="phone number"
@@ -374,16 +391,27 @@ export default function AddNew() {
                     </Radio.Group>
                   </Form.Item>
                   <Form.Item
-                    name="period"
+                    name="Race"
                     label="Race"
                     rules={[{ required: true, message: "Please enter Race" }]}
                   >
-                    <Input min={1} placeholder="Race" />
+                    <Select
+                      placeholder="Race"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        { value: "Chinese", label: "Chinese" },
+                        { value: "Malay", label: "Malay" },
+                        { value: "Indian", label: "Indian" },
+                        { value: "Myanmarese", label: "Myanmarese" },
+                        { value: "Burmese", label: "Burmese" },
+                      ]}
+                    />
                   </Form.Item>
                 </div>
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="name"
+                <Form.Item
+                    name="Married"
                     label="Married Status"
                     rules={[
                       {
@@ -397,8 +425,11 @@ export default function AddNew() {
                       style={{ width: "100%" }}
                       onChange={handleChange}
                       options={[
-                        { value: "Singapore", label: "Married" },
-                        { value: "Singapore", label: "Unmarried" },
+                        { value: "Married", label: "Married" },
+                        { value: "Single", label: "Single" },
+                        { value: "Widowed", label: "Widowed" },
+                        { value: "Separated", label: "Separated" },
+                        { value: "Divorced", label: "Divorced" },
                       ]}
                     />
                   </Form.Item>
@@ -421,14 +452,22 @@ export default function AddNew() {
             <div className="border bg-white rounded p-3 mt-4">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
+                <Form.Item
+                    name="Role"
                     label="Role"
                     rules={[
                       { required: true, message: "Please enter Staff Role" },
                     ]}
                   >
-                    <Input placeholder="Role" />
+                    <Select
+                      placeholder="Role"
+                      style={{ width: "100%" }}
+                      onChange={handleChange}
+                      options={[
+                        { value: "Ops_Manager", label: "Ops Manager" },
+                        { value: "Crew", label: "Crew" },
+                      ]}
+                    />
                   </Form.Item>
                   <Form.Item
                     name="period"
@@ -863,13 +902,13 @@ export default function AddNew() {
               </div>
               <div className="mt-4">
                 {selectedFiles.length > 0 && (
-                  <ul>
-                    {selectedFiles.map((file) => (
-                    <li key={file.name} className="my-3" style={styles.files}>
-                      {" "}
-                      <UploadFileIcon /> {file.name}
-                    </li>
-                  ))}
+                  <ul className="p-0" style={{width:'40%'}}>
+                    {selectedFiles.map((file,i) => (
+                      <li key={file.name} className="my-3" style={styles.files}>
+                        {" "}
+                        <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
+                      </li>
+                    ))}
                   </ul>
                 )}
               </div>

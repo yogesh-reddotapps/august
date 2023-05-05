@@ -55,10 +55,10 @@ const AddNewLesson = () => {
           <h5>Subject</h5>
           <Input placeholder="Subject Name" />
         </div>
-        <div className="mt-4">
+        {/* <div className="mt-4">
           <h5>Course Name</h5>
           <Input className="w-50" placeholder="Course Name" />
-        </div>
+        </div> */}
         <div className="mt-4">
           <h5>Chapters</h5>
 

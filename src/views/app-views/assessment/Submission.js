@@ -145,14 +145,14 @@ function Submission() {
       },
     },
     {
-      title: "Id Upload",
+      title: "Id Uploaded",
       dataIndex: "nationality",
       render: (avatar) => {
         return <img src="/img/idcard.png" />;
       },
     },
     {
-      title: "Id Upload",
+      title: "Id Uploaded",
       dataIndex: "nationality",
       render: (flag) => {
         return <div> Pending </div>;
@@ -172,7 +172,7 @@ function Submission() {
                       {" "}
                       <div className="d-flex align-items-center">
                         <AcceptTick />
-                        Accept
+                        Accept Verification
                       </div>
                     </Link>
                   </Menu.Item>
@@ -181,7 +181,7 @@ function Submission() {
                       {" "}
                       <div className="d-flex align-items-center">
                         <CancelCross />
-                        Reject
+                        Reject Verification
                       </div>
                     </span>
                   </Menu.Item>
@@ -218,6 +218,23 @@ function Submission() {
       key: 1,
       children: (
         <div>
+          <div className="" style={{ display: "flex", marginBottom: "10px" }}>
+            <SearchBox />
+            <Filter>
+              <Button
+                icon={<Icon component={FilterIcon} />}
+                className="d-flex align-items-center ml-2"
+              >
+                Filters
+              </Button>
+            </Filter>
+            <Button
+              icon={<Icon component={ExportIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
           <Helper
             clients={facilityBooking}
             attribiue={facilityBookingColumns}
@@ -230,6 +247,23 @@ function Submission() {
       key: 2,
       children: (
         <div>
+          <div className="" style={{ display: "flex", marginBottom: "10px" }}>
+            <SearchBox />
+            <Filter>
+              <Button
+                icon={<Icon component={FilterIcon} />}
+                className="d-flex align-items-center ml-2"
+              >
+                Filters
+              </Button>
+            </Filter>
+            <Button
+              icon={<Icon component={ExportIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
           <Helper
             clients={membershipRequestData}
             attribiue={membershipRequestColumns}
@@ -322,7 +356,8 @@ function Submission() {
           </table>
         </div>
 
-        <Tabs tabBarExtraContent={operations}>
+        {/* <Tabs tabBarExtraContent={operations}> */}
+        <Tabs>
           {items.map((item) => (
             <Tabs.TabPane tab={item.label} key={item.key}>
               {item.children}
