@@ -1,6 +1,6 @@
 import { Button, Form, Input, Menu, Select, Switch } from 'antd'
 import EllipsisDropdown from 'components/shared-components/EllipsisDropdown'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import '../Membership_Request/MembershipRequest.css'
 import { DeleteOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons'
 import { membershipRequest } from '../data'
@@ -9,6 +9,7 @@ import { Account, Edit, Export, ExportIcon, FilterIcon, History, Verified } from
 import Helper from '../Helper'
 import { Modal, Drawer } from 'antd';
 // import Drawer from 'react-modern-drawer'
+import axios from "axios";
 import 'react-modern-drawer/dist/index.css'
 import SearchBox from 'components/shared-components/SearchBox'
 import Filter from 'components/shared-components/Filter'
@@ -45,6 +46,26 @@ export default function MembershipRequest() {
     setIsModalOpen(false);
   };
 
+  const getEvents = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/get-admins",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+
+        setmembershipRequestData(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   const onDeleteData = (record) => {
     Modal.confirm({
       title: "Are you sure, you want to delete this members record ?",
@@ -57,6 +78,10 @@ export default function MembershipRequest() {
       }
     })
   }
+
+  useEffect(() => {
+    getEvents();
+  }, []);
 
   const membershipRequestColumns = [
     {
@@ -71,12 +96,12 @@ export default function MembershipRequest() {
     },
     {
       title: "Admin Username",
-      dataIndex: 'applicant_name',
+      dataIndex: 'name',
     },
    
     {
       title: "Mobile Number",
-      dataIndex: 'phone',
+      dataIndex: 'phone_number' ,
     },
     {
       title: "Email ID",
@@ -88,7 +113,7 @@ export default function MembershipRequest() {
     },
     {
       title:"Last Login Date",
-      dataIndex:'lastLoginDate'
+      dataIndex:'lastLoginTime'
     },
     {
       title: "Status",

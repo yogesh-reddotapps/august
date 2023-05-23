@@ -67,7 +67,7 @@ export default function AddNew() {
           },
         }
       );
-      console.log(response);
+      console.log("response", response);
       if (response.status === 200) {
         setSuccesmodaltext({
           title: "New Admin added successfully!",
@@ -76,7 +76,7 @@ export default function AddNew() {
         setSuccessModal(true);
       }
     } catch (error) {
-      console.log(error);
+      console.log("error", error);
     }
   };
   
