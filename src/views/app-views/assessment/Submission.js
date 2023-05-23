@@ -1,4 +1,4 @@
-import { Button, Menu, Modal, Select } from "antd";
+import { Button, Divider, Menu, Modal, Select } from "antd";
 import {
   Export,
   ExportIcon,
@@ -50,6 +50,13 @@ function Submission() {
       dataIndex: "applicant_name",
     },
     {
+      title: "Batch ID",
+      dataIndex: "result",
+      render: (text) => {
+        return <div>#W1-B2</div>;
+      },
+    },
+    {
       title: "Verified On",
       dataIndex: "event_time",
     },
@@ -81,7 +88,7 @@ function Submission() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="/app/assessment/view-submission">
+                    <Link to="submission/view-submission">
                       {" "}
                       <div className="d-flex align-items-center">
                         <AssessQue color={"#455560"} className="mr-2 " />
@@ -135,6 +142,13 @@ function Submission() {
       dataIndex: "name",
       render: (avatar) => {
         return <h5>16 Jan 2023</h5>;
+      },
+    },
+    {
+      title: "Batch ID",
+      dataIndex: "name",
+      render: (avatar) => {
+        return <h5>#W1-BS</h5>;
       },
     },
     {
@@ -306,57 +320,68 @@ function Submission() {
   };
 
   return (
-    <div>
-      <div className="border rounded p-3 mb-4 bg-white">
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <th
-                  className="p-2"
-                  style={{ width: "300px", textAlign: "left" }}
-                >
-                  Course
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "300px", textAlign: "left" }}
-                >
-                  Assesment
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "300px", textAlign: "left" }}
-                >
-                  Total Questions
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "300px", textAlign: "left" }}
-                >
-                  Submission
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "300px", textAlign: "left" }}
-                >
-                  Pending Submissions
-                </th>
-              </tr>
-              <tr>
-                <td className="p-2">
+    <div className="tabbarWhite">
+      <div className="p-3 bg-white">
+      <div
+          style={{ background: "#fafafb" }}
+          className="mb-4 rounded d-flex justify-content-between align-items-start w-100 p-3"
+        >
+          <div
+            style={{ gap: "10px",width:'80%' }}
+            className="d-flex align-items-start p-3 w-100 justify-content-between"
+          >
+            <div>
+              <div>
+                <h5 className="m-0">ID</h5>
+                <p className="m-0">#21</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div style={{ gap: "10px" }} className="d-flex align-items-top">
+              <div>
+                <img height={40} width={40} src="/img/avatar3.png" alt="img" />
+              </div>
+              <div style={{ width: "330px" }}>
+                <h5 className="m-0">Course</h5>
+                <div className="d-flex align-items-center">
                   Workplace Safety and Health in Construction Sites
-                </td>
-                <td className="p-2">Assesment 1</td>
-                <td className="p-2">25</td>
-                <td className="p-2">5</td>
-                <td className="p-2">10</td>
-              </tr>
-            </tbody>
-          </table>
+                </div>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Course Category</h5>
+                <p className="m-0">Safety courses</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Assessment Title</h5>
+                <p className="m-0">Assessment 1</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Submitted By</h5>
+                <p className="m-0">10</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Pending Submissions</h5>
+                <p className="m-0">20</p>
+              </div>
+            </div>
+          </div>
+          
         </div>
 
         {/* <Tabs tabBarExtraContent={operations}> */}
+      </div>
         <Tabs>
           {items.map((item) => (
             <Tabs.TabPane tab={item.label} key={item.key}>
@@ -364,7 +389,6 @@ function Submission() {
             </Tabs.TabPane>
           ))}
         </Tabs>
-      </div>
 
       <div className="d-flex justify-content-between mb-3">
         {/* <div className="" style={{ display: "flex" }}>

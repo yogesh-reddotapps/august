@@ -15,7 +15,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Events.css";
-import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EyeOutlined,CloseCircleOutlined } from "@ant-design/icons";
 import { membershipEventBooking } from "../data";
 import Helper from "../Helper";
 import axios from "axios";
@@ -93,6 +93,12 @@ export default function Events() {
       setIsSuccModalOpen(false)
     }, 1500);
   }
+  const delUplFile = (i) => {
+    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
+      return index!==i
+    })
+    setSelectedFiles(AfterDeleteFile);
+  }
   const onDeleteData = (record, dataSet, Id) => {
     // console.log(Id)
     // console.log(record)
@@ -109,49 +115,49 @@ export default function Events() {
   const membershipRequestColumns = [
     {
       title: "User ID",
-      dataIndex: "id",
+      dataIndex: "user_id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img style={{borderRadius:'50%'}} width={50} height={50} src={`${avatar}`} alt="..."/>;
       },
     },
     {
       title: "Student Name",
-      dataIndex: "applicant_name",
+      dataIndex: "name",
     },
     {
       title: "Date of Birth",
       dataIndex: "event_time",
     },
-    {
-      title: "Age",
-      dataIndex: "age",
-    },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      render: (text) => {
-        return (
-          <img
-            src={`${text !== "male" ? "/img/female.png" : "/img/male.png"}`}
-          ></img>
-        );
-      },
-    },
-    {
-      title: "Nationality",
-      dataIndex: "nationality",
-      render: (flag) => {
-        return (
-          <img
-            width="20px"
-            src={`${flag === "Singapore" ? "/img/flag.jpg" : ""}`}
-          ></img>
-        );
-      },
-    },
+    // {
+    //   title: "Age",
+    //   dataIndex: "age",
+    // },
+    // {
+    //   title: "Gender",
+    //   dataIndex: "gender",
+    //   render: (text) => {
+    //     return (
+    //       <img
+    //         src={`${text !== "male" ? "/img/female.png" : "/img/male.png"}`}
+    //       ></img>
+    //     );
+    //   },
+    // },
+    // {
+    //   title: "Nationality",
+    //   dataIndex: "nationality",
+    //   render: (flag) => {
+    //     return (
+    //       <img
+    //         width="20px"
+    //         src={`${flag === "Singapore" ? "/img/flag.jpg" : ""}`}
+    //       ></img>
+    //     );
+    //   },
+    // },
     {
       title: "Mobile Number",
       dataIndex: "phone",
@@ -223,14 +229,22 @@ export default function Events() {
   ];
 
   const getEvents = () => {
-    axios.get("http://127.0.0.1:3333/events").then((response) => {
-      console.log(response.data.result);
-      if (response.data.status) {
-        setEventsData(response.data.result);
-      } else {
-        console.log(response);
-      }
-    });
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/get-students",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setmembershipRequestData(res.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const deleteEvents = (record, dataSet, Id) => {
@@ -352,16 +366,16 @@ export default function Events() {
             />
           </div>
           <div className="mt-4">
-            {selectedFiles.length > 0 && (
-              <ul style={{ padding: 0 }}>
-                {selectedFiles.map((file) => (
-                  <li key={file.name} className="my-3" style={styles.files}>
-                    {" "}
-                    <UploadFileIcon /> {file.name}
-                  </li>
-                ))}
-              </ul>
-            )}
+          {selectedFiles.length > 0 && (
+                  <ul className="p-0" style={{width:'450px'}}>
+                    {selectedFiles.map((file,i) => (
+                      <li key={file.name} className="my-3" style={styles.files}>
+                        {" "}
+                        <div className="d-flex align-items-center"><UploadFileIcon /> <span style={{maxWidth:'344px'}} className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
           </div>
           <div
             style={{ gap: "10px" }}

@@ -71,13 +71,6 @@ function FacilityBooking() {
       }
     },
     {
-      title: "Chapters",
-      dataIndex: "enroll",
-      render: (avatar) => {
-        return <div>20</div>;
-      }
-    },
-    {
       title: "Lessons",
       dataIndex: "enroll",
       render: (avatar) => {
@@ -89,14 +82,6 @@ function FacilityBooking() {
       title: "Students Enroll",
       dataIndex: "enroll",
     },
-    // {
-    //   title: "Assignments",
-    //   dataIndex: "assignment",
-    // },
-    // {
-    //   title: "Assesment",
-    //   dataIndex: "assesment",
-    // },
     {
       title: "Status",
       dataIndex: "status",
@@ -104,7 +89,7 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text !== "active" ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
             {text}
@@ -128,7 +113,7 @@ function FacilityBooking() {
                       View Details
                     </Link>
                   </Menu.Item>
-                  <Menu.Item>
+                  {/* <Menu.Item>
                     <Link to="assessment">
                       {" "}
                       <FileUnknownOutlined className="mr-2 " />
@@ -158,7 +143,7 @@ function FacilityBooking() {
                         </span>
                       </div>
                     </Link>
-                  </Menu.Item>
+                  </Menu.Item> */}
                 </Menu>
               }
             />

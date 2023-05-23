@@ -504,7 +504,9 @@ export const membershipRequest = [
         gender:"male",
         nationality:"Singapore",
         role:"Manager",
-        avatar:"/img/Avatar.png"
+        avatar:"/img/Avatar.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
     {
         id: "#125",
@@ -517,7 +519,9 @@ export const membershipRequest = [
         gender:"female",
         nationality:"Singapore",
         role:"Teacher",
-        avatar:"/img/Avatar 2.png"
+        avatar:"/img/Avatar 2.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
     {
         id: "#121",
@@ -530,7 +534,9 @@ export const membershipRequest = [
         gender:"male",
         nationality:"Singapore",
         role:"Manager",
-        avatar:"/img/Avatar.png"
+        avatar:"/img/Avatar.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
     {
         id: "#120",
@@ -543,7 +549,9 @@ export const membershipRequest = [
         gender:"female",
         nationality:"Singapore",
         role:"Teacher",
-        avatar:"/img/Avatar 2.png"
+        avatar:"/img/Avatar 2.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
     {
         id: "#129",
@@ -556,7 +564,9 @@ export const membershipRequest = [
         gender:"male",
         nationality:"Singapore",
         role:"Manager",
-        avatar:"/img/Avatar.png"
+        avatar:"/img/Avatar.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
     {
         id: "#130",
@@ -569,7 +579,9 @@ export const membershipRequest = [
         gender:"female",
         nationality:"Singapore",
         role:"Teacher",
-        avatar:"/img/Avatar 2.png"
+        avatar:"/img/Avatar 2.png",
+        dob:'11 Jan 1990',
+        lastLoginDate:'11 May 2023, 10:00:25 Am'
     },
   
 ]

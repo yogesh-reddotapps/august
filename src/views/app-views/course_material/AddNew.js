@@ -1,5 +1,5 @@
-import React,{useState} from "react";
-import { Button, Input} from "antd";
+import React, { useState } from "react";
+import { Button, Input } from "antd";
 import { UploadFileIcon } from "assets/svg/icon";
 import { CloseCircleOutlined } from "@ant-design/icons";
 
@@ -55,17 +55,17 @@ const AddNew = () => {
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
   const delUplFile = (i) => {
-    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
-      return index!==i
-    })
+    let AfterDeleteFile = selectedFiles.filter((elem, index) => {
+      return index !== i;
+    });
     setSelectedFiles(AfterDeleteFile);
-  }
+  };
   return (
     <>
       <div className="border rounded p-3 mt-4 bg-white">
         <div className="w-50 mb-4 mt-3">
-            <h5>Title</h5>
-            <Input placeholder="Type here" />
+          <h5>Title</h5>
+          <Input placeholder="Type here" />
         </div>
         <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
           <svg
@@ -114,39 +114,46 @@ const AddNew = () => {
         </div>
         <div className="mt-4">
           {selectedFiles.length > 0 && (
-            <ul className="p-0" style={{width:'40%'}}>
-            {selectedFiles.map((file,i) => (
-              <li key={file.name} className="my-3" style={styles.files}>
-                {" "}
-                <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
-              </li>
-            ))}
-          </ul>
+            <ul className="p-0" style={{ width: "40%" }}>
+              {selectedFiles.map((file, i) => (
+                <li key={file.name} className="my-3" style={styles.files}>
+                  {" "}
+                  <div className="d-flex align-items-start">
+                    <UploadFileIcon />{" "}
+                    <span className="ml-2">{file.name} <p className="m-0">Uploaded 1min ago</p></span>{" "}
+                  </div>
+                  <span
+                    style={{ cursor: "pointer" }}
+                    onClick={() => delUplFile(i)}
+                  >
+                    {" "}
+                    <CloseCircleOutlined />{" "}
+                  </span>
+                </li>
+              ))}
+            </ul>
           )}
         </div>
       </div>
-      <div
-            style={{ gap: "10px" }}
-            className="mt-5 d-flex justify-content-end"
-          >
-      <Button
-                className="px-4 font-weight-semibold"
-                htmlType="button"
-                onClick={()=>console.log('test')}
-              >
-                Back
-              </Button>
-            <Button className="px-4 font-weight-semibold" htmlType="button">
-              Clear All
-            </Button>
-            
-            <Button
-              className="px-4 font-weight-semibold text-white bg-info"
-              htmlType="submit"
-            >
-              Save
-            </Button>
-            </div>
+      <div style={{ gap: "10px" }} className="mt-5 d-flex justify-content-end">
+        <Button
+          className="px-4 font-weight-semibold"
+          htmlType="button"
+          onClick={() => console.log("test")}
+        >
+          Back
+        </Button>
+        <Button className="px-4 font-weight-semibold" htmlType="button">
+          Clear All
+        </Button>
+
+        <Button
+          className="px-4 font-weight-semibold text-white bg-info"
+          htmlType="submit"
+        >
+          Save
+        </Button>
+      </div>
     </>
   );
 };

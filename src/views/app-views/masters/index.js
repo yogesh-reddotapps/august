@@ -1,22 +1,83 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
-import { Button, Menu } from "antd";
-import { FilterIcon, CsvIcon,Edit,ViewSubject, AlertTick } from "assets/svg/icon";
+import { Button, Menu, Select } from "antd";
+import {
+  FilterIcon,
+  CsvIcon,
+  Edit,
+  ViewSubject,
+  AlertTick,
+  ExportIcon,
+} from "assets/svg/icon";
 import Helper from "../Helper";
-import CustomIcon from 'components/util-components/CustomIcon'
+import CustomIcon from "components/util-components/CustomIcon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import { DeleteOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
-import { useLocation,Link ,useHistory  } from "react-router-dom";
+import { useLocation, Link, useHistory } from "react-router-dom";
+import Search from "antd/lib/transfer/search";
+import axios from "axios";
+
+const { Option } = Select;
+const languageArr = [
+  {
+    ID: 1,
+    Language_Code: "en",
+    Language_Name: "English",
+    Updated_On: "2023-05-17",
+  },
+  {
+    ID: 2,
+    Language_Code: "fr",
+    Language_Name: "French",
+    Updated_On: "2023-05-17",
+  },
+  {
+    ID: 3,
+    Language_Code: "es",
+    Language_Name: "Spanish",
+    Updated_On: "2023-05-17",
+  },
+];
+// const certData = [
+//   {
+//     User_ID: 1,
+//     Course_Category: "Programming",
+//     Course: "JavaScript",
+//     Medium: "English",
+//     Duration: "6 weeks",
+//     Course_Price: 99.99,
+//   },
+//   {
+//     User_ID: 2,
+//     Course_Category: "Design",
+//     Course: "Graphic Design",
+//     Medium: "English, Chinese, Tamil, Bengali, Hindi, Malay, Thai, Burmese",
+//     Duration: "8 weeks",
+//     Course_Price: 199.99,
+//   },
+//   {
+//     User_ID: 3,
+//     Course_Category: "Language",
+//     Course: "Spanish",
+//     Medium: "English",
+//     Duration: "12 weeks",
+//     Course_Price: 149.99,
+//   },
+// ];
 const Masters = () => {
   const history = useHistory();
   const [key, setKey] = useState(1);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
-  const [alertText, setAlertText] = useState('Course category added Successfully!');
+  const [allCourses, setAllCourses] = useState([])
+  const [allLang, setAllLang] = useState([])
+  const [alertText, setAlertText] = useState(
+    "Course category added Successfully!"
+  );
 
   const addParam = queryParams.get("add");
 
@@ -59,8 +120,6 @@ const Masters = () => {
     },
   ];
 
-  console.log(dummyData);
-
   const assData = [
     {
       Id: 1,
@@ -100,28 +159,6 @@ const Masters = () => {
       dataIndex: "Venue_Capacity",
     },
     {
-      title: "Created By",
-      dataIndex: "Id",
-      render: (text) => {
-        return <div>Admin</div>;
-      },
-    },
-
-    {
-      title: "Created On",
-      dataIndex: "status",
-      render: (text) => {
-        return <div>1 Jan 2023</div>;
-      },
-    },
-    {
-      title: "Updated By",
-      dataIndex: "status",
-      render: (text) => {
-        return <div>Admin</div>;
-      },
-    },
-    {
       title: "Updated On",
       dataIndex: "status",
       render: (text) => {
@@ -139,12 +176,12 @@ const Masters = () => {
                 <Menu>
                   <Menu.Item>
                     <Link to="course_enroll/assessment_submission">
-                    <DeleteOutlined className='mr-2 ' /> Delete
+                      <DeleteOutlined className="mr-2 " /> Delete
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="course_enroll/assessment_submission">
-                    <CustomIcon className='mr-2' svg={Edit} /> Edit
+                      <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -157,28 +194,18 @@ const Masters = () => {
   ];
   const facilityBookingColumns = [
     {
-      title: "Id",
+      title: "ID",
       dataIndex: "Id",
     },
     {
-      title: "Course Category",
+      dataIndex: "avatar",
+      render: (avatar) => {
+        return <img src={`/img/avatar.png`} alt="..." />;
+      },
+    },
+    {
+      title: "Course Name",
       dataIndex: "Course_Category",
-    },
-    {
-      title: "Description",
-      dataIndex: "Description",
-    },
-    {
-      title: "Created By",
-      dataIndex: "Created_By",
-    },
-    {
-      title: "Created On",
-      dataIndex: "Created_On",
-    },
-    {
-      title: "Updated By",
-      dataIndex: "Updated_By",
     },
     {
       title: "Updated On",
@@ -195,12 +222,12 @@ const Masters = () => {
                 <Menu>
                   <Menu.Item>
                     <Link to="course_enroll/assignment_submission">
-                    <DeleteOutlined className='mr-2 ' /> Delete
+                      <DeleteOutlined className="mr-2 " /> Delete
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="course_enroll/assignment_submission">
-                    <CustomIcon className='mr-2' svg={Edit} /> Edit
+                      <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -211,57 +238,82 @@ const Masters = () => {
       },
     },
   ];
-  const certData = [
+  
+
+  const languageColumn = [
     {
-      User_ID: 1,
-      Course_Category: "Programming",
-      Course: "JavaScript",
-      Medium: "Online",
-      Duration: "6 weeks",
-      Course_Price: 99.99,
+      title: "ID",
+      dataIndex: "id",
     },
     {
-      User_ID: 2,
-      Course_Category: "Design",
-      Course: "Graphic Design",
-      Medium: "In-person",
-      Duration: "8 weeks",
-      Course_Price: 199.99,
+      title: "Language Code",
+      dataIndex: "language_code",
     },
     {
-      User_ID: 3,
-      Course_Category: "Language",
-      Course: "Spanish",
-      Medium: "Online",
-      Duration: "12 weeks",
-      Course_Price: 149.99,
+      title: "Language Name",
+      dataIndex: "language_name",
+    },
+    {
+      title: "Updated On",
+      dataIndex: "updated_at",
+      render:(val)=>{
+        return<>{val===null ? "2023-05-17":val}</>
+      }
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <Link to="course_enroll/assignment_submission">
+                      <DeleteOutlined className="mr-2 " /> Delete
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to="course_enroll/assignment_submission">
+                      <CustomIcon className="mr-2" svg={Edit} /> Edit
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
     },
   ];
-
   const certificatecolumn = [
     {
-      title: "User ID",
-      dataIndex: "User_ID",
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      dataIndex: "avatar",
+      render: (avatar) => {
+        return <img src={`/img/avatar.png`} alt="..." />;
+      },
+    },
+    {
+      title: "Course Name",
+      dataIndex: "course_name",
     },
     {
       title: "Course Category",
-      dataIndex: "Course_Category",
+      dataIndex: "course_category",
     },
     {
-      title: "Course",
-      dataIndex: "Course",
-    },
-    {
-      title: "Medium",
-      dataIndex: "Medium",
+      title: "Language Available",
+      dataIndex: "medium",
+      width:300
     },
     {
       title: "Duration",
-      dataIndex: "Duration",
-    },
-    {
-      title: "Course Price",
-      dataIndex: "Course_Price",
+      dataIndex: "course_duration",
     },
     {
       title: "Action",
@@ -284,7 +336,7 @@ const Masters = () => {
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="course_enroll/assignment_submission">
-                    <CustomIcon className='mr-2' svg={Edit} /> Edit
+                      <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -297,25 +349,51 @@ const Masters = () => {
   ];
   const items = [
     {
-      label: `Course Category`,
+      label: `Languages`,
       key: 1,
       children: (
         <div>
-          <div className="membershipPlanTableSearchFilter d-flex mb-3">
-            <SearchBox />
-            <Filter>
+          <div className="membershipPlanTableSearchFilter d-flex justify-content-between mb-3">
+            <div className="d-flex">
+              <Search
+                placeholder="Search"
+                onSearch={(value) => console.log(value)}
+              />
               <Button
-                icon={<Icon component={FilterIcon} />}
+                icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
-                Filters
+                Export
               </Button>
-            </Filter>
-            <Button
-              icon={<Icon component={CsvIcon} />}
-              className="d-flex align-items-center ml-2"
-            >
-              Export
+            </div>
+            <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
+              <Link to={"masters/language/add_new_language"}> + Add New</Link>
+            </Button>
+          </div>
+          <Helper clients={allLang} attribiue={languageColumn} />
+        </div>
+      ),
+    },
+    {
+      label: `Course Category`,
+      key: 2,
+      children: (
+        <div>
+          <div className="membershipPlanTableSearchFilter d-flex justify-content-between mb-3">
+            <div className="d-flex">
+              <Search
+                placeholder="Search"
+                onSearch={(value) => console.log(value)}
+              />
+              <Button
+                icon={<Icon component={ExportIcon} />}
+                className="d-flex align-items-center ml-2"
+              >
+                Export
+              </Button>
+            </div>
+            <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
+              <Link to={"masters/course_category/add_new"}> + Add New</Link>
             </Button>
           </div>
           <Helper clients={dummyData} attribiue={facilityBookingColumns} />
@@ -324,24 +402,24 @@ const Masters = () => {
     },
     {
       label: `Venue`,
-      key: 2,
+      key: 3,
       children: (
         <div>
-          <div className="membershipPlanTableSearchFilter d-flex mb-3">
-            <SearchBox />
-            <Filter>
+          <div className="membershipPlanTableSearchFilter d-flex justify-content-between mb-3">
+            <div className="d-flex">
+              <Search
+                placeholder="Search"
+                onSearch={(value) => console.log(value)}
+              />
               <Button
-                icon={<Icon component={FilterIcon} />}
+                icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
-                Filters
+                Export
               </Button>
-            </Filter>
-            <Button
-              icon={<Icon component={CsvIcon} />}
-              className="d-flex align-items-center ml-2"
-            >
-              Export
+            </div>
+            <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
+              <Link to="masters/venue/add_new">+ Add New</Link>
             </Button>
           </div>
           <Helper clients={assData} attribiue={assessmentcolumn} />
@@ -350,96 +428,119 @@ const Masters = () => {
     },
     {
       label: `Courses`,
-      key: 3,
+      key: 4,
       children: (
         <div>
-          <div className="membershipPlanTableSearchFilter d-flex mb-3">
-            <SearchBox />
-            <Filter>
+          <div className="membershipPlanTableSearchFilter d-flex justify-content-between mb-3">
+            <div className="d-flex">
+              <div className="d-flex">
+              <Search
+                placeholder="Search"
+                onSearch={(value) => console.log(value)}
+              />
               <Button
-                icon={<Icon component={FilterIcon} />}
+                icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
-                Filters
+                Export
               </Button>
-            </Filter>
-            <Button
-              icon={<Icon component={CsvIcon} />}
-              className="d-flex align-items-center ml-2"
-            >
-              Export
+              </div>
+              <Select className="ml-2" style={{width:200}} placeholder='Course Category'>
+                <Option value="text">Test</Option>
+              </Select>
+            </div>
+            <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
+              <Link to="masters/courses/add_new">+ Add New Course</Link>
             </Button>
           </div>
-          <Helper clients={certData} attribiue={certificatecolumn} />
+          <Helper clients={allCourses} attribiue={certificatecolumn} />
         </div>
       ),
     },
   ];
 
-  const operations = (
-    <div className="mb-2 d-flex align-items-center">
-      {key == 1 && (
-        <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
-          <Link to={"masters/course_category/add_new"}> + Add New</Link>
-        </Button>
-      )}
-      {key == 2 && (
-        <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
-          <Link to="masters/venue/add_new">Add New</Link>
-        </Button>
-      )}
-      {key == 3 && (
-        <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
-          <Link to="masters/courses/add_new">Add New Course</Link>
-        </Button>
-      )}
-    </div>
-  );
+  const operations = <div className="mb-2 d-flex align-items-center"></div>;
 
   let alertstyle = {
     position: "absolute",
-    top: '0px',
+    top: "0px",
     left: 0,
     width: " 100%",
     height: "50px",
     background: "#00AB6F",
     color: "white",
-    transition:'all 0.5s ease 0s',
-    zIndex:2
+    transition: "all 0.5s ease 0s",
+    zIndex: 2,
   };
 
   const showAlert = () => {
-    if (addParam=="course_category") {
-      setAlertSuccess(true)
-      setAlertText('Course category added Successfully!')
+    if (addParam === "course_category") {
+      setAlertSuccess(true);
+      setAlertText("Course category added Successfully!");
       setTimeout(() => {
-        history.push('/app/masters')
-        setAlertSuccess(false)
+        history.push("/app/masters");
+        setAlertSuccess(false);
       }, 2000);
     }
-    if (addParam=="venue") {
-      setAlertSuccess(true)
-      setAlertText('New venue added Successfully!')
+    if (addParam === "venue") {
+      setAlertSuccess(true);
+      setAlertText("New venue added Successfully!");
       setTimeout(() => {
-        history.push('/app/masters')
-        setAlertSuccess(false)
+        history.push("/app/masters");
+        setAlertSuccess(false);
       }, 2000);
     }
-    if (addParam=="course") {
-      setAlertSuccess(true)
-      setAlertText('New course added successfully!')
+    if (addParam === "course") {
+      setAlertSuccess(true);
+      setAlertText("New course added successfully!");
       setTimeout(() => {
-        history.push('/app/masters')
-        setAlertSuccess(false)
+        history.push("/app/masters");
+        setAlertSuccess(false);
       }, 2000);
     }
+  };
+  const getAllCourses = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/get-all-courses",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setAllCourses(res.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
-
+  const getAllLanguage = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/admin-languages",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setAllLang(res.data.data);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
-    showAlert()
-  
-  }, [])
-  
+    getAllCourses()
+    getAllLanguage()
+    showAlert();
+  }, []);
+
   return (
     <div>
       {alertSuccess ? (
@@ -447,12 +548,12 @@ const Masters = () => {
           className="d-flex align-items-center justify-content-center"
           style={alertstyle}
         >
-         <AlertTick /> {alertText}
+          <AlertTick /> {alertText}
         </div>
       ) : (
         ""
       )}
-      <div className="p-3 mb-4 bg-white">
+      <div className="p-3 mb-4 tabbarWhite">
         <Tabs tabBarExtraContent={operations} onChange={(e) => setKey(e)}>
           {items.map((item) => (
             <Tabs.TabPane tab={item.label} key={item.key}>
@@ -466,3 +567,6 @@ const Masters = () => {
 };
 
 export default Masters;
+
+
+

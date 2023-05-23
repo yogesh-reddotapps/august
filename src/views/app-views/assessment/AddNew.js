@@ -144,7 +144,7 @@ const AddNew = () => {
     console.log(addQue);
   };
   return (
-    <div>
+    <div className="tabbarWhite">
       <Form
         layout="vertical"
         onFinish={onFinish}

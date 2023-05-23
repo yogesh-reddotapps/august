@@ -16,7 +16,10 @@ import {
   Dashboard,
   StaffManage,
   StudentManage,
-  CourseAndCurriculam
+  CourseAndCurriculam,
+  BatchCal,
+  CourseBatches,
+  CurriculumList
 } from "assets/svg/icon";
 
 const dashBoardNavTree = [
@@ -44,22 +47,22 @@ const dashBoardNavTree = [
         icon: StaffManage,
         breadcrumb: true,
         submenu: [
-          // {
-          //   key: 'members',
-          //   path: `${APP_PREFIX_PATH}/membership/members`,
-          //   title: 'members',
-          //   // icon: DashboardOutlined,
-          //   breadcrumb: true,
-          //   submenu: []
-          // },
-          // {
-          //   key: 'membership_request',
-          //   path: `${APP_PREFIX_PATH}/membership/membership_request`,
-          //   title: 'membership_request',
-          //   // icon: DashboardOutlined,
-          //   breadcrumb: true,
-          //   submenu: []
-          // },
+          {
+            key: 'Admin_Management',
+            path: `${APP_PREFIX_PATH}/staffManagement/admin_management`,
+            title: 'Admin Management',
+            icon: Masters,
+            breadcrumb: true,
+            submenu: []
+          },
+          {
+            key: 'Teacher_Management',
+            path: `${APP_PREFIX_PATH}/staffManagement/teacher_management`,
+            title: 'Teacher Management',
+            icon: TeacherManage,
+            breadcrumb: true,
+            submenu: []
+          },
           // {
           //   key: 'payments',
           //   path: `${APP_PREFIX_PATH}/membership/payments`,
@@ -112,12 +115,29 @@ const dashBoardNavTree = [
         ],
       },
       {
-        key: "facility_management",
-        path: `${APP_PREFIX_PATH}/Course_Curriculum`,
-        title: "facility_management",
+        key: "Course_Curriculum",
+        path: `${APP_PREFIX_PATH}/course_curriculum`,
+        title: "Course Curriculum",
         icon: CourseAndCurriculam,
         breadcrumb: true,
-        submenu: [],
+        submenu: [
+          {
+            key: 'curriculum_list',
+            path: `${APP_PREFIX_PATH}/course_curriculum/curriculum_list`,
+            title: 'Curriculum List',
+            icon: CurriculumList,
+            breadcrumb: true,
+            submenu: []
+          },
+          {
+            key: 'course_batches',
+            path: `${APP_PREFIX_PATH}/course_curriculum/course_batches`,
+            title: 'Course Batches',
+            icon: CourseBatches,
+            breadcrumb: true,
+            submenu: []
+          },
+        ],
       },
       {
         key: "notification",
@@ -127,14 +147,14 @@ const dashBoardNavTree = [
         breadcrumb: true,
         submenu: [],
       },
-      {
-        key: "teacher_management",
-        path: `${APP_PREFIX_PATH}/teacher_management`,
-        title: "Teacher Management",
-        icon: TeacherManage,
-        breadcrumb: true,
-        submenu: [],
-      },
+      // {
+      //   key: "teacher_management",
+      //   path: `${APP_PREFIX_PATH}/teacher_management`,
+      //   title: "Teacher Management",
+      //   icon: TeacherManage,
+      //   breadcrumb: true,
+      //   submenu: [],
+      // },
       {
         key: "upcoming_classes",
         path: `${APP_PREFIX_PATH}/upcoming_classes`,
@@ -148,7 +168,7 @@ const dashBoardNavTree = [
         path: `${APP_PREFIX_PATH}/masters`,
         title: "Masters",
         icon: Masters,
-        breadcrumb: false,
+        breadcrumb: true,
         submenu: [],
       },
     ],

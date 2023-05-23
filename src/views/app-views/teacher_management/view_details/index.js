@@ -1,5 +1,13 @@
-import { Button, Menu, Modal, Select, Rate, Switch,Divider } from "antd";
-import { Export, ExportIcon, FilterIcon, History, Edit, CourseAccess, ClassInvite, LeaveApplication } from "assets/svg/icon";
+import { Button, Menu, Modal, Select, Rate, Switch, Divider } from "antd";
+import {
+  CourseAccess,
+  ClassInvite,
+  LeaveApplication,
+  CsvIcon,
+  AcceptTick,
+  CancelCross,
+  RatingTab,
+} from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
 import React, { useEffect } from "react";
@@ -16,32 +24,109 @@ import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import Search from "antd/lib/transfer/search";
+const admins = [
+  {
+      "User_ID": 1,
+      "Admin_Name": "John",
+      "Ratings_Given": 4,
+      "Remarks": "Good service",
+      "Status": "active"
+  },
+  {
+      "User_ID": 2,
+      "Admin_Name": "Sarah",
+      "Ratings_Given": 3,
+      "Remarks": "Average experience",
+      "Status": "inactive"
+  },
+  {
+      "User_ID": 3,
+      "Admin_Name": "David",
+      "Ratings_Given": 5,
+      "Remarks": "Excellent support",
+      "Status": "active"
+  }
+]
+const students = [
+  {
+      "User_ID": 1,
+      "Class_ID": 101,
+      "Student": "John",
+      "Ratings_Given": 4,
+      "Remarks": "Good performance",
+      "Status": "active"
+  },
+  {
+      "User_ID": 2,
+      "Class_ID": 101,
+      "Student": "Sarah",
+      "Ratings_Given": 3,
+      "Remarks": "Average progress",
+      "Status": "inactive"
+  },
+  {
+      "User_ID": 3,
+      "Class_ID": 102,
+      "Student": "David",
+      "Ratings_Given": 5,
+      "Remarks": "Excellent work",
+      "Status": "active"
+  }
+]
+
 
 function FacilityBooking() {
+  const [tabKey, setTabKey] = useState(0)
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
   const [membershipRequestData, setmembershipRequestData] = useState(
     membershipEventBooking
   );
+  const acceptApp = (record) => {
+    setmembershipRequestData((pre)=>{
+      // console.log(pre,record);
+      return pre.map((elem,i) => {
+        if (elem.id===record.id) {
+          return {...elem,status:"Accepted"}
+        } else {
+          return elem
+        }
+      })
+    })
+  }
+  const rejecttApp = (record) => {
+    setmembershipRequestData((pre)=>{
+      // console.log(pre,record);
+      return pre.map((elem,i) => {
+        if (elem.id===record.id) {
+          return {...elem,status:"Rejected"}
+        } else {
+          return elem
+        }
+      })
+    })
+  }
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const membershipRequestColumns = [
     {
-      title: "ID",
+      title: "Batch ID",
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      title: "Class ID",
+      dataIndex: "id",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
-      },
+         return <>#WS-001</>;
+       },
     },
     {
       title: "Course Name",
       dataIndex: "applicant_name",
       render: (avatar) => {
-        return <>Workplace Safety an Health in Construction Sites</>
+        return <>Workplace Safety an Health in Construction Sites</>;
       },
     },
     {
@@ -49,19 +134,26 @@ function FacilityBooking() {
       dataIndex: "event_time",
     },
     {
-      title: "Time",
+      title: "Start Time",
       dataIndex: "time",
       render: (avatar) => {
-        return <>10:00 AM - 12:00 PM</>
+        return <>10:00 AM</>;
+      },
+    },
+    {
+      title: "End Time",
+      dataIndex: "time",
+      render: (avatar) => {
+        return <>12:00 PM</>;
       },
     },
     {
       title: "Date of Invite",
-      dataIndex: "event_time"
+      dataIndex: "event_time",
     },
     {
-        title: "Date of Accept/Reject",
-        dataIndex: "event_time"
+      title: "Date of Accept/Reject",
+      dataIndex: "event_time",
     },
     {
       title: "Status",
@@ -77,26 +169,26 @@ function FacilityBooking() {
           </div>
         );
       },
-    }
+    },
   ];
 
   const leaveAppColumns = [
     {
-      title: "ID",
+      title: "Batch ID",
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      title: "Class ID",
+      dataIndex: "id",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
-      },
+         return <>#WS-001</>;
+       },
     },
     {
       title: "Course Name",
-      width:'180px',
       dataIndex: "applicant_name",
       render: (avatar) => {
-        return <>Workplace Safety an Health in Construction Sites</>
+        return <>Workplace Safety an Health in Construction Sites</>;
       },
     },
     {
@@ -104,27 +196,34 @@ function FacilityBooking() {
       dataIndex: "event_time",
     },
     {
-      title: "Time",
+      title: "Start Time",
       dataIndex: "time",
       render: (avatar) => {
-        return <>10:00 AM - 12:00 PM</>
+        return <>10:00 AM</>;
+      },
+    },
+    {
+      title: "End Time",
+      dataIndex: "time",
+      render: (avatar) => {
+        return <>12:00 PM</>;
       },
     },
     {
       title: "Date of Application",
-      width:'180px',
+      width: "180px",
       dataIndex: "event_time",
       render: (avatar) => {
-        return <>16 Jan 2023, 10:00 Am</>
+        return <>16 Jan 2023, 10:00 Am</>;
       },
     },
     {
-        title: "Reason",
-        width:'250px',
-        dataIndex: "event_time",
-        render: (avatar) => {
-          return <>Loreum ipsum is dummy text .Loreum ipsum is dummy text</>
-        },
+      title: "Reason",
+      width: "250px",
+      dataIndex: "event_time",
+      render: (avatar) => {
+        return <>Loreum ipsum is dummy text .Loreum ipsum is dummy text</>;
+      },
     },
     {
       title: "Status",
@@ -140,9 +239,180 @@ function FacilityBooking() {
           </div>
         );
       },
-    }
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" onClick={()=>acceptApp(record)}>
+                      <AcceptTick/>
+                      Accept
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" onClick={()=>rejecttApp(record)}>
+                      <CancelCross/>
+                      Reject
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
+    },
   ];
-
+  const adminratingColumn = [
+    {
+      title: "User ID",
+      dataIndex: "User_ID",
+    },
+    {
+      dataIndex: "avatar",
+      render: (avatar) => {
+        return <img src='/img/avatar3.png' alt="img" />;
+      },
+    },
+    {
+      title: "Admin Name",
+      dataIndex: "Admin_Name",
+    },
+    {
+      title: "Ratings Given",
+      dataIndex: "Ratings_Given",
+      render:(val)=>{
+        return <><Rate disabled defaultValue={val} /></>
+      }
+    },
+    {
+      title: "Remarks",
+      dataIndex: "Remarks",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      render: (text) => {
+        return (
+          <div
+            className={`${
+              text === "active" ? "text-success" : "text-danger"
+            } font-weight-semibold`}
+          >
+            {text}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+                      <AcceptTick/>
+                      Accept
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+                      <CancelCross/>
+                      Reject
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
+    },
+  ]
+  const classratingColumn = [
+    {
+      title: "User ID",
+      dataIndex: "User_ID",
+    },
+    {
+      title: "Class ID",
+      dataIndex: "Class_ID",
+    },
+    {
+      dataIndex: "avatar",
+      render: (avatar) => {
+        return <img src='/img/avatar3.png' alt="img" />;
+      },
+    },
+    {
+      title: "Student",
+      dataIndex: "Student",
+    },
+    {
+      title: "Ratings Given",
+      dataIndex: "Ratings_Given",
+      render:(val)=>{
+        return <><Rate disabled defaultValue={val} /></>
+      }
+    },
+    {
+      title: "Remarks",
+      dataIndex: "Remarks",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      render: (text) => {
+        return (
+          <div
+            className={`${
+              text === "active" ? "text-success" : "text-danger"
+            } font-weight-semibold`}
+          >
+            {text}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+                      <AcceptTick/>
+                      Accept
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+                      <CancelCross/>
+                      Reject
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
+    },
+  ]
   const showModal = () => {
     setIsModalOpen(true);
     // handleOk()
@@ -201,7 +471,7 @@ function FacilityBooking() {
     },
   ];
   const operations = (
-    <div className="mb-2 d-flex align-items-center">
+    <div className="mb-2 mr-3 d-flex align-items-center">
       <Button
         onClick={showModal}
         className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
@@ -212,10 +482,27 @@ function FacilityBooking() {
   );
   const items = [
     {
-      label: (<div className="d-flex justify-content-center"><CourseAccess/> <span className='ml-2'>Course Access</span></div>),
+      label: (
+        <div className="d-flex justify-content-center">
+          <CourseAccess /> <span className="ml-2">Course Access</span>
+        </div>
+      ),
       key: 1,
       children: (
         <div>
+          <div style={{width:'330px'}} className="d-flex mb-3">
+            <Search
+              placeholder="Search"
+              onSearch={(value) => console.log(value)}
+              style={{width:'220px'}}
+            />
+            <Button
+              icon={<Icon component={CsvIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
           <Helper
             clients={facilityBooking}
             attribiue={facilityBookingColumns}
@@ -224,10 +511,27 @@ function FacilityBooking() {
       ),
     },
     {
-      label: (<div className="d-flex justify-content-center"><ClassInvite/> <span className='ml-2'>Class Invite</span></div>),
+      label: (
+        <div className="d-flex justify-content-center">
+          <ClassInvite /> <span className="ml-2">Class Invite</span>
+        </div>
+      ),
       key: 2,
       children: (
         <div>
+          <div style={{width:'330px'}} className="d-flex mb-3">
+            <Search
+              placeholder="Search"
+              onSearch={(value) => console.log(value)}
+              style={{width:'220px'}}
+            />
+            <Button
+              icon={<Icon component={CsvIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
           <Helper
             clients={membershipRequestData}
             attribiue={membershipRequestColumns}
@@ -236,14 +540,80 @@ function FacilityBooking() {
       ),
     },
     {
-      label: (<div className="d-flex justify-content-center"><LeaveApplication/> <span className='ml-2'>Leave Application</span></div>),
+      label: (
+        <div className="d-flex justify-content-center">
+          <LeaveApplication /> <span className="ml-2">Leave Application</span>
+        </div>
+      ),
       key: 3,
       children: (
         <div>
-          <Helper
-            clients={membershipRequestData}
-            attribiue={leaveAppColumns}
-          />
+          <div style={{width:'330px'}} className="d-flex mb-3">
+            <Search
+              placeholder="Search"
+              onSearch={(value) => console.log(value)}
+              style={{width:'220px'}}
+            />
+            <Button
+              icon={<Icon component={CsvIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
+          <Helper clients={membershipRequestData} attribiue={leaveAppColumns} />
+        </div>
+      ),
+    },
+    {
+      label: (
+        <div className="d-flex justify-content-center">
+          <RatingTab /> <span className="ml-2">Admin Ratings</span>
+        </div>
+      ),
+      key: 4,
+      children: (
+        <div>
+          <div style={{width:'330px'}} className="d-flex mb-3">
+            <Search
+              placeholder="Search"
+              onSearch={(value) => console.log(value)}
+              style={{width:'220px'}}
+            />
+            <Button
+              icon={<Icon component={CsvIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
+          <Helper clients={admins} attribiue={adminratingColumn} />
+        </div>
+      ),
+    },
+    {
+      label: (
+        <div className="d-flex justify-content-center">
+          <RatingTab /> <span className="ml-2">Class Ratings</span>
+        </div>
+      ),
+      key: 5,
+      children: (
+        <div>
+          <div style={{width:'330px'}} className="d-flex mb-3">
+            <Search
+              placeholder="Search"
+              onSearch={(value) => console.log(value)}
+              style={{width:'220px'}}
+            />
+            <Button
+              icon={<Icon component={CsvIcon} />}
+              className="d-flex align-items-center ml-2"
+            >
+              Export
+            </Button>
+          </div>
+          <Helper clients={students} attribiue={classratingColumn} />
         </div>
       ),
     },
@@ -282,78 +652,62 @@ function FacilityBooking() {
   };
 
   return (
-    <div>
-      <div className="border rounded p-3 mb-4 bg-white">
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <th
-                  className="p-2"
-                  style={{ width: "80px", textAlign: "left" }}
-                >
-                  ID
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "150px", textAlign: "left" }}
-                >
-                  Teacher
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "200px", textAlign: "left" }}
-                >
-                  Email Id
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "180px", textAlign: "left" }}
-                >
-                  Phone Number
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "150px", textAlign: "left" }}
-                >
-                  Course Assigned
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "150px", textAlign: "left" }}
-                >
-                  Invite Sent
-                </th>
-                <th
-                  className="p-2"
-                  style={{ width: "250px", textAlign: "left" }}
-                >
-                  Performance Ratings
-                </th>
-              </tr>
-              <tr>
-                <td className="p-2">#125</td>
-                <td className="p-2">Wood smith</td>
-                <td className="p-2">wade@gmail.com</td>
-                <td className="p-2">+65 2546 8546</td>
-                <td className="p-2">2</td>
-                <td className="p-2">5</td>
-                <td className="p-2">
-                  <Rate disabled defaultValue={2} />
-                  <p>*Ratings updated on 10 Mar 2023</p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+    <div className="tabbarWhite">
+      <div className="p-3 bg-white">
+        <div
+          style={{ background: "#fafafb" }}
+          className="mb-4 rounded d-flex justify-content-between align-items-start w-100 p-3"
+        >
+          <div
+            style={{ width: "60%" }}
+            className="d-flex align-items-start p-3 justify-content-between"
+          >
+            <div style={{ gap: "10px" }} className="d-flex align-items-center">
+              <div>
+                <img height={40} width={40} src="/img/avatar3.png" />
+              </div>
+              <div>
+                <h5 className="m-0">Teacher</h5>
+                <div className="d-flex align-items-center">
+                  Jane Cooper <img className="ml-2" src="/img/female.png" />
+                </div>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Email ID</h5>
+                <p className="m-0">Janecooper@gmail.com</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Phone Number</h5>
+                <p className="m-0">+65 123 456</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Last Login Date</h5>
+                <p className="m-0">1 Mar 2022</p>
+              </div>
+            </div>
+          </div>
+            <div className="p-3 d-flex flex-column align-items-end">
+              <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">Active</h5>
+              <div>Since Monday, 1 Jan 2022</div>
+            </div>
         </div>
-        <Tabs tabBarExtraContent={operations}>
-          {items.map((item) => (
-            <Tabs.TabPane tab={item.label} key={item.key}>
-              {item.children}
-            </Tabs.TabPane>
-          ))}
-        </Tabs>
       </div>
+      <Tabs tabBarExtraContent={tabKey >= 4 ?  operations : ''} onChange={(e)=>setTabKey(e)}>
+        {items.map((item) => (
+          <Tabs.TabPane tab={item.label} key={item.key}>
+            {item.children}
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
 
       <div className="d-flex justify-content-between mb-3">
         {/* <div className="" style={{ display: "flex" }}>
@@ -392,16 +746,16 @@ function FacilityBooking() {
       >
         <div className="d-flex mb-3 flex-column">
           {/* <CustomIcon svg={Verified} /> */}
-          <h3 style={{margin: 0}} className="font-weight-bold">
-          Performance Ratings
+          <h3 style={{ margin: 0 }} className="font-weight-bold">
+            Performance Ratings
           </h3>
           <Divider />
           <h5 className="font-weight-bold">Teacher</h5>
           <h5>Wade Smith</h5>
-          <br/>
+          <br />
           <h5 className="font-weight-bold">Ratings</h5>
           <Rate />
-          <br/>
+          <br />
           <h5 className="font-weight-bold">Remarks</h5>
           <TextArea rows={4} />
           <div>

@@ -2,45 +2,57 @@ import {
   Button,
   Form,
   Input,
-  InputNumber,
   Radio,
   Select,
   Modal,
   DatePicker,
   Upload,
 } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { AddressDetail, BasicDetail, dollars, StudentDet, UploadDocument, Verified } from "assets/svg/icon";
-import axios from "axios";
-import CustomIcon from "components/util-components/CustomIcon";
+import {
+  AddressDetail,
+  BasicDetail,
+  StudentDet,
+  UploadDocument,
+} from "assets/svg/icon";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Tabs } from "antd";
-import { useLocation, useParams } from "react-router-dom";
-import { PlusOutlined,CloseCircleOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
+import { PlusOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
-
+import { Option } from "antd/lib/mentions";
+import moment from "moment";
+import axios from "axios";
+const getBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
 export default function AddNew() {
   const { TabPane } = Tabs;
-  const param = useParams();
   const location = useLocation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("1");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
-  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false)
-  const [successModal, setSuccessModal] = useState(false)
+  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [succesmodaltext, setSuccesmodaltext] = useState({
-    title:'Status Change',text:'Student status changed to terminated.'
-  })
-
+    title: "Status Change",
+    text: "Student status changed to terminated.",
+  });
+  const [fileList, setFileList] = useState([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
   const successOk = () => {
-    setSuccessModal(false)
-  }
+    setSuccessModal(false);
+  };
   const successCancel = () => {
-    setSuccessModal(false)
-  }
+    setSuccessModal(false);
+  };
 
   const changeStudHandleOk = () => {
     setIsChangeStudModalOpen(false);
@@ -65,17 +77,18 @@ export default function AddNew() {
     }
   }
 
-  let styles = {files: {
-    listStyle: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "13px",
-    border: "1px solid lightblue",
-    padding: "10px",
-    borderRadius: "9px",
-    background: "#0093ff0a",
-  },
+  let styles = {
+    files: {
+      listStyle: "none",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: "13px",
+      border: "1px solid lightblue",
+      padding: "10px",
+      borderRadius: "9px",
+      background: "#0093ff0a",
+    },
     uploadFile: {
       position: "absolute",
       width: "100%",
@@ -103,79 +116,57 @@ export default function AddNew() {
     },
   };
 
-  const showModal = () => {
-    setIsModalOpen(true);
-    handleOk();
-  };
-
-  const handleOk = () => {
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 10000);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
   const [form] = Form.useForm();
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
     console.log("Success:", values);
-    if (
-      location.pathname ===
-      `/app/membership/membership_plans/update/${param.id}`
-    ) {
-      // let newVal =
-      createMembership(
-        { ...values, id: param.id },
-        `http://127.0.0.1:3333/membership/update`
+    try {
+      console.log("Success:", values);
+      let data = {
+        name: values.name,
+        email: values.email,
+        // profile_pic: "1.amazonaws.com/profile_picture/6ZlZO4i2RqkKOhoXPe_Ok.png",
+        password: "Student@123",
+        role: values.role,
+        phone_number: values.phone_number,
+        dob: moment(values.dob).format("DD-MM-YYYY"),
+      };
+      console.log("test", data);
+      const response = await axios.post(
+        "http://18.140.159.50:3333/api/student-register",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
-    } else {
-      createMembership(values, "http://127.0.0.1:3333/membership/new");
+      console.log(response);
+      if (response.status === 200) {
+        setSuccesmodaltext({
+          title: "Student Account Created Successfully!",
+          text: "Student ID #TC-1234 jane cooper added.",
+        })
+        setSuccessModal(true)
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
-  const handleChange = () => {};
 
-  const createMembership = (values, url) => {
-    const formData = new FormData();
-    for (const key in values) {
-      formData.append(key, values[key]);
+  const handleChange = (e) => {
+    setFileList(e.fileList);
+    console.log(e);
+  };
+
+  const handleCancel = () => setPreviewOpen(false);
+  const handlePreview = async (file) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj);
     }
-    axios({
-      method: "post",
-      url: url,
-      data: formData,
-      headers: {
-        "content-type": `multipart/form-data`,
-      },
-    })
-      .then(function (response) {
-        console.log(response);
-        if (response.data.status) {
-          showModal();
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
-  const getMembershipPlan = () => {
-    axios
-      .get(`http://127.0.0.1:3333/membership?id=${param.id}`)
-      .then((response) => {
-        console.log(response.data[0]);
-        if (response.status === 200) {
-          // const data = response.data.result[0];
-          form.setFieldsValue(response.data[0]);
-        } else {
-          console.log(response);
-        }
-      });
+    setPreviewImage(file.url || file.preview);
+    setPreviewOpen(true);
+    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
   };
   console.log(location.pathname);
   function handleFileSelect(event) {
@@ -190,18 +181,13 @@ export default function AddNew() {
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
   const delUplFile = (i) => {
-    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
-      return index!==i
-    })
+    let AfterDeleteFile = selectedFiles.filter((elem, index) => {
+      return index !== i;
+    });
     setSelectedFiles(AfterDeleteFile);
-  }
+  };
   useEffect(() => {
-    if (
-      location.pathname ===
-      `/app/membership/membership_plans/update/${param.id}`
-    ) {
-      getMembershipPlan();
-    }
+    
   }, []);
 
   const uploadButton = (
@@ -218,8 +204,8 @@ export default function AddNew() {
   );
 
   return (
-    <div>
-      <div style={{ gap: "10px" }} className="mt-2 d-flex justify-content-end">
+    <div className="tabbarWhite">
+      {/* <div style={{ gap: "10px" }} className="mt-2 d-flex justify-content-end">
         <Button
           style={{ border: "1.6px solid #3e79f7" }}
           className="px-4 font-weight-semibold text-info"
@@ -234,7 +220,7 @@ export default function AddNew() {
         >
           Deactivate Account
         </Button>
-      </div>
+      </div> */}
       <Form
         layout="vertical"
         onFinish={onFinish}
@@ -243,676 +229,110 @@ export default function AddNew() {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <BasicDetail /> <span className="ml-2">Basic Details</span>
-        </div>
-      )} key="1">
-            <Form.Item name="images">
-              <Upload
-                // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                listType="picture-card"
-                onChange={handleChange}
-              >
-                {uploadButton}
-              </Upload>
-            </Form.Item>
-            <div className="border rounded bg-white p-3">
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
-                    label="Student Id"
-                    rules={[
-                      { required: true, message: "Please enter Staff Id" },
-                    ]}
-                  >
-                    <Input placeholder="Student Id" />
-                  </Form.Item>
-                  <Form.Item
-                    name="period"
-                    label="Email Id"
-                    rules={[
-                      { required: true, message: "Please enter email Id" },
-                    ]}
-                  >
-                    <Input min={1} placeholder="Email Id" />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="name"
-                    label="Full Name"
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <Input placeholder="Full Name" />
-                  </Form.Item>
-                  <Form.Item
-                    name="phone number"
-                    label="Phone Number"
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <Input
-                      min={0}
-                      style={{ width: "100%" }}
-                      placeholder="Phone number"
-                    />
-                  </Form.Item>
-                </div>
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <BasicDetail /> <span className="ml-2">Basic Details</span>
               </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                <Form.Item
-                    name="Nationality"
-                    label="Nationality"
-                    rules={[
-                      { required: true, message: "Please enter Nationality" },
-                    ]}
+            }
+            key="1"
+          >
+            <div className="border rounded p-3 bg-white">
+                {" "}
+                <Form.Item name="images">
+                  <Upload
+                    // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                    listType="picture-card"
+                    onChange={handleChange}
                   >
-                    <Select
-                      placeholder="Nationality"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[
-                        { value: "Singapore", label: "Singapore" },
-                        { value: "Singapore", label: "Singapore" },
-                        { value: "Singapore", label: "Singapore" },
+                    {uploadButton}
+                  </Upload>
+                </Form.Item>
+                <div style={{ gap: "60px" }} className="d-flex ">
+                  <div style={{ width: "45%" }}>
+                    <Form.Item
+                      name="id"
+                      label="Id"
+                      rules={[
+                        { required: true, message: "Please enter Id" },
                       ]}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="period"
-                    label="Date of Birth"
-                    rules={[{ required: true, message: "Please enter DOB" }]}
-                  >
-                    <DatePicker
-                      placeholder="Event Date"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                <Form.Item
-                    name="Residency"
-                    label="Residency Status"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter Residency Status",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Residency"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[
-                        {
-                          value: "Permeant_Resident",
-                          label: "Permeant Resident",
-                        },
-                        { value: "Citizen", label: "Citizen" },
-                        { value: "Non_native", label: "Non-native" },
+                    >
+                      <Input placeholder="Id" />
+                    </Form.Item>
+                    <Form.Item
+                      name="name"
+                      label="Full Name"
+                      rules={[
+                        { required: true, message: "Please enter full name" },
                       ]}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="phone number"
-                    label="NRIC/FIN"
-                    rules={[
-                      { required: true, message: "Please enter NRIC/FIN" },
-                    ]}
-                  >
-                    <Input
-                      min={0}
-                      style={{ width: "100%" }}
-                      placeholder="NRIC/FIN"
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
-                    label="Gender"
-                    rules={[
-                      { required: true, message: "Please enter Staff Id" },
-                    ]}
-                  >
-                    <Radio.Group>
-                      <Radio value={1}>Male</Radio>
-                      <Radio value={2}>Female</Radio>
-                      <Radio value={3}>Other</Radio>
-                    </Radio.Group>
-                  </Form.Item>
-                  <Form.Item
-                    name="Race"
-                    label="Race"
-                    rules={[{ required: true, message: "Please enter Race" }]}
-                  >
-                    <Select
-                      placeholder="Race"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[
-                        { value: "Chinese", label: "Chinese" },
-                        { value: "Malay", label: "Malay" },
-                        { value: "Indian", label: "Indian" },
-                        { value: "Myanmarese", label: "Myanmarese" },
-                        { value: "Burmese", label: "Burmese" },
+                    >
+                      <Input placeholder="Full Name" />
+                    </Form.Item>
+                  </div>
+                  <div style={{ width: "45%" }}>
+                    <Form.Item
+                      name="role"
+                      label="Role"
+                      rules={[
+                        { required: true, message: "Please enter Role" },
                       ]}
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                <Form.Item
-                    name="Married"
-                    label="Married Status"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter Married Status",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Married Status"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[
-                        { value: "Married", label: "Married" },
-                        { value: "Single", label: "Single" },
-                        { value: "Widowed", label: "Widowed" },
-                        { value: "Separated", label: "Separated" },
-                        { value: "Divorced", label: "Divorced" },
+                    >
+                      <Input placeholder="Role" />
+                    </Form.Item>
+                    <Form.Item
+                      name="phone_number"
+                      label="Phone Number"
+                      rules={[
+                        { required: true, message: "Please enter Full Name" },
                       ]}
-                    />
-                  </Form.Item>
-                  <Form.Item
-                    name="Religion"
-                    label="Religion"
-                    rules={[
-                      { required: true, message: "Please enter Religion" },
-                    ]}
-                  >
-                    <Input
-                      min={0}
-                      style={{ width: "100%" }}
-                      placeholder="Religion"
-                    />
-                  </Form.Item>
+                    >
+                      <Input
+                      addonBefore={
+                        <Select
+                        defaultValue={'In'}
+                          style={{
+                            width: 80,
+                          }}
+                          >
+                          <Option value="In">In</Option>
+                          <Option value="SG">SG</Option>
+                        </Select>
+                      }
+                        style={{ width: "100%" }}
+                        placeholder="Phone number"
+                      />
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="border bg-white rounded p-3 mt-4">
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                <Form.Item
-                    name="Role"
-                    label="Role"
-                    rules={[
-                      { required: true, message: "Please enter Staff Role" },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Role"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[
-                        { value: "Ops_Manager", label: "Ops Manager" },
-                        { value: "Crew", label: "Crew" },
+                <div style={{ gap: "60px" }} className="d-flex ">
+                  <div style={{ width: "45%" }}>
+                    <Form.Item
+                      name="email"
+                      label="Email Id"
+                      rules={[
+                        { required: true, message: "Please enter Email Id" },
                       ]}
-                    />
-                  </Form.Item>
+                    >
+                      <Input
+                        style={{ width: "100%" }}
+                        placeholder="Email Id"
+                      />
+                    </Form.Item>
+                  </div>
+                  <div style={{ width: "45%" }}>
                   <Form.Item
-                    name="period"
-                    label="Joining Date"
-                    rules={[
-                      { required: true, message: "Please enter joining Date" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="name"
-                    label="Department"
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <Input placeholder="Department" />
-                  </Form.Item>
-                  <Form.Item
-                    name="phone number"
-                    label="Confirmation Date"
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
+                      name="dob"
+                      label="Date of Birth"
+                      rules={[{ required: true, message: "Please enter DOB" }]}
+                    >
+                      <DatePicker
+                        placeholder="Date of Birth"
+                        style={{ width: "100%" }}
+                      />
+                    </Form.Item>
+                  </div>
                 </div>
               </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
-                    label="Working Status"
-                    rules={[
-                      { required: true, message: "Please enter Nationality" },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Working Status"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[]}
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="name"
-                    label="Manager (Report To)"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please enter Residency Status",
-                      },
-                    ]}
-                  >
-                    <Select
-                      placeholder="Select"
-                      style={{ width: "100%" }}
-                      onChange={handleChange}
-                      options={[]}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-            <div className="border bg-white rounded p-3 mt-4">
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
-                    label="Work Permit Number (if applicable)"
-                  >
-                    <Input placeholder="Work Permit Number" />
-                  </Form.Item>
-                  <Form.Item name="period" label="Type of Work Permit">
-                    <Input placeholder="Type of Work Permit" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="phone number"
-                    label="Expiry Date"
-                    style={{ flex: "1" }}
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="id"
-                    label="Passport Number"
-                    rules={[
-                      { required: true, message: "Please enter Nationality" },
-                    ]}
-                  >
-                    <Input placeholder="Passport Number" />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="phone number"
-                    label="Expiry Date"
-                    style={{ flex: "1" }}
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-          </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <StudentDet /> <span className="ml-2">Education Details</span>
-        </div>
-      )} key="2">
-            <div className="border bg-white rounded p-3 mt-4">
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item name="id" label="Highest Qualification">
-                    <Input placeholder="Highest Qualification" />
-                  </Form.Item>
-                  <Form.Item
-                    name="period"
-                    label="University"
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <Input placeholder="University" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="id"
-                    label="Field of study"
-                    rules={[
-                      { required: true, message: "Please enter Nationality" },
-                    ]}
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Field of study" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="phone number"
-                    label="Start Date"
-                    style={{ flex: "1" }}
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="phone number"
-                    label="End Date"
-                    style={{ flex: "1" }}
-                    rules={[
-                      { required: true, message: "Please enter Full Name" },
-                    ]}
-                  >
-                    <DatePicker
-                      placeholder="DD/MM/YYYY"
-                      style={{ width: "100%" }}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-          </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AddressDetail /> <span className="ml-2">Address Details</span>
-        </div>
-      )} key="3">
-            <div className="border bg-white rounded p-3 mt-4">
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="block_number"
-                    label="Block Number"
-                    rules={[
-                      { required: true, message: "Please input block number!" },
-                    ]}
-                  >
-                    <Input placeholder="Block Number" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="street_number"
-                    label="Street Number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input street number!",
-                      },
-                    ]}
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Street Number" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="level_number"
-                    label="Level Number"
-                    rules={[
-                      { required: true, message: "Please input level number!" },
-                    ]}
-                  >
-                    <Input placeholder="Level Number" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="unit_number"
-                    label="Unit Number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input unit number!",
-                      },
-                    ]}
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Unit Number" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="postal_code"
-                    label="Postal Code"
-                    rules={[
-                      { required: true, message: "Please input postal code!" },
-                    ]}
-                  >
-                    <Input placeholder="Postal Code" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="country"
-                    label="Country"
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Country" />
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-            <div className="border bg-white rounded p-3 mt-4">
-              <div>
-                <h4>Alternative Contact Person</h4>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item name="parents_name" label="Parents/Guardian Name">
-                    <Input placeholder="Parents/Guardian Name" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="occupation"
-                    label="Occupation"
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Occupation" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div style={{ gap: "60px" }} className="d-flex ">
-                <div style={{ width: "45%" }}>
-                  <Form.Item
-                    name="phone_number"
-                    label="Phone Number"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Please input phone number!",
-                      },
-                    ]}
-                  >
-                    <Input maxLength={10} placeholder="Phone Number" />
-                  </Form.Item>
-                </div>
-                <div
-                  style={{
-                    width: "45%",
-                    display: "flex",
-                    alignItems: "flex-end",
-                  }}
-                >
-                  <Form.Item
-                    name="email_id"
-                    label="Email Id"
-                    style={{ width: "100%" }}
-                  >
-                    <Input placeholder="Email Id" />
-                  </Form.Item>
-                </div>
-              </div>
-            </div>
-          </TabPane>
-
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <UploadDocument /> <span className="ml-2">Upload Document</span>
-        </div>
-      )} key="4">
-            <div className="border bg-white rounded p-3 mt-4">
-              <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="64"
-                  height="64"
-                  fill="none"
-                  viewBox="0 0 64 64"
-                >
-                  <path
-                    fill="#0E7CEB"
-                    d="M18.57 15.51l7.86 7a2 2 0 001.33.51H56v34.9A2.93 2.93 0 0153.26 61H5.74A2.93 2.93 0 013 57.92V18a2.85 2.85 0 012.68-3h11.56a2 2 0 011.33.51z"
-                  ></path>
-                  <path fill="#D7E6EF" d="M49 57H7V3h42v54z"></path>
-                  <path
-                    fill="#0E7CEB"
-                    d="M45 23h16v-6a2 2 0 00-2-2h-6l-8 8z"
-                  ></path>
-                  <path fill="#F7FCFF" d="M14 9h42v14H14V9z"></path>
-                  <path
-                    fill="#0E7CEB"
-                    d="M25.69 15.51l7.42 7a1.8 1.8 0 001.25.51H61v34.9A2.87 2.87 0 0158.41 61H13.59A2.87 2.87 0 0111 57.92V18a2.79 2.79 0 012.53-3h10.9c.47 0 .922.184 1.26.51z"
-                  ></path>
-                  <path
-                    fill="#F7FCFF"
-                    d="M36 55c7.18 0 13-5.82 13-13s-5.82-13-13-13-13 5.82-13 13 5.82 13 13 13z"
-                  ></path>
-                  <path
-                    fill="#D7E6EF"
-                    d="M52 13H32a1 1 0 000 2h20a1 1 0 000-2zm0 4H37a1 1 0 000 2h15a1 1 0 000-2z"
-                  ></path>
-                  <path
-                    fill="#44394A"
-                    d="M36.5 49.28l6.72-6.72a5.501 5.501 0 00-7.78-7.78l-8.84 8.84a1.002 1.002 0 000 1.42A1 1 0 0028 45l8.84-8.84a3.5 3.5 0 114.95 4.95l-6.71 6.71a1.998 1.998 0 01-3.38-.571A2 2 0 0132.26 45L39 38.32a.5.5 0 01.71 0 .48.48 0 010 .71l-6 6a1 1 0 101.42 1.41l6-6a2.503 2.503 0 00-3.54-3.54l-6.72 6.72a4 4 0 000 5.66 4.003 4.003 0 005.66 0h-.03z"
-                  ></path>
-                </svg>
-                <h5 className="mb-0 mt-2">Drag & Drop Files Here</h5>
-                <h5 className="mb-0">Or</h5>
-                <h5 className="mb-0" style={{ color: "#4096ff" }}>
-                  Choosen File
-                </h5>
-                <input
-                  style={styles.uploadFile}
-                  className="uploadFile"
-                  type="file"
-                  multiple
-                  onChange={handleFileSelect}
-                />
-              </div>
-              <div className="mt-4">
-                {selectedFiles.length > 0 && (
-                  <ul className="p-0" style={{width:'40%'}}>
-                    {selectedFiles.map((file,i) => (
-                      <li key={file.name} className="my-3" style={styles.files}>
-                        {" "}
-                        <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
           </TabPane>
         </Tabs>
         <Form.Item>
@@ -920,7 +340,6 @@ export default function AddNew() {
             style={{ gap: "10px" }}
             className="mt-5 d-flex justify-content-end"
           >
-            {activeTab > 1 ? (
               <Button
                 className="px-4 font-weight-semibold"
                 htmlType="button"
@@ -928,22 +347,9 @@ export default function AddNew() {
               >
                 Back
               </Button>
-            ) : (
-              ""
-            )}
             <Button className="px-4 font-weight-semibold" htmlType="button">
-              Clear All
+              Save As Draft
             </Button>
-            {activeTab < 4 ? (
-              <Button
-                className="px-4 font-weight-semibold text-white bg-info"
-                onClick={handleNextClick}
-              >
-                Next
-              </Button>
-            ) : (
-              ""
-            )}
             <Button
               className="px-4 font-weight-semibold text-white bg-info"
               htmlType="submit"
@@ -965,16 +371,29 @@ export default function AddNew() {
           <h5>Studnet ID #TC-1234 will be deleted from system</h5>
         </div>
         <div
-            style={{ gap: "10px" }}
-            className="mt-5 d-flex justify-content-end"
+          style={{ gap: "10px" }}
+          className="mt-5 d-flex justify-content-end"
+        >
+          <Button
+            className="px-4 font-weight-semibold"
+            onClick={() => setIsDeactiveModalOpen(false)}
           >
-            <Button className="px-4 font-weight-semibold" onClick={()=>setIsDeactiveModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsDeactiveModalOpen(false); setSuccesmodaltext({title:'Deactivated',text:'student ID #TC-1234 deactivated.'});setSuccessModal(true)}}>
-              Yes, confirm
-            </Button>
-          </div>
+            Cancel
+          </Button>
+          <Button
+            className="px-4 font-weight-semibold text-white bg-info"
+            onClick={() => {
+              setIsDeactiveModalOpen(false);
+              setSuccesmodaltext({
+                title: "Deactivated",
+                text: "student ID #TC-1234 deactivated.",
+              });
+              setSuccessModal(true);
+            }}
+          >
+            Yes, confirm
+          </Button>
+        </div>
       </Modal>
       <Modal
         width={600}
@@ -989,7 +408,7 @@ export default function AddNew() {
           <Select
             placeholder="Select"
             optionFilterProp="children"
-            onChange={(val)=>console.log(`selected ${val}`)}
+            onChange={(val) => console.log(`selected ${val}`)}
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
@@ -1010,19 +429,32 @@ export default function AddNew() {
           />
         </div>
         <div
-            style={{ gap: "10px" }}
-            className="mt-5 d-flex justify-content-end"
+          style={{ gap: "10px" }}
+          className="mt-5 d-flex justify-content-end"
+        >
+          <Button
+            className="px-4 font-weight-semibold"
+            onClick={() => setIsChangeStudModalOpen(false)}
           >
-            <Button className="px-4 font-weight-semibold" onClick={()=>setIsChangeStudModalOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="px-4 font-weight-semibold text-white bg-info" onClick={()=>{setIsChangeStudModalOpen(false);setSuccesmodaltext({title:'Status Change',text:'Student status changed to terminated.'});setSuccessModal(true)}}>
-              Save
-            </Button>
-          </div>
+            Cancel
+          </Button>
+          <Button
+            className="px-4 font-weight-semibold text-white bg-info"
+            onClick={() => {
+              setIsChangeStudModalOpen(false);
+              setSuccesmodaltext({
+                title: "Status Change",
+                text: "Student status changed to terminated.",
+              });
+              setSuccessModal(true);
+            }}
+          >
+            Save
+          </Button>
+        </div>
       </Modal>
       <Modal
-        width={400}
+        width={600}
         footer={null}
         visible={successModal}
         onOk={successOk}
@@ -1042,11 +474,22 @@ export default function AddNew() {
               fill="#00AB6F"
             />
           </svg>
-          <h3 className="font-weight-bold mt-4">Student {succesmodaltext.title} Successfully!</h3>
+          <h3 className="font-weight-bold mt-4">
+            {succesmodaltext.title} 
+          </h3>
           <span className="text-center font-size-sm w-75 font-weight-semibold">
-          {succesmodaltext.text}
+            {succesmodaltext.text}
           </span>
         </div>
+      </Modal>
+      <Modal visible={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+        <img
+          alt="example"
+          style={{
+            width: '100%',
+          }}
+          src={previewImage}
+        />
       </Modal>
     </div>
   );

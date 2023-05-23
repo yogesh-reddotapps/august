@@ -1,6 +1,6 @@
 import { Button, Menu, Modal, Form, Input, Select, DatePicker } from "antd";
-import React, { useState } from "react";
-import { ExportIcon, FilterIcon } from "assets/svg/icon";
+import React, { useEffect, useState } from "react";
+import { Edit, ExportIcon, FilterIcon } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import { Link } from "react-router-dom";
 import { EyeOutlined } from "@ant-design/icons";
@@ -8,7 +8,9 @@ import Helper from "../Helper";
 import "./teacher_management.css";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
-import Icon from "@ant-design/icons";
+import Icon ,{DeleteOutlined} from "@ant-design/icons";
+import CustomIcon from "components/util-components/CustomIcon";
+import axios from "axios";
 
 const teacherArray = [
   {
@@ -68,83 +70,94 @@ const teacherArray = [
     ),
   },
 ];
-
+const dummyArray = [
+  {
+    id: 1,
+    Assessment: "Jane Cooper",
+    Assessment_Questions: "M",
+    Attended_By: "SG",
+    Due_Date: "+65 2541 3652",
+    Created_By: "jane@gmail.com",
+    Created_On: "11 Jan 1990",
+    invite_sent: "11 May 2023, 10:00:25 Am",
+  },
+  {
+    id: 2,
+    Assessment: "Jane Cooper",
+    Assessment_Questions: "M",
+    Attended_By: "SG",
+    Due_Date: "+65 2541 3652",
+    Created_By: "jane@gmail.com",
+    Created_On: "11 Jan 1990",
+    invite_sent: "11 May 2023, 10:00:25 Am",
+  },
+  {
+    id: 3,
+    Assessment: "Jane Cooper",
+    Assessment_Questions: "M",
+    Attended_By: "SG",
+    Due_Date: "+65 2541 3652",
+    Created_By: "jane@gmail.com",
+    Created_On: "11 Jan 1990",
+    invite_sent: "11 May 2023, 10:00:25 Am",
+  },
+];
 
 function TeacherManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [data, setData] = useState(dummyArray)
   const [form] = Form.useForm();
-  const dummyArray = [
-    {
-      id: 1,
-      Assessment: "Jane Cooper",
-      Assessment_Questions: "M",
-      Attended_By: "SG",
-      Due_Date: "+65 2541 3652",
-      Created_By: "jane@gmail.com",
-      Created_On: "3",
-      invite_sent: "4",
-    },
-    {
-      id: 2,
-      Assessment: "Jane Cooper",
-      Assessment_Questions: "M",
-      Attended_By: "SG",
-      Due_Date: "+65 2541 3652",
-      Created_By: "jane@gmail.com",
-      Created_On: "3",
-      invite_sent: "4",
-    },
-    {
-      id: 3,
-      Assessment: "Jane Cooper",
-      Assessment_Questions: "M",
-      Attended_By: "SG",
-      Due_Date: "+65 2541 3652",
-      Created_By: "jane@gmail.com",
-      Created_On: "3",
-      invite_sent: "4",
-    },
-  ];
+  
+  const onDeleteData = (record) => {
+    // Modal.confirm({
+    //   title: "Are you sure, you want to delete this members record ?",
+    //   okText: "Yes",
+    //   okType: "danger",
+    //   onOk: () => {
+        setData((pre) => {
+          return pre.filter((member) => member.id !== record.id)
+        })
+    //   }
+    // })
+  }
 
   const assesmentColumn = [
     {
       title: "User ID",
-      dataIndex: "id",
+      dataIndex: "user_id",
     },
     {
       dataIndex: "avatar",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img src={`${avatar}`} alt="img"/>;
       },
     },
     {
       title: "Teacher Name",
-      dataIndex: "Assessment",
-    },
-    {
-      title: "Gender",
-      dataIndex: "Assessment_Questions",
-    },
-    {
-      title: "Nationality",
-      dataIndex: "Attended_By",
+      dataIndex: "name",
     },
     {
       title: "Mobile Number",
-      dataIndex: "Due_Date",
+      dataIndex: "phone_number",
     },
     {
       title: "Email Id",
-      dataIndex: "Created_By",
+      dataIndex: "email",
     },
     {
-      title: "Class Assigned",
-      dataIndex: "Created_On",
+      title: "DOB",
+      dataIndex: "dob",
+      render:(val)=>{
+        return<>{val===null ? "11 May 2023" : val}</>
+      }
     },
     {
-      title: "Invite Sent",
+      title: "Last Login Date",
       dataIndex: "invite_sent",
+      render:()=>{
+        return<>11 May 2023, 10:00:25 Am</>
+      }
     },
     {
       title: "Status",
@@ -156,7 +169,7 @@ function TeacherManagement() {
               text !== "Active" ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            Active
+            {text}
           </div>
         );
       },
@@ -171,12 +184,18 @@ function TeacherManagement() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="/app/teacher_management/teacher_detail">
+                    <Link to="/app/staffManagement/teacher_management/teacher_detail">
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Detail
                     </Link>
                   </Menu.Item>
+                  <Menu.Item>
+                  <span onClick={() => onDeleteData(record)}> <DeleteOutlined className='mr-2 ' />Delete</span>
+                </Menu.Item>
+                <Menu.Item>
+                  <span className='d-flex align-items-center' ><CustomIcon className='mr-2' svg={Edit} />Edit</span>
+                </Menu.Item>
                 </Menu>
               }
             />
@@ -208,6 +227,28 @@ function TeacherManagement() {
     transition:'all 0.5s ease 0s'
   };
 
+  const getTeacher = () => {
+    axios
+    .post(
+      "http://18.140.159.50:3333/api/admin-teacher",
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((res) => {
+      setData(res.data);
+      // console.log("teacge",res.data);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+  useEffect(() => {
+    getTeacher()
+  }, [])
+  
   return (
     <div>
       {alertSuccess ? (
@@ -239,12 +280,19 @@ function TeacherManagement() {
             Export
           </Button>
         </div>
+        <div style={{gap:'10px'}} className="d-flex">
         <Button
-          className="bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
-          onClick={() => setIsModalOpen(true)}
+          // className="text-info d-flex align-items-center rounded font-weight-semibold"
+          onClick={() => setIsModalOpen(true)} type="primary" ghost
         >
-          Send Invite
+          Send Class Invite
         </Button>
+        <Button
+          className="bg-info d-flex align-items-center rounded text-white font-weight-semibold"
+        ><Link to={`teacher_management/add_new`}>
+          Add New Teacher
+        </Link>
+        </Button></div>
       </div>
       <Modal
         width={600}
@@ -291,15 +339,32 @@ function TeacherManagement() {
             </Form.Item>
             <Form.Item
               className="w-75"
-              name="date_of_class"
-              label="Date Of Class"
+              name="batch"
+              label="Batch"
             >
-              <DatePicker
-                className="w-100"
-                onChange={(date, dateString) => console.log(date, dateString)}
+              <Select
+                style={{
+                  width: "100%",
+                }}
+                placeholder="Select"
+                onChange={(value) => console.log(`selected ${value}`)}
+                options={[
+                  {
+                    value: "jack",
+                    label: "Jack",
+                  },
+                  {
+                    value: "lucy",
+                    label: "Lucy",
+                  },
+                  {
+                    value: "Yiminghe",
+                    label: "yiminghe",
+                  },
+                ]}
               />
             </Form.Item>
-            <Form.Item className="w-75" name="time_slot" label="Time Slot">
+            <Form.Item className="w-75" name="class" label="Class">
               <Select
                 style={{
                   width: "100%",
@@ -329,7 +394,8 @@ function TeacherManagement() {
                 options={teacherArray}
               />
             </Form.Item>
-          </Form>
+            <Form.Item>
+          
           <div className="d-flex justify-content-end mb-3">
             <Button
               className=" d-flex align-items-center rounded font-weight-semibold px-4"
@@ -346,15 +412,18 @@ function TeacherManagement() {
                   setAlertSuccess(false);
                 }, 2000);
               }}
+              htmlType="submit"
             >
               Send Invite
             </Button>
           </div>
+          </Form.Item>
+            </Form>
         </div>
       </Modal>
 
       <div className="mb-3">
-        <Helper clients={dummyArray} attribiue={assesmentColumn} />
+        <Helper clients={data} attribiue={assesmentColumn} />
       </div>
     </div>
   );

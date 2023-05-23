@@ -27,10 +27,6 @@ const ClassAttend = () => {
       dataIndex: "student_name",
     },
     {
-      title: "Chapters",
-      dataIndex: "age",
-    },
-    {
       title: "Lessons",
       dataIndex: "age",
     },

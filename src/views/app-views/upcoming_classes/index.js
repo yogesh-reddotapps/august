@@ -50,30 +50,44 @@ function TeacherManagement() {
 
   const assesmentColumn = [
     {
-      title: "User ID",
+      title: "Course ID",
       dataIndex: "id",
-    },
-    {
-      dataIndex: "avatar",
-      render: (avatar) => {
-        return <img src={`${avatar}`} />;
-      },
     },
     {
       title: "Upcoming Courses",
       dataIndex: "Assessment",
     },
     {
-      title: "Venue",
+      title: "Batch ID",
       dataIndex: "Assessment_Questions",
+      render:()=>{
+        return<>Woodland</>
+      }
+    },
+    {
+      title: "Class ID",
+      dataIndex: "Assessment_Questions",
+      render:()=>{
+        return<>Woodland</>
+      }
     },
     {
       title: "Class Date",
       dataIndex: "Attended_By",
     },
     {
-      title: "Time",
+      title: "Start Time",
       dataIndex: "Due_Date",
+      render:(text)=>{
+        return <>{text.slice(0,8)}</>
+      }
+    },
+    {
+      title: "End Time",
+      dataIndex: "Due_Date",
+      render:(text)=>{
+        return <>{text.slice(10,19)}</>
+      }
     },
     {
       title: "Teachers Invited",
@@ -88,16 +102,6 @@ function TeacherManagement() {
       dataIndex: "invite_sent",
     },
     {
-      title: "Pending",
-      dataIndex: "status",
-      render: (text) => {
-        return (
-          <div>
-            10
-          </div>
-        );
-      },
-    },{
       title: "Action",
       // dataIndex: 'action',
       render: (record) => {
