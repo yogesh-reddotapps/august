@@ -75,6 +75,7 @@ const Masters = () => {
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [allCourses, setAllCourses] = useState([])
   const [allLang, setAllLang] = useState([])
+  const [allCate, setallCate] = useState([])
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -287,6 +288,50 @@ const Masters = () => {
       },
     },
   ];
+
+  const Course_Category = [
+  {
+    title: "ID",
+    dataIndex: "id",
+  },
+  {
+    title: "Course Name",
+    dataIndex: "course_category",
+  },
+  {
+    title: "Updated On",
+    dataIndex: "updated_at",
+    render:(val)=>{
+      return<>{val===null ? "2023-05-17":val}</>
+    }
+  },
+  {
+    title: "Action",
+    // dataIndex: 'action',
+    render: (record) => {
+      return (
+        <>
+          <EllipsisDropdown
+            menu={
+              <Menu>
+                <Menu.Item>
+                  <Link to="course_enroll/assignment_submission">
+                    <DeleteOutlined className="mr-2 " /> Delete
+                  </Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link to="course_enroll/assignment_submission">
+                    <CustomIcon className="mr-2" svg={Edit} /> Edit
+                  </Link>
+                </Menu.Item>
+              </Menu>
+            }
+          />
+        </>
+      );
+    },
+  },
+];
   const certificatecolumn = [
     {
       title: "ID",
@@ -396,7 +441,7 @@ const Masters = () => {
               <Link to={"masters/course_category/add_new"}> + Add New</Link>
             </Button>
           </div>
-          <Helper clients={dummyData} attribiue={facilityBookingColumns} />
+          <Helper clients={allCate} attribiue={Course_Category} />
         </div>
       ),
     },
@@ -535,7 +580,26 @@ const Masters = () => {
         console.log(error);
       });
   }
+  const getAllCourseCate = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/admin-category",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setallCate(res.data.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
+    getAllCourseCate()
     getAllCourses()
     getAllLanguage()
     showAlert();
