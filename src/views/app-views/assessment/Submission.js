@@ -19,7 +19,7 @@ import { DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import Helper, { capitalizeFirstLetter } from "../Helper";
 import "./assessment.css";
 import { useState } from "react";
-import axios from "axios";
+import axios from "../../../axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
@@ -302,7 +302,7 @@ function Submission() {
 
   const deleteFacilityBooking = (record, dataSet, Id) => {
     axios
-      .delete("http://127.0.0.1:3333/bookings/delete", {
+      .delete("/bookings/delete", {
         data: { id: record[Id] },
       })
       .then((response) => {

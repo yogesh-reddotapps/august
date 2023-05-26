@@ -1,5 +1,5 @@
 import { Form, Input, Button, InputNumber, Select, Modal } from "antd";
-import axios from "axios";
+import axios from "../../../../../axios";
 import { useState } from "react";
 
 const MyForm = () => {
@@ -20,7 +20,7 @@ const MyForm = () => {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-add-venue",
+        "/api/admin-add-venue",
         data,
         {
           headers: {

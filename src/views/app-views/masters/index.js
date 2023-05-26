@@ -18,7 +18,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
 import { useLocation, Link, useHistory } from "react-router-dom";
 import Search from "antd/lib/transfer/search";
-import axios from "axios";
+import axios from "../../../axios";
 
 const { Option } = Select;
 const languageArr = [
@@ -549,11 +549,14 @@ const Masters = () => {
   };
   const getAllCourses = () => {
     axios
-      .post("http://18.140.159.50:3333/api/get-all-courses", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "http://18.140.159.50:3333/api/get-all-courses",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         setAllCourses(res.data);
         // console.log(res.data);
@@ -564,11 +567,14 @@ const Masters = () => {
   };
   const getAllLanguage = () => {
     axios
-      .post("http://18.140.159.50:3333/api/admin-languages", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "http://18.140.159.50:3333/api/admin-languages",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         setAllLang(res.data.data);
         console.log(res.data);
@@ -579,11 +585,14 @@ const Masters = () => {
   };
   const getAllCourseCate = () => {
     axios
-      .post("http://18.140.159.50:3333/api/admin-category", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "http://18.140.159.50:3333/api/admin-category",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         setallCate(res.data.data);
         // console.log(res.data);
@@ -594,11 +603,14 @@ const Masters = () => {
   };
   const getAllVenues = () => {
     axios
-      .post("http://18.140.159.50:3333/api/admin-venues", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
+      .post(
+        "http://18.140.159.50:3333/api/admin-venues",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
       .then((res) => {
         console.log(res.data.data);
         setallVenues(

@@ -1,12 +1,12 @@
 import { Button, Form, Input, Select, Modal, DatePicker, Upload } from "antd";
 import { BasicDetail } from "assets/svg/icon";
-//   import axios from "axios";
+
 import React from "react";
 import { useState } from "react";
 import { Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Option } from "antd/lib/mentions";
-import axios from "axios";
+import axios from "../../../../axios";
 import moment from "moment";
 
 export default function AddNew() {
@@ -59,7 +59,7 @@ export default function AddNew() {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-register",
+        "/api/admin-register",
         data,
         {
           headers: {
