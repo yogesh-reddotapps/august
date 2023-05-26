@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
-import axios from "axios";
+import axios from "../../../../axios";
 const ScheduleNewClass = () => {
   const [form] = Form.useForm();
   const [successModal, setSuccessModal] = useState(false);
@@ -14,7 +14,7 @@ const ScheduleNewClass = () => {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-add-language",
+        "/api/admin-add-language",
         data,
         {
           headers: {

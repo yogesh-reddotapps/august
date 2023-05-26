@@ -18,7 +18,7 @@ import "./Events.css";
 import { DeleteOutlined, EyeOutlined,CloseCircleOutlined } from "@ant-design/icons";
 import { membershipEventBooking } from "../data";
 import Helper from "../Helper";
-import axios from "axios";
+import axios from "../../../axios";
 import Icon from "@ant-design/icons";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
@@ -231,7 +231,7 @@ export default function Events() {
   const getEvents = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/get-students",
+        "/api/get-students",
         {
           headers: {
             "Content-Type": "application/json",

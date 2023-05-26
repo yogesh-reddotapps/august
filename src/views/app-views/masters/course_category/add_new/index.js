@@ -2,7 +2,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
-import axios from "axios";
+import axios from "../../../../../axios";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -57,7 +57,7 @@ const AddCategoryForm = () => {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-add-category",
+        "/api/admin-add-category",
         data,
         {
           headers: {

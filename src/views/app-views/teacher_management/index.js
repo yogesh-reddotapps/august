@@ -10,7 +10,7 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon ,{DeleteOutlined} from "@ant-design/icons";
 import CustomIcon from "components/util-components/CustomIcon";
-import axios from "axios";
+import axios from "../../../axios";
 
 const teacherArray = [
   {
@@ -230,7 +230,7 @@ function TeacherManagement() {
   const getTeacher = () => {
     axios
     .post(
-      "http://18.140.159.50:3333/api/admin-teacher",
+      "/api/admin-teacher",
       {
         headers: {
           "Content-Type": "application/json",

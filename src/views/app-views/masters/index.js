@@ -18,7 +18,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
 import { useLocation, Link, useHistory } from "react-router-dom";
 import Search from "antd/lib/transfer/search";
-import axios from "axios";
+import axios from "../../../axios";
 
 const { Option } = Select;
 const languageArr = [
@@ -549,7 +549,7 @@ const Masters = () => {
   const getAllCourses = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/get-all-courses",
+        "/api/get-all-courses",
         {
           headers: {
             "Content-Type": "application/json",
@@ -567,7 +567,7 @@ const Masters = () => {
   const getAllLanguage = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-languages",
+        "/api/admin-languages",
         {
           headers: {
             "Content-Type": "application/json",
@@ -585,7 +585,7 @@ const Masters = () => {
   const getAllCourseCate = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-category",
+        "/api/admin-category",
         {
           headers: {
             "Content-Type": "application/json",
@@ -603,7 +603,7 @@ const Masters = () => {
   const getAllVenues = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-venues",
+        "/api/admin-venues",
         {
           headers: {
             "Content-Type": "application/json",

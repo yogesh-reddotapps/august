@@ -23,7 +23,7 @@ import { PlusOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
 import { Option } from "antd/lib/mentions";
 import moment from "moment";
-import axios from "axios";
+import axios from "../../../axios";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -133,7 +133,7 @@ export default function AddNew() {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/student-register",
+        "/api/student-register",
         data,
         {
           headers: {

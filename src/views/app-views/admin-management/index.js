@@ -9,7 +9,7 @@ import { Account, Edit, Export, ExportIcon, FilterIcon, History, Verified } from
 import Helper from '../Helper'
 import { Modal, Drawer } from 'antd';
 // import Drawer from 'react-modern-drawer'
-import axios from "axios";
+import axios from "../../../axios";
 import 'react-modern-drawer/dist/index.css'
 import SearchBox from 'components/shared-components/SearchBox'
 import Filter from 'components/shared-components/Filter'
@@ -49,12 +49,7 @@ export default function MembershipRequest() {
   const getEvents = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/get-admins",
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+        "/api/get-admins"
       )
       .then((res) => {
         console.log(res.data);

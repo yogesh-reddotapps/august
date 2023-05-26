@@ -19,7 +19,7 @@ import {
   UploadDocument,
   UploadFileIcon,
 } from "assets/svg/icon";
-import axios from "axios";
+import axios from "../../../../axios";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -234,7 +234,7 @@ export default function AddNew() {
       };
       console.log("test", data);
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/teacher-register",
+        "/api/teacher-register",
         data,
         {
           headers: {
