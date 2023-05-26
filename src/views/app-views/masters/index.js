@@ -75,6 +75,8 @@ const Masters = () => {
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [allCourses, setAllCourses] = useState([])
   const [allLang, setAllLang] = useState([])
+  const [allCate, setallCate] = useState([])
+  const [allVenues, setallVenues] = useState([])
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -120,50 +122,51 @@ const Masters = () => {
     },
   ];
 
-  const assData = [
-    {
-      Id: 1,
-      Venue_Name: "ABC Conference Center",
-      Address: "123 Main Street, Anytown, USA",
-      Venue_Capacity: 500,
-    },
-    {
-      Id: 2,
-      Venue_Name: "XYZ Stadium",
-      Address: "456 Elm Avenue, Othertown, USA",
-      Venue_Capacity: 10000,
-    },
-    {
-      Id: 3,
-      Venue_Name: "123 Theater",
-      Address: "789 Oak Road, Anothercity, USA",
-      Venue_Capacity: 250,
-    },
-  ];
+  // const assData = [
+  //   {
+  //     Id: 1,
+  //     Venue_Name: "ABC Conference Center",
+  //     Address: "123 Main Street, Anytown, USA",
+  //     Venue_Capacity: 500,
+  //   },
+  //   {
+  //     Id: 2,
+  //     Venue_Name: "XYZ Stadium",
+  //     Address: "456 Elm Avenue, Othertown, USA",
+  //     Venue_Capacity: 10000,
+  //   },
+  //   {
+  //     Id: 3,
+  //     Venue_Name: "123 Theater",
+  //     Address: "789 Oak Road, Anothercity, USA",
+  //     Venue_Capacity: 250,
+  //   },
+  // ];
+
 
   const assessmentcolumn = [
     {
       title: "Id",
-      dataIndex: "Id",
+      dataIndex: "id",
     },
     {
       title: "Venue Name",
-      dataIndex: "Venue_Name",
+      dataIndex: "venue_name",
     },
     {
       title: "Address",
-      dataIndex: "Address",
+      dataIndex: "postal_code",
     },
     {
       title: "Venue Capacity",
-      dataIndex: "Venue_Capacity",
+      dataIndex: "venue_capacity",
     },
     {
       title: "Updated On",
-      dataIndex: "status",
-      render: (text) => {
-        return <div>2 Jan 2023</div>;
-      },
+      dataIndex: "updated_at",
+      // render: (text) => {
+      //   return <div>2 Jan 2023</div>;
+      // },
     },
     {
       title: "Action",
@@ -287,6 +290,50 @@ const Masters = () => {
       },
     },
   ];
+
+  const Course_Category = [
+  {
+    title: "ID",
+    dataIndex: "id",
+  },
+  {
+    title: "Course Name",
+    dataIndex: "course_category",
+  },
+  {
+    title: "Updated On",
+    dataIndex: "updated_at",
+    render:(val)=>{
+      return<>{val===null ? "2023-05-17":val}</>
+    }
+  },
+  {
+    title: "Action",
+    // dataIndex: 'action',
+    render: (record) => {
+      return (
+        <>
+          <EllipsisDropdown
+            menu={
+              <Menu>
+                <Menu.Item>
+                  <Link to="course_enroll/assignment_submission">
+                    <DeleteOutlined className="mr-2 " /> Delete
+                  </Link>
+                </Menu.Item>
+                <Menu.Item>
+                  <Link to="course_enroll/assignment_submission">
+                    <CustomIcon className="mr-2" svg={Edit} /> Edit
+                  </Link>
+                </Menu.Item>
+              </Menu>
+            }
+          />
+        </>
+      );
+    },
+  },
+];
   const certificatecolumn = [
     {
       title: "ID",
@@ -396,7 +443,7 @@ const Masters = () => {
               <Link to={"masters/course_category/add_new"}> + Add New</Link>
             </Button>
           </div>
-          <Helper clients={dummyData} attribiue={facilityBookingColumns} />
+          <Helper clients={allCate} attribiue={Course_Category} />
         </div>
       ),
     },
@@ -422,7 +469,7 @@ const Masters = () => {
               <Link to="masters/venue/add_new">+ Add New</Link>
             </Button>
           </div>
-          <Helper clients={assData} attribiue={assessmentcolumn} />
+          <Helper clients={allVenues} attribiue={assessmentcolumn} />
         </div>
       ),
     },
@@ -535,9 +582,47 @@ const Masters = () => {
         console.log(error);
       });
   }
+  const getAllCourseCate = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/admin-category",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setallCate(res.data.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  const getAllVenues = () => {
+    axios
+      .post(
+        "http://18.140.159.50:3333/api/admin-venues",
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        setallVenues(res.data.data);
+        // console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   useEffect(() => {
+    getAllCourseCate()
     getAllCourses()
     getAllLanguage()
+    getAllVenues()
     showAlert();
   }, []);
 

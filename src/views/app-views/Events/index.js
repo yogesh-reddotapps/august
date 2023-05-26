@@ -115,7 +115,7 @@ export default function Events() {
   const membershipRequestColumns = [
     {
       title: "User ID",
-      dataIndex: "user_id",
+      dataIndex: "id",
     },
     {
       dataIndex: "profile_pic",
@@ -129,7 +129,7 @@ export default function Events() {
     },
     {
       title: "Date of Birth",
-      dataIndex: "event_time",
+      dataIndex: "dob",
     },
     // {
     //   title: "Age",
@@ -160,7 +160,7 @@ export default function Events() {
     // },
     {
       title: "Mobile Number",
-      dataIndex: "phone",
+      dataIndex: "phone_number",
     },
     {
       title: "Email ID",

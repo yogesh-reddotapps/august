@@ -16,7 +16,7 @@ const MyForm = () => {
         street_number: values.streetNo,
         unit_number: values.unitNo,
         country: values.country,
-        level_no: values.levelNo,
+        level_no: "01",
       };
       console.log("test", data);
       const response = await axios.post(
