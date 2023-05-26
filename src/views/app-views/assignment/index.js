@@ -8,7 +8,7 @@ import { FileUnknownOutlined, DeleteOutlined } from "@ant-design/icons";
 import Helper, { capitalizeFirstLetter } from "../Helper";
 import "./assignment.css";
 import { useState } from "react";
-import axios from "axios";
+
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";

@@ -103,3 +103,80 @@
 th.ant-table-cell{
   color: #3e79f7 !important;
 }
+
+.imagesUpload .ant-tooltip-inner,.imagesUpload .ant-tooltip-arrow-content,.imagesUpload .ant-tooltip-inner{
+  display: none !important;
+}
+
+
+.tabbarWhite .ant-tabs .ant-tabs-nav{
+  background-color: white;
+}
+.correctOpt{
+  background: #e6ebf15c;
+    border-radius: 5px;
+    position: relative;
+}
+.correctOpt label{
+  width: 100%;
+}
+
+.correctOpt .customCircle{
+  background-color:#D4D4D4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  margin-right: 4px;
+}
+.normalOpt .customCircle{
+  background-color:#D4D4D4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white !important;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  margin-right: 4px;
+}
+
+.correctOpt label span:nth-child(1){
+  width: 25px;
+}
+
+.correctOpt label span:nth-child(2){
+  display: flex;
+  justify-content: space-between;
+  /* width: 500px; */
+}
+.correctOpt .tick{
+  position: absolute;
+  top: 12px;
+  right: 8px;
+}
+.normalOpt label{
+  width: 100%;
+}
+
+.normalOpt label span:nth-child(1){
+  width: 25px;
+}
+
+.normalOpt label span:nth-child(2){
+  display: flex;
+  justify-content: space-between;
+  /* width: 500px; */
+}
+.uploadfilevalidationastrick::before{
+  display: inline-block;
+  margin-right: 4px;
+  color: rgb(255, 107, 114);
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: "*";
+}

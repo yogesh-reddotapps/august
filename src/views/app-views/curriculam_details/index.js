@@ -1,7 +1,5 @@
 import { Button, Menu, Modal, Select, Divider } from "antd";
 import {
-  Export,
-  ExportIcon,
   FilterIcon,
   CsvIcon,
   Edit,
@@ -12,6 +10,9 @@ import {
   FileTypeUsingProp,
   AlertTick,
   AwardCerti,
+  BatchCal,
+  PdfType,
+  VideoType,
 } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import CustomIcon from "components/util-components/CustomIcon";
@@ -28,13 +29,17 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
-import AwardCert from "./award_certificate";
+import { FileUnknownOutlined } from "@ant-design/icons";
 const teacherArray = [
   {
     value: "Teacher 1",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-1.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-1.jpg"
+          alt="img"
+        />
         Teacher 1
       </div>
     ),
@@ -43,7 +48,11 @@ const teacherArray = [
     value: "Teacher 2",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-2.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-2.jpg"
+          alt="img"
+        />
         Teacher 2
       </div>
     ),
@@ -52,7 +61,11 @@ const teacherArray = [
     value: "Teacher 3",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-3.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-3.jpg"
+          alt="img"
+        />
         Teacher 3
       </div>
     ),
@@ -61,7 +74,11 @@ const teacherArray = [
     value: "Teacher 4",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-4.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-4.jpg"
+          alt="img"
+        />
         Teacher 4
       </div>
     ),
@@ -72,7 +89,11 @@ const teacherArray = [
     value: "Teacher 5",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-5.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-5.jpg"
+          alt="img"
+        />
         Teacher 5
       </div>
     ),
@@ -81,7 +102,11 @@ const teacherArray = [
     value: "Teacher 6",
     label: (
       <div>
-        <img className="circleTeacherImage mr-2" src="/img/avatars/thumb-6.jpg" alt="img" />
+        <img
+          className="circleTeacherImage mr-2"
+          src="/img/avatars/thumb-6.jpg"
+          alt="img"
+        />
         Teacher 6
       </div>
     ),
@@ -98,11 +123,92 @@ let alertstyle = {
   transition: "all 0.5s ease 0s",
   zIndex: 2,
 };
+const lessonData = [
+  {
+    Sr_No: 1,
+    Batch_ID: "BATCH001",
+    Start_Date: "2023-01-01",
+    End_Date: "2023-05-31",
+    Classes_Done: 10,
+    Classes_Remaining: 30,
+    Capacity: 40,
+    Enroll_Students: 20,
+    Status: "Active",
+  },
+  {
+    Sr_No: 2,
+    Batch_ID: "BATCH002",
+    Start_Date: "2023-02-15",
+    End_Date: "2023-06-30",
+    Classes_Done: 5,
+    Classes_Remaining: 35,
+    Capacity: 50,
+    Enroll_Students: 25,
+    Status: "Active",
+  },
+  // Add more objects as needed
+];
+const assessments = [
+  {
+    ID: 1,
+    Assessment_Title: "Mathematics Quiz",
+    Assessment_Questions: "10",
+    Start_Date: "2023-05-20",
+    Due_Date: "2023-05-25",
+    Attended_By: "John Doe",
+    Status: "Active",
+  },
+  {
+    ID: 2,
+    Assessment_Title: "English Essay",
+    Assessment_Questions: "1",
+    Start_Date: "2023-05-22",
+    Due_Date: "2023-05-27",
+    Attended_By: "Jane Smith",
+    Status: "In Progress",
+  },
+  {
+    ID: 3,
+    Assessment_Title: "Science Experiment",
+    Assessment_Questions: "5",
+    Start_Date: "2023-05-24",
+    Due_Date: "2023-05-29",
+    Attended_By: "Alex Johnson",
+    Status: "Not Started",
+  },
+];
+const courseMaterials = [
+  {
+    ID: 1,
+    Course_Material_Name: "Introduction to Mathematics",
+    File_Type: "pdf",
+    URL: "https://example.com/material1.pdf",
+    Created_By: "John Doe",
+    Created_On: "2023-05-10",
+    Status: "Active",
+  },
+  {
+    ID: 2,
+    Course_Material_Name: "English Grammar Guide",
+    File_Type: "video",
+    URL: "https://example.com/material2.docx",
+    Created_By: "Jane Smith",
+    Created_On: "2023-05-12",
+    Status: "Inactive",
+  },
+  {
+    ID: 3,
+    Course_Material_Name: "Chemistry Lecture Slides",
+    File_Type: "pdf",
+    URL: "https://example.com/material3.ppt",
+    Created_By: "Alex Johnson",
+    Created_On: "2023-05-15",
+    Status: "Active",
+  },
+];
+
 function FacilityBooking() {
   const history = useHistory();
-  const [facilityBooking, setFacilityBooking] = useState(
-    membershipFacilityBooking
-  );
   const [key, setKey] = useState(1);
   const [membershipRequestData, setmembershipRequestData] = useState(
     membershipEventBooking
@@ -156,28 +262,13 @@ function FacilityBooking() {
       dataIndex: "event_time",
     },
     {
-      title: "Age",
-      dataIndex: "age",
-    },
-    {
       title: "Gender",
       dataIndex: "gender",
       render: (text) => {
         return (
           <img
             src={`${text !== "male" ? "/img/female.png" : "/img/male.png"}`}
-          ></img>
-        );
-      },
-    },
-    {
-      title: "Nationality",
-      dataIndex: "nationality",
-      render: (flag) => {
-        return (
-          <img
-            width="20px"
-            src={`${flag === "Singapore" ? "/img/flag.jpg" : ""}`}
+            alt="..."
           ></img>
         );
       },
@@ -265,99 +356,42 @@ function FacilityBooking() {
     setIsModalOpen(false);
   };
 
-  const lessonData = [
-    {
-      userId: 1,
-      Sections: "Section 1 Course Intro",
-      Lessons: "video",
-    },
-    {
-      userId: 2,
-      Sections: "Section 1 Course Intro",
-      Lessons: "audio",
-    },
-    {
-      userId: 3,
-      Sections: "Section 1 Course Intro",
-      Lessons: "text",
-    },
-    {
-      userId: 4,
-      Sections: "Section 1 Course Intro",
-      Lessons: "question",
-    },
-    {
-      userId: 5,
-      Sections: "Section 1 Course Intro",
-      Lessons: "text",
-    },
-    {
-      userId: 6,
-      Sections: "Section 1 Course Intro",
-      Lessons: "text",
-    },
-  ];
-  const certificateData = [
-    {
-      User_Id: 1,
-      Student_Name: "John Doe",
-      Gender: "Male",
-      Email_ID: "johndoe@example.com",
-      Awarded_On: "2022-03-15",
-    },
-    {
-      User_Id: 2,
-      Student_Name: "Jane Smith",
-      Gender: "Female",
-      Email_ID: "janesmith@example.com",
-      Awarded_On: "2022-03-16",
-    },
-    // Add more objects as needed
-  ];
-
   const certificateColumns = [
     {
-      title: "User Id",
-      dataIndex: "User_Id",
+      title: "ID",
+      dataIndex: "ID",
     },
     {
-      title: "Student Name",
-      dataIndex: "Student_Name",
+      title: "Assessment Title",
+      dataIndex: "Assessment_Title",
     },
     {
-      title: "Gender",
-      dataIndex: "Gender",
+      title: "Assessment Questions",
+      dataIndex: "Assessment_Questions",
     },
     {
-      title: "Email ID",
-      dataIndex: "Email_ID",
+      title: "Start Date",
+      dataIndex: "Start_Date",
     },
     {
-      title: "Awarded On",
-      dataIndex: "Awarded_On",
+      title: "Due Date",
+      dataIndex: "Due_Date",
     },
     {
-      title: "Certificate",
-      dataIndex: "certificate",
-      render: (text) => {
-        return (
-          <div>
-            <img src="/img/3rd Certificate 1.png" alt="img" />
-          </div>
-        );
-      },
+      title: "Attended By",
+      dataIndex: "Attended_By",
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "Status",
       render: (text) => {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-success" : "text-danger"
+              text === "Active" ? "text-success" : "text-danger"
             } font-weight-semibold`}
           >
-            Completed
+            {text}
           </div>
         );
       },
@@ -372,17 +406,25 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="curriculam_details/award_certificate">
-                      {" "}
-                    <div className="d-flex align-items-center"><span className="mr-1"> <AwardCerti /></span>
-                      Award Certificate</div> 
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link to="curriculam_details/view_lesson_preview">
+                    <span>
                       {" "}
                       <DeleteOutlined className="mr-2 " />
                       Delete
+                    </span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <span className="d-flex align-items-center">
+                      <CustomIcon className="mr-2" svg={Edit} />
+                      Edit
+                    </span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/assessment/submission"
+                    >
+                      <FileUnknownOutlined className="mr-2" />
+                      View Submissions
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -396,24 +438,45 @@ function FacilityBooking() {
   const lessonColumns = [
     {
       title: "Sr No",
-      dataIndex: "userId",
+      dataIndex: "Sr_No",
     },
     {
-      title: "Lesson Module",
-      dataIndex: "Sections",
+      title: "Batch ID",
+      dataIndex: "Batch_ID",
     },
     {
-      title: "Lessons Type",
-      dataIndex: "Lessons",
+      title: "Start Date",
+      dataIndex: "Start_Date",
+    },
+    {
+      title: "End Date",
+      dataIndex: "End_Date",
+    },
+    {
+      title: "Classes Done",
+      dataIndex: "Classes_Done",
+    },
+    {
+      title: "Classes Remaining",
+      dataIndex: "Classes_Remaining",
+    },
+    {
+      title: "Capacity",
+      dataIndex: "Capacity",
+    },
+    {
+      title: "Enroll Students",
+      dataIndex: "Enroll_Students",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
       render: (text) => {
-        return <FileTypeUsingProp type={text}/>;
-      },
-    },
-    {
-      title: "Estimated Time (Mins)",
-      dataIndex: "status",
-      render: (text) => {
-        return <div>20</div>;
+        return (
+          <div className={text === "Active" ? "text-success" : "text-danger"}>
+            {text}
+          </div>
+        );
       },
     },
     {
@@ -426,10 +489,10 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="curriculam_details/view_lesson_preview">
+                    <Link to="curriculum_list/curriculam_details/batch/classes">
                       {" "}
                       <EyeOutlined className="mr-2 " />
-                      View
+                      View Classes
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -455,32 +518,24 @@ function FacilityBooking() {
       title: "Teacher Name",
       dataIndex: "teacherName",
     },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-      render: (text) => {
-        return (
-          <img
-            src={`${text !== "male" ? "/img/female.png" : "/img/male.png"}`}
-          ></img>
-        );
-      },
-    },
-    {
-      title: "Nationality",
-      dataIndex: "nationality",
-      render: (flag) => {
-        return <img width="20px" src={`/img/flag.jpg`}></img>;
-      },
-    },
-    {
-      title: "Mobile Number",
-      dataIndex: "mobileNumber",
-    },
 
     {
       title: "Email Id",
       dataIndex: "emailId",
+    },
+    {
+      title: "Batch ID",
+      dataIndex: "Batch_ID",
+      render: () => {
+        return <>#B002</>;
+      },
+    },
+    {
+      title: "Class ID",
+      dataIndex: "Class_ID",
+      render: () => {
+        return <>#C002</>;
+      },
     },
     {
       title: "Assigned on",
@@ -532,26 +587,79 @@ function FacilityBooking() {
       },
     },
   ];
-  const operations = (
-    <div className="mb-2 d-flex align-items-center">
-      {key == 1 && (
-        <Button
-          onClick={showModal}
-          className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
-        >
-          Assign New Teacher
-        </Button>
-      )}
-      {/* {key==3 && 
-      <Button
-        onClick={showModal}
-        className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
-      >
-        <Link to="curriculam_details/add_new_lesson">
-        Assign New Lesson</Link>
-      </Button>} */}
-    </div>
-  );
+  const courseMatColumns = [
+    {
+      title: "ID",
+      dataIndex: "ID",
+    },
+    {
+      title: "Course Material Name",
+      dataIndex: "Course_Material_Name",
+    },
+    {
+      title: "File Type",
+      dataIndex: "File_Type",
+      render: (text) => {
+        return (
+          <div>
+            {text === "pdf" && <PdfType />}
+            {text === "video" && <VideoType />}
+          </div>
+        );
+      },
+    },
+    {
+      title: "URL",
+      dataIndex: "URL",
+    },
+    {
+      title: "Created By",
+      dataIndex: "Created_By",
+    },
+    {
+      title: "Created On",
+      dataIndex: "Created_On",
+    },
+    {
+      title: "Status",
+      dataIndex: "Status",
+      render: (text) => {
+        return (
+          <div
+            className={`${
+              text === "Active" ? "text-success" : "text-danger"
+            } font-weight-semibold`}
+          >
+            {text}
+          </div>
+        );
+      },
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <span>
+                      {" "}
+                      <DeleteOutlined className="mr-2 " />
+                      Delete
+                    </span>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
+    },
+  ];
+  const operations = <div className="mb-2 d-flex align-items-center"></div>;
   const items = [
     {
       label: (
@@ -563,23 +671,32 @@ function FacilityBooking() {
       key: 1,
       children: (
         <div>
-          <div className="membershipPlanTableSearchFilter d-flex mb-3">
-            <SearchBox />
-            <Filter type={"curriculam_det"}>
+          <div className="d-flex justify-content-between">
+            <div className="membershipPlanTableSearchFilter d-flex mb-3">
+              <SearchBox />
+              <Filter>
+                <Button
+                  icon={<Icon component={FilterIcon} />}
+                  className="d-flex align-items-center ml-2"
+                >
+                  Filters
+                </Button>
+              </Filter>
               <Button
-                icon={<Icon component={FilterIcon} />}
+                icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
-                Filters
+                Export
               </Button>
-            </Filter>
+            </div>
             <Button
-              icon={<Icon component={CsvIcon} />}
-              className="d-flex align-items-center ml-2"
+              onClick={showModal}
+              className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
             >
-              Export
+              Assign New Teacher
             </Button>
           </div>
+
           <Helper clients={dummyData} attribiue={facilityBookingColumns} />
         </div>
       ),
@@ -620,8 +737,7 @@ function FacilityBooking() {
     {
       label: (
         <div className="d-flex justify-content-center">
-          <ViewCourseMaterial color={"#3e79f7"} />{" "}
-          <span className="ml-2">Subjects</span>
+          <BatchCal /> <span className="ml-2">Batches</span>
         </div>
       ),
       key: 3,
@@ -629,7 +745,7 @@ function FacilityBooking() {
         <div>
           <div className="membershipPlanTableSearchFilter d-flex mb-3">
             <SearchBox />
-            <Filter type={'subjects'}>
+            <Filter type={"subjects"}>
               <Button
                 icon={<Icon component={FilterIcon} />}
                 className="d-flex align-items-center ml-2"
@@ -662,28 +778,6 @@ function FacilityBooking() {
                 },
               ]}
             />
-            <div className="d-flex align-items-center">
-              <h5 className="m-0">Chapter : </h5>
-              <Select
-                className="mx-2"
-                style={{ width: "120px" }}
-                placeholder="Lesson"
-                options={[
-                  {
-                    value: "Lesson 1",
-                    label: "Lesson 1",
-                  },
-                  {
-                    value: "Lesson 2",
-                    label: "Lesson 2",
-                  },
-                  {
-                    value: "Lesson 3",
-                    label: "Lesson 3",
-                  },
-                ]}
-              />
-            </div>
           </div>
           <Helper clients={lessonData} attribiue={lessonColumns} />
         </div>
@@ -692,30 +786,82 @@ function FacilityBooking() {
     {
       label: (
         <div className="d-flex justify-content-center">
-          <CertificationsIcon /> <span className="ml-2">Certifications</span>
+          <CertificationsIcon /> <span className="ml-2">Assessments</span>
         </div>
       ),
       key: 4,
       children: (
         <div>
-          <div className="membershipPlanTableSearchFilter d-flex mb-3">
-            <SearchBox />
-            <Filter>
+          <div className="d-flex justify-content-between">
+            <div className="membershipPlanTableSearchFilter d-flex mb-3">
+              <SearchBox />
+              <Filter>
+                <Button
+                  icon={<Icon component={FilterIcon} />}
+                  className="d-flex align-items-center ml-2"
+                >
+                  Filters
+                </Button>
+              </Filter>
               <Button
-                icon={<Icon component={FilterIcon} />}
+                icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
-                Filters
+                Export
               </Button>
-            </Filter>
-            <Button
-              icon={<Icon component={CsvIcon} />}
-              className="d-flex align-items-center ml-2"
-            >
-              Export
+            </div>
+            <Button className="bg-info">
+              <Link
+                to={"curriculam_details/assessment/add_new"}
+                className="text-white"
+              >
+                {" "}
+                + Add New Assessent
+              </Link>
             </Button>
           </div>
-          <Helper clients={certificateData} attribiue={certificateColumns} />
+          <Helper clients={assessments} attribiue={certificateColumns} />
+        </div>
+      ),
+    },
+    {
+      label: (
+        <div className="d-flex justify-content-center">
+          <CertificationsIcon /> <span className="ml-2">Course Material</span>
+        </div>
+      ),
+      key: 5,
+      children: (
+        <div>
+          <div className="d-flex justify-content-between">
+            <div className="membershipPlanTableSearchFilter d-flex mb-3">
+              <SearchBox />
+              <Filter>
+                <Button
+                  icon={<Icon component={FilterIcon} />}
+                  className="d-flex align-items-center ml-2"
+                >
+                  Filters
+                </Button>
+              </Filter>
+              <Button
+                icon={<Icon component={CsvIcon} />}
+                className="d-flex align-items-center ml-2"
+              >
+                Export
+              </Button>
+            </div>
+            <Button className="bg-info">
+              <Link
+                to={"curriculam_details/course_material/add_new"}
+                className="text-white"
+              >
+                {" "}
+                + Add New Material
+              </Link>
+            </Button>
+          </div>
+          <Helper clients={courseMaterials} attribiue={courseMatColumns} />
         </div>
       ),
     },
@@ -768,18 +914,18 @@ function FacilityBooking() {
     showAlert();
   }, []);
   return (
-    <div>
+    <div className="tabbarWhite">
       {alertSuccess ? (
         <div
           className="d-flex align-items-center justify-content-center"
           style={alertstyle}
         >
-         <AlertTick/> {alertText}
+          <AlertTick /> {alertText}
         </div>
       ) : (
         ""
       )}
-      <div className="border rounded p-3 mb-4 bg-white">
+      <div className="p-3 bg-white">
         <div
           style={{ background: "#fafafb" }}
           className="mb-4 rounded d-flex align-items-start w-100 p-3 justify-content-between"
@@ -834,43 +980,16 @@ function FacilityBooking() {
             </div>
           </div>
         </div>
-        <Tabs tabBarExtraContent={operations} onChange={(e) => setKey(e)}>
-          {items.map((item) => (
-            <Tabs.TabPane tab={item.label} key={item.key}>
-              {item.children}
-            </Tabs.TabPane>
-          ))}
-        </Tabs>
       </div>
+      <Tabs tabBarExtraContent={operations} onChange={(e) => setKey(e)}>
+        {items.map((item) => (
+          <Tabs.TabPane tab={item.label} key={item.key}>
+            {item.children}
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
 
-      <div className="d-flex justify-content-between mb-3">
-        {/* <div className="" style={{ display: "flex" }}>
-          <SearchBox />
-          <Filter>
-            <Button
-              icon={<Icon component={FilterIcon} />}
-              className="d-flex align-items-center ml-2"
-            >
-              Filters
-            </Button>
-          </Filter>
-          <Button
-            icon={<Icon component={ExportIcon} />}
-            className="d-flex align-items-center ml-2"
-          >
-            Export
-          </Button>
-        </div> */}
-        {/* <Link
-          to="staffManagement/add_new"
-          className="bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
-        >
-          Add New Staff
-        </Link> */}
-      </div>
-      {/* <div>
-        <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />
-      </div> */}
+      <div className="d-flex justify-content-between mb-3"></div>
       <Modal
         width={600}
         footer={null}
@@ -890,18 +1009,20 @@ function FacilityBooking() {
           <br />
           <h5 className="font-weight-bold mt-4">Select Teacher</h5>
           <Select
-                style={{
-                  width: 300,
-                  marginBottom:'5px'
-                }}
-                placeholder="Select"
-                onChange={(value) => console.log(`selected ${value}`)}
-                options={teacherArray}
-              />
-              <br />
+            style={{
+              width: 300,
+              marginBottom: "5px",
+            }}
+            placeholder="Select"
+            onChange={(value) => console.log(`selected ${value}`)}
+            options={teacherArray}
+          />
+          <br />
           <div className="d-flex justify-content-end">
             <Button className="w-25 text-black">Cancel</Button>
-            <Button onClick={handleOk} className="ml-3 w-25 bg-info text-white">Save</Button>
+            <Button onClick={handleOk} className="ml-3 w-25 bg-info text-white">
+              Save
+            </Button>
           </div>
         </div>
       </Modal>

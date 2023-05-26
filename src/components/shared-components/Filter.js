@@ -3,30 +3,24 @@ import React, { useState } from "react";
 
 const test = (
   <Menu mode="horizontal">
-    {" "}
-    {/* Set the mode to "horizontal" or "vertical" */}
+    <Menu.Item>
+        <div>All</div>
+      </Menu.Item>
     <Menu.SubMenu key="item1" title="Roles">
-      {" "}
-      {/* Use SubMenu component with a key and title */}
       <Menu.Item key="subitem1">
         <Checkbox>All</Checkbox>
-      </Menu.Item>{" "}
-      {/* Use Menu.Item components as submenu items */}
+      </Menu.Item>
       <Menu.Item key="subitem1">
         <Checkbox>Crew</Checkbox>
-      </Menu.Item>{" "}
-      {/* Use Menu.Item components as submenu items */}
+      </Menu.Item>
       <Menu.Item key="subitem2">
         <Checkbox>Ops Manager</Checkbox>
       </Menu.Item>
     </Menu.SubMenu>
     <Menu.SubMenu key="item2" title="Status">
-      {" "}
-      {/* Use SubMenu component with a key and title */}
       <Menu.Item key="subitem1">
         <Checkbox>All</Checkbox>
-      </Menu.Item>{" "}
-      {/* Use Menu.Item components as submenu items */}
+      </Menu.Item>
       <Menu.Item key="subitem2">
         <Checkbox>Active</Checkbox>
       </Menu.Item>
@@ -35,16 +29,12 @@ const test = (
       </Menu.Item>
     </Menu.SubMenu>
     <Menu.SubMenu key="item3" title="Gender">
-      {" "}
-      {/* Use SubMenu component with a key and title */}
       <Menu.Item key="subitem1">
         <Checkbox>All</Checkbox>
-      </Menu.Item>{" "}
-      {/* Use Menu.Item components as submenu items */}
+      </Menu.Item>
       <Menu.Item key="subitem1">
         <Checkbox>Male</Checkbox>
-      </Menu.Item>{" "}
-      {/* Use Menu.Item components as submenu items */}
+      </Menu.Item>
       <Menu.Item key="subitem2">
         <Checkbox>Female</Checkbox>
       </Menu.Item>

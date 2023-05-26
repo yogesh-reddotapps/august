@@ -5,7 +5,7 @@ import CustomIcon from 'components/util-components/CustomIcon'
 import SearchBox from "components/shared-components/SearchBox";
 import { Link } from "react-router-dom";
 import Filter from "components/shared-components/Filter";
-import { Edit, CsvIcon, AlertTick, LessonTypeText, LessonTypeVideo, LessonTypeMusic, LessonTypeQuestion } from "assets/svg/icon";
+import { Edit, CsvIcon, AlertTick, LessonTypeText, LessonTypeVideo, LessonTypeMusic, LessonTypeQuestion, FiletypeText, FiletypeVideo, FiletypeAudio, FiletypeQue, FileTypeArVr } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import Helper from "../../../../Helper";
 import { useLocation, useHistory } from "react-router-dom";
@@ -26,7 +26,7 @@ const ClassAttend = () => {
       dataIndex: "Sr_No",
     },
     {
-      title: "Lesson Module ",
+      title: "Lesson",
       dataIndex: "Lesson_Module",
     },
     {
@@ -35,10 +35,11 @@ const ClassAttend = () => {
       render: (type) => {
         return (
           <> 
-          {type==='text' ? <LessonTypeText/> :''}
-          {type==='video' ? <LessonTypeVideo/> :''}
-          {type==='music' ? <LessonTypeMusic/> :''}
-          {type==='question' ? <LessonTypeQuestion/> :''}
+          {type==='text' ? <FiletypeText/> :''}
+          {type==='video' ? <FiletypeVideo/> :''}
+          {type==='music' ? <FiletypeAudio/> :''}
+          {type==='question' ? <FiletypeQue/> :''}
+          {type==='arvr' ? <FileTypeArVr/> :''}
           </>
         );
       },
@@ -138,7 +139,7 @@ const ClassAttend = () => {
       )}
       <div className="p-3 mb-4 bg-white">
         <div style={{ background: "#fafafb" }} className="w-100 rounded">
-          <div className="mb-4 d-flex align-items-start w-75 justify-content-between p-3">
+          <div className="mb-4 d-flex align-items-start w-100 justify-content-between p-3">
             <div>
               <div style={{ width: "250px" }}>
                 <h5 className="m-0">Course</h5>
@@ -162,6 +163,13 @@ const ClassAttend = () => {
               <div>
                 <h5 className="m-0">Medium</h5>
                 <p className="m-0">English</p>
+              </div>
+            </div>
+            <Divider style={{ height: "60px" }} type="vertical" />
+            <div>
+              <div>
+                <h5 className="m-0">Subject</h5>
+                <p className="m-0">Workplace Safety</p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />

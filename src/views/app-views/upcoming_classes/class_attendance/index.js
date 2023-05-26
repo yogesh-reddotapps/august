@@ -129,15 +129,15 @@ const ClassAttend = () => {
           <Divider style={{ height: "60px" }} type="vertical" />
           <div>
             <div>
-              <h5 className="m-0">Venue</h5>
-              <p className="m-0">Bedok</p>
+              <h5 className="m-0">Batch ID</h5>
+              <p className="m-0">#WS-B1</p>
             </div>
           </div>
           <Divider style={{ height: "60px" }} type="vertical" />
           <div>
             <div>
-              <h5 className="m-0">Medium</h5>
-              <p className="m-0">English</p>
+              <h5 className="m-0">Class ID</h5>
+              <p className="m-0">#WS-001</p>
             </div>
           </div>
           <Divider style={{ height: "60px" }} type="vertical" />
