@@ -16,6 +16,7 @@ import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
+import moment from "moment";
 
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
@@ -25,6 +26,7 @@ function FacilityBooking() {
     membershipEventBooking
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sysNoti, setSysNoti] = useState([])
 
   const membershipRequestColumns = [
     {
@@ -179,15 +181,21 @@ function FacilityBooking() {
   const facilityBookingColumns = [
     {
       title: "Notification Title",
-      dataIndex: "notificationName",
+      dataIndex: "notification_title",
     },
     {
       title: "Created On",
-      dataIndex: "createdOn",
+      dataIndex: "created_at",
+      render:(time)=>{
+        return<>{moment.utc(time).local().format("DD/MM/YYYY, hh:mm:ss A")}</>
+      }
     },
     {
       title: "Last Update",
-      dataIndex: "lastUpdate"
+      dataIndex: "updated_at",
+      render:(time)=>{
+        return<>{moment.utc(time).local().format("DD/MM/YYYY, hh:mm:ss A")}</>
+      }
     },
     {
       title: "Status",
@@ -196,10 +204,10 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-success" : "text-danger"
+              text === 1 ? "text-success" : "text-danger"
             } font-weight-semibold`}
           >
-            Active
+            {text === 1 ? "Active" : "Inactive"}
           </div>
         );
       },
@@ -210,7 +218,7 @@ function FacilityBooking() {
       render: (text) => {
         return (
           <Switch
-            defaultChecked
+            defaultChecked={text===1?true:false}
             onChange={(checked) => console.log(`switch to ${checked}`)}
           />
         );
@@ -226,7 +234,7 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="/app/notification/edit">
+                    <Link to={`/app/notification/edit?id=${record.id}`}>
                       {" "}
                       <CustomIcon className='mr-2' svg={Edit} /> Edit
                     </Link>
@@ -257,7 +265,7 @@ function FacilityBooking() {
       children: (
         <div className="border rounded p-3 mb-4 bg-white">
           <Helper
-            clients={notificationArray}
+            clients={sysNoti}
             attribiue={facilityBookingColumns}
           />
         </div>
@@ -309,7 +317,14 @@ function FacilityBooking() {
         console.log(err);
       });
   };
-
+  const getSysNotification = async () => {
+    const res1 = await axios.get('http://18.140.159.50:3333/api/notifications/system');
+    setSysNoti(res1.data);
+  }
+  useEffect(() => {
+  getSysNotification()
+  }, [])
+  
   return (
     <div>
       <div>

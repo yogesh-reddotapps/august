@@ -9,26 +9,31 @@ import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import Helper from "../../../Helper";
 import { useLocation,useHistory  } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
+import axios from "axios";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [subjectList, setSubjectList] = useState([])
   const [alertText, setAlertText] = useState('Course category added Successfully!');
-
+  const id = queryParams.get("id");
   const addParam = queryParams.get("add");
   const attcolumn = [
     {
       title: "Id",
-      dataIndex: "Id",
+      dataIndex: "id",
     },
     {
       title: "Subjects",
-      dataIndex: "student_name",
+      dataIndex: "subject_name",
     },
     {
       title: "Lessons",
-      dataIndex: "age",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>{lessons.length}</>
+      }
     },
     {
       title: "Action",
@@ -40,7 +45,7 @@ const ClassAttend = () => {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="subjects/lessons"><ViewSubject className="mr-2 " /> View Lessons</Link>
+                    <Link to={`subjects/lessons?course_id=${id}&subject_id=${record.id}`}><ViewSubject className="mr-2 " /> View Lessons</Link>
                   </Menu.Item>
                   <Menu.Item>
                     <span><DeleteOutlined className="mr-2 " /> Delete</span>
@@ -121,11 +126,22 @@ const ClassAttend = () => {
       }, 2000);
     }
   }
-
+  const getSubjects = async () => {
+    const res1 = await axios.post('http://18.140.159.50:3333/api/admin-subjects',{ "course_id": id})
+    setSubjectList(res1.data);
+    console.log(res1.data);
+  }
   useEffect(() => {
-    showAlert()
-  
+    if(id){
+      getSubjects()
+    }
   }, [])
+  
+
+  // useEffect(() => {
+  //   showAlert()
+  
+  // }, [])
 
   return (
     <div>
@@ -195,7 +211,7 @@ const ClassAttend = () => {
           <Link to={"subjects/add_new"}> + Add New</Link>
         </Button>
       </div>
-      <Helper clients={attData} attribiue={attcolumn} />
+      <Helper clients={subjectList} attribiue={attcolumn} />
     </div>
   );
 };

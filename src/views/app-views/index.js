@@ -16,6 +16,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement`} component={lazy(() => import(`./Membership_Request`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/admin_management`} component={lazy(() => import(`./admin-management`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/admin_management/add_new`} component={lazy(() => import(`./admin-management/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/staffManagement/admin_management/edit`} component={lazy(() => import(`./admin-management/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/add_new`} component={lazy(() => import(`./Membership_Request/AddNew.js`))} />
         {/* <Route exact path={`${APP_PREFIX_PATH}/membership/payments`} component={lazy(() => import(`./Payments`))} />
         <Route exact path={`${APP_PREFIX_PATH}/membership/membership_plans`} component={lazy(() => import(`./Membership_plans`))} />
@@ -27,10 +28,12 @@ export const AppViews = () => {
         {/* <Route exact path={`${APP_PREFIX_PATH}/events/sport-event-funds/add-new`} component={lazy(() => import(`./Sport_Event_Funds/AddNew`))} /> */}
         {/* <Route exact path={`${APP_PREFIX_PATH}/events/sport-event-funds/details`} component={lazy(() => import(`./Sport_Event_Funds/Invoice`))} /> */}
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/add_new`} component={lazy(() => import(`./Events/AddNew.js`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/Student_management/edit`} component={lazy(() => import(`./Events/AddNew.js`))} />
         {/* <Route exact path={`${APP_PREFIX_PATH}/events/event_list/update/:id`} component={lazy(() => import(`./Events/AddNew.js`))} /> */}
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches`} component={lazy(() => import(`./course_batches`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches/add_new_batch`} component={lazy(() => import(`./course_batches/add_new_batch`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list`} component={lazy(() => import(`./curriculum_list`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches/enroll-new-student`} component={lazy(() => import(`./course_batches/EnrollStudent`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list/curriculam_details/batch/classes`} component={lazy(() => import(`./curriculum_list/batch/classes`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list/curriculam_details/batch/classes/attendance`} component={lazy(() => import(`./curriculum_list/batch/classes/attendance`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list/curriculam_details/batch/classes/view_subjects`} component={lazy(() => import(`./curriculum_list/batch/classes/view_subjects`))} />
@@ -55,6 +58,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/course_material/add_new`} component={lazy(() => import(`./course_material/AddNew`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/teacher_management`} component={lazy(() => import(`./teacher_management`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/teacher_management/add_new`} component={lazy(() => import(`./teacher_management/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/staffManagement/teacher_management/edit`} component={lazy(() => import(`./teacher_management/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/staffManagement/teacher_management/teacher_detail`} component={lazy(() => import(`./teacher_management/view_details`))} />
         <Route exact path={`${APP_PREFIX_PATH}/upcoming_classes`} component={lazy(() => import(`./upcoming_classes`))} />
         <Route exact path={`${APP_PREFIX_PATH}/upcoming_classes/class_attendance`} component={lazy(() => import(`./upcoming_classes/class_attendance`))} />

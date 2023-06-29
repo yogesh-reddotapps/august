@@ -1,87 +1,252 @@
-import { Form, Input, Button, Select, InputNumber, DatePicker, Modal } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  InputNumber,
+  DatePicker,
+  Modal,
+  Tabs,
+} from "antd";
+import { ClassInvite, TeacherAssignedIcon } from "assets/svg/icon";
+import axios from "axios";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Helper from "views/app-views/Helper";
+const { Search } = Input;
 
 const MyForm = () => {
   const [form] = Form.useForm();
-  const [successModal, setSuccessModal] = useState(false)
-
-  const onFinish = (values) => {
+  const [successModal, setSuccessModal] = useState(false);
+  const [coursenameid, setCoursenameid] = useState([]);
+  const attcolumn = [
+    {
+      title: "Id",
+      dataIndex: "Id",
+    },
+    {
+      title: "Student Name",
+      dataIndex: "student_name",
+    },
+    {
+      title: "DOB",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>26 Aug 1996</>
+      }
+    },
+    {
+      title: "Mobile Number",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>+65 1359 7283</>
+      }
+    },
+    {
+      title: "Email ID",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>jane@gmail.com</>
+      }
+    },
+    {
+      title: "Date of Enroll",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>16 May 2023</>
+      }
+    },
+    {
+      title: "Status",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>Active</>
+      }
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            del
+          </>
+        );
+      },
+    },
+  ];
+  const attData = [
+    {
+      Id: 1,
+      student_name: "John Doe",
+      age: 18,
+      gender: "Male",
+      contact_no: "1234567890",
+      email: "johndoe@example.com",
+      attendance: "Present",
+    },
+    {
+      Id: 2,
+      student_name: "Jane Smith",
+      age: 19,
+      gender: "Female",
+      contact_no: "9876543210",
+      email: "janesmith@example.com",
+      attendance: "Absent",
+    },
+    {
+      Id: 3,
+      student_name: "Tom Johnson",
+      age: 17,
+      gender: "Male",
+      contact_no: "7890123456",
+      email: "tomjohnson@example.com",
+      attendance: "Present",
+    },
+    {
+      Id: 4,
+      student_name: "Alice Brown",
+      age: 18,
+      gender: "Female",
+      contact_no: "3456789012",
+      email: "alicebrown@example.com",
+      attendance: "Absent",
+    },
+  ];
+  const onFinish = async (values) => {
+    let course = values.course.split(",");
     let start_date = moment(values.startDate).format("YYYY-MM-DD");
     let end_date = moment(values.endDate).format("YYYY-MM-DD");
     console.log(values, start_date, end_date);
-    setSuccessModal(true)
+    let data = await axios.post("http://18.140.159.50:3333/api/batches", {
+      course_name: course[1],
+      course_id: course[0],
+      start_date: start_date,
+      end_date: end_date,
+      capacity: values.batchCapacity,
+      status: 1,
+      batch_id: values.batchId,
+    });
+    console.log(data);
+    setSuccessModal(true);
     setTimeout(() => {
-        setSuccessModal(false)
+      setSuccessModal(false);
     }, 900);
   };
 
+  const getCoursesNameAndId = async () => {
+    let res = await axios.get("http://18.140.159.50:3333/api/courses-list");
+    setCoursenameid(
+      res.data.data.map((elem, i) => {
+        return {
+          value: `${elem.id},${elem.course_name}`,
+          label: elem.course_name,
+        };
+      })
+    );
+  };
+
+  useEffect(() => {
+    getCoursesNameAndId();
+  }, []);
 
   return (
     <>
-      <Form form={form} onFinish={onFinish}>
-        <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="text-info mb-4">Add New Batch</h5>
-          <div className="mt-4">
-            <h5>Batch Id</h5>
-            <Form.Item name="batchId">
-              <Input className="w-50" placeholder="Batch Id" />
-            </Form.Item>
-          </div>
-          <div className="mt-4">
-            <h5>Course</h5>
-            <Form.Item name="course">
-              <Select
-                placeholder="Select"
-                className="w-50"
-                options={[
-                  {
-                    value: "Course_1",
-                    label: "Course 1",
-                  },
-                  {
-                    value: "Course_2",
-                    label: "Course 2",
-                  },
-                ]}
+      <Tabs className="whiteBack">
+        <Tabs.TabPane
+          tab={
+            <div className="d-flex align-items-center">
+              <ClassInvite /> <span className="ml-2">Batch Details</span>
+            </div>
+          }
+          key="item-1"
+        >
+          <Form form={form} onFinish={onFinish}>
+            <div className="border rounded p-3 mb-4 bg-white">
+              <h5 className="text-info mb-4">Add New Batch</h5>
+              <div className="mt-4">
+                <h5>Batch Id</h5>
+                <Form.Item name="batchId">
+                  <Input className="w-50" placeholder="Batch Id" />
+                </Form.Item>
+              </div>
+              <div className="mt-4">
+                <h5>Course</h5>
+                <Form.Item name="course">
+                  <Select
+                    placeholder="Select"
+                    className="w-50"
+                    options={coursenameid}
+                  />
+                </Form.Item>
+              </div>
+              <div className="mt-4">
+                <h5>Batch Capacity</h5>
+                <Form.Item name="batchCapacity">
+                  <InputNumber className="w-50" defaultValue={0} />
+                </Form.Item>
+              </div>
+              <div className="mt-4">
+                <h5>Start Date</h5>
+                <Form.Item name="startDate">
+                  <DatePicker className="w-50" />
+                </Form.Item>
+              </div>
+              <div className="mt-4">
+                <h5>End Date</h5>
+                <Form.Item name="endDate">
+                  <DatePicker className="w-50" />
+                </Form.Item>
+              </div>
+            </div>
+            <div className="d-flex mt-3 justify-content-end">
+              <Form.Item>
+                <Button>Cancel</Button>
+              </Form.Item>
+              <Form.Item>
+                <Button className="text-white bg-info ml-3" htmlType="submit">
+                  Save
+                </Button>
+              </Form.Item>
+            </div>
+          </Form>
+        </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={
+            <div className="d-flex align-items-center">
+              <TeacherAssignedIcon />{" "}
+              <span className="ml-2">Enrolled Students</span>
+            </div>
+          }
+          key="item-2"
+        >
+          <div className="d-flex justify-content-between">
+            <div>
+              <Search
+                placeholder="Search"
+                onSearch={(value) => console.log(value)}
+                style={{
+                  width: 200,
+                }}
               />
-            </Form.Item>
+            </div>
+            <div>
+              <Button className="bg-info text-white">
+                <Link to={"enroll-new-student"}>
+                  {" "}
+                  + Enroll New Student
+                </Link>
+              </Button>
+            </div>
           </div>
-          <div className="mt-4">
-            <h5>Batch Capacity</h5>
-            <Form.Item name="batchCapacity">
-              <InputNumber className="w-50" defaultValue={0} />
-            </Form.Item>
+          <div className="mt-3">
+          <Helper clients={attData} attribiue={attcolumn} />
           </div>
-          <div className="mt-4">
-            <h5>Start Date</h5>
-            <Form.Item name="startDate">
-              <DatePicker className="w-50" />
-            </Form.Item>
-          </div>
-          <div className="mt-4">
-            <h5>End Date</h5>
-            <Form.Item name="endDate">
-              <DatePicker className="w-50" />
-            </Form.Item>
-          </div>
-        </div>
-        <div className="d-flex mt-3 justify-content-end">
-          <Form.Item>
-            <Button>Cancel</Button>
-          </Form.Item>
-          <Form.Item>
-            <Button className="text-white bg-info ml-3" htmlType="submit">
-              Save
-            </Button>
-          </Form.Item>
-        </div>
-      </Form>
-      <Modal
-        width={500}
-        footer={null}
-        visible={successModal}
-      >
+        </Tabs.TabPane>
+      </Tabs>
+
+      <Modal width={500} footer={null} visible={successModal}>
         <div className="d-flex my-3 align-items-center flex-column justify-content-center">
           {/* <CustomIcon svg={Verified} /> */}
           <svg

@@ -31,6 +31,7 @@ export default function Events() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSuccModalOpen, setIsSuccModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [refereshTog, setRefereshTog] = useState(false)
 
   let styles = {
     files: {
@@ -106,8 +107,17 @@ export default function Events() {
       title: "Are you sure, you want to delete this members record ?",
       okText: "Yes",
       okType: "danger",
-      onOk: () => {
-        deleteEvents(record, dataSet, Id);
+      onOk: async () => {
+        let res1 = await axios.post(
+          "http://18.140.159.50:3333/api/delete-student",
+          {
+            user_id: record,
+          }
+        );
+        if(res1.data.success){
+          console.log(refereshTog);
+          setRefereshTog(refereshTog?false:true)
+        }
       },
     });
   };
@@ -195,7 +205,7 @@ export default function Events() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="Student_management/student_detail">
+                    <Link to={`Student_management/student_detail?id=${record.user_id}&student_id=${record.id}`}>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Details
@@ -203,7 +213,7 @@ export default function Events() {
                   </Menu.Item>
                   <Menu.Item>
                     <span
-                      onClick={() => onDeleteData(record, setEventsData, "id")}
+                      onClick={() => onDeleteData(record.user_id, setEventsData, "id")}
                     >
                       {" "}
                       <DeleteOutlined className="mr-2 " />
@@ -211,12 +221,11 @@ export default function Events() {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link
-                      to={`event_list/update/${record.id}`}
-                      className="d-flex align-items-center"
-                    >
-                      <CustomIcon className="mr-2" svg={Edit} />
-                      Edit
+                  <Link to={`Student_management/edit?id=${record.user_id}`}>
+                      <span className="d-flex align-items-center">
+                        <CustomIcon className="mr-2" svg={Edit} />
+                        Edit
+                      </span>
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -268,7 +277,7 @@ export default function Events() {
 
   useEffect(() => {
     getEvents();
-  }, []);
+  }, [refereshTog]);
 
   return (
     <div>

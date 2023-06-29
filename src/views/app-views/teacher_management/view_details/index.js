@@ -1,4 +1,4 @@
-import { Button, Menu, Modal, Select, Rate, Switch, Divider } from "antd";
+import { Button, Menu, Modal, Select, Rate, Switch, Divider, Tag } from "antd";
 import {
   CourseAccess,
   ClassInvite,
@@ -25,90 +25,116 @@ import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
 const admins = [
   {
-      "User_ID": 1,
-      "Admin_Name": "John",
-      "Ratings_Given": 4,
-      "Remarks": "Good service",
-      "Status": "active"
+    User_ID: 1,
+    Admin_Name: "John",
+    Ratings_Given: 4,
+    Remarks: "Good service",
+    Status: "active",
   },
   {
-      "User_ID": 2,
-      "Admin_Name": "Sarah",
-      "Ratings_Given": 3,
-      "Remarks": "Average experience",
-      "Status": "inactive"
+    User_ID: 2,
+    Admin_Name: "Sarah",
+    Ratings_Given: 3,
+    Remarks: "Average experience",
+    Status: "inactive",
   },
   {
-      "User_ID": 3,
-      "Admin_Name": "David",
-      "Ratings_Given": 5,
-      "Remarks": "Excellent support",
-      "Status": "active"
-  }
-]
+    User_ID: 3,
+    Admin_Name: "David",
+    Ratings_Given: 5,
+    Remarks: "Excellent support",
+    Status: "active",
+  },
+];
 const students = [
   {
-      "User_ID": 1,
-      "Class_ID": 101,
-      "Student": "John",
-      "Ratings_Given": 4,
-      "Remarks": "Good performance",
-      "Status": "active"
+    User_ID: 1,
+    Class_ID: 101,
+    Student: "John",
+    Ratings_Given: 4,
+    Remarks: "Good performance",
+    Status: "active",
   },
   {
-      "User_ID": 2,
-      "Class_ID": 101,
-      "Student": "Sarah",
-      "Ratings_Given": 3,
-      "Remarks": "Average progress",
-      "Status": "inactive"
+    User_ID: 2,
+    Class_ID: 101,
+    Student: "Sarah",
+    Ratings_Given: 3,
+    Remarks: "Average progress",
+    Status: "inactive",
   },
   {
-      "User_ID": 3,
-      "Class_ID": 102,
-      "Student": "David",
-      "Ratings_Given": 5,
-      "Remarks": "Excellent work",
-      "Status": "active"
-  }
-]
-
+    User_ID: 3,
+    Class_ID: 102,
+    Student: "David",
+    Ratings_Given: 5,
+    Remarks: "Excellent work",
+    Status: "active",
+  },
+];
 
 function FacilityBooking() {
-  const [tabKey, setTabKey] = useState(0)
+  const [tabKey, setTabKey] = useState(0);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const [teacherData, setTeacherData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [adminRatingsList, setAdminRatingsList] = useState([]);
+  const [adminRating, setAdminRating] = useState({
+    teacher_id: 0,
+    admin_id: "15",
+    description: "",
+    rating: 0,
+  });
+  const [leaveApp, setLeaveApp] = useState([]);
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
   const [membershipRequestData, setmembershipRequestData] = useState(
     membershipEventBooking
   );
-  const acceptApp = (record) => {
-    setmembershipRequestData((pre)=>{
-      // console.log(pre,record);
-      return pre.map((elem,i) => {
-        if (elem.id===record.id) {
-          return {...elem,status:"Accepted"}
-        } else {
-          return elem
-        }
-      })
-    })
-  }
-  const rejecttApp = (record) => {
-    setmembershipRequestData((pre)=>{
-      // console.log(pre,record);
-      return pre.map((elem,i) => {
-        if (elem.id===record.id) {
-          return {...elem,status:"Rejected"}
-        } else {
-          return elem
-        }
-      })
-    })
-  }
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const acceptApp = async (record) => {
+    console.log(record);
+    const res1 = await axios.post(
+      "http://18.140.159.50:3333/api/accept-reject-applications",
+      {
+        leave_application_id: record.id,
+        status: 1,
+      }
+    );
+    console.log(res1);
+  };
+  const rejecttApp = async (record) => {
+    console.log(record);
+    const res1 = await axios.post(
+      "http://18.140.159.50:3333/api/accept-reject-applications",
+      {
+        leave_application_id: record.id,
+        status: 2,
+      }
+    );
+    console.log(res1);
+  };
+  const sendAdminRate = async () => {
+    const res1 = await axios.post(
+      "http://18.140.159.50:3333/api/add-performance-rating",
+      adminRating
+    );
+    if (res1.status === 201) {
+      setIsModalOpen(false);
+      setAdminRating({
+        teacher_id: 0,
+        admin_id: "15",
+        description: "",
+        rating: 0,
+      });
+    }
+  };
 
   const membershipRequestColumns = [
     {
@@ -119,8 +145,8 @@ function FacilityBooking() {
       title: "Class ID",
       dataIndex: "id",
       render: (avatar) => {
-         return <>#WS-001</>;
-       },
+        return <>#WS-001</>;
+      },
     },
     {
       title: "Course Name",
@@ -175,68 +201,72 @@ function FacilityBooking() {
   const leaveAppColumns = [
     {
       title: "Batch ID",
-      dataIndex: "id",
+      dataIndex: "batch_id",
     },
     {
       title: "Class ID",
-      dataIndex: "id",
-      render: (avatar) => {
-         return <>#WS-001</>;
-       },
+      dataIndex: "class_id",
     },
     {
       title: "Course Name",
-      dataIndex: "applicant_name",
-      render: (avatar) => {
-        return <>Workplace Safety an Health in Construction Sites</>;
-      },
+      dataIndex: "course_name",
     },
     {
       title: "Class Date",
-      dataIndex: "event_time",
+      dataIndex: "class_date",
+      render: (date) => {
+        return <div>{moment(date).format("YYYY-MM-DD")}</div>;
+      },
     },
     {
       title: "Start Time",
-      dataIndex: "time",
-      render: (avatar) => {
-        return <>10:00 AM</>;
+      dataIndex: "start_time",
+      render: (time) => {
+        return <>{moment(time, "HH:mm:ss").format("h:mm A")}</>;
       },
     },
     {
       title: "End Time",
-      dataIndex: "time",
-      render: (avatar) => {
-        return <>12:00 PM</>;
+      dataIndex: "end_time",
+      render: (time) => {
+        return <>{moment(time, "HH:mm:ss").format("h:mm A")}</>;
       },
     },
     {
       title: "Date of Application",
       width: "180px",
-      dataIndex: "event_time",
-      render: (avatar) => {
-        return <>16 Jan 2023, 10:00 Am</>;
+      dataIndex: "date_of_application",
+      render: (time) => {
+        return <>{moment(time).utc().format("DD MMM YYYY, h:mm A")}</>;
       },
     },
     {
       title: "Reason",
       width: "250px",
-      dataIndex: "event_time",
-      render: (avatar) => {
-        return <>Loreum ipsum is dummy text .Loreum ipsum is dummy text</>;
-      },
+      dataIndex: "reason",
     },
     {
       title: "Status",
       dataIndex: "status",
       render: (text) => {
         return (
-          <div
-            className={`${
-              text !== "Active" ? "text-danger" : "text-success"
-            } font-weight-semibold`}
-          >
-            {text}
-          </div>
+          <>
+            {text === 0 && (
+              <div className={`text-warning`}>
+                <Tag color="warning">Pending</Tag>
+              </div>
+            )}
+            {text === 1 && (
+              <div className={`text-success`}>
+                <Tag color="success">Accepted</Tag>
+              </div>
+            )}
+            {text === 2 && (
+              <div className={`text-danges`}>
+                <Tag color="error">Rejected</Tag>
+              </div>
+            )}
+          </>
         );
       },
     },
@@ -246,24 +276,34 @@ function FacilityBooking() {
       render: (record) => {
         return (
           <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" onClick={()=>acceptApp(record)}>
-                      <AcceptTick/>
-                      Accept
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" onClick={()=>rejecttApp(record)}>
-                      <CancelCross/>
-                      Reject
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
+            <>
+              {record.status === 0 && (
+                <EllipsisDropdown
+                  menu={
+                    <Menu>
+                      <Menu.Item>
+                        <Link
+                          className="d-flex align-items-center"
+                          to="curriculam_details/view_lesson_preview"
+                        >
+                          <AcceptTick />
+                          Accept
+                        </Link>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <Link
+                          className="d-flex align-items-center"
+                          to="curriculam_details/view_lesson_preview"
+                        >
+                          <CancelCross />
+                          Reject
+                        </Link>
+                      </Menu.Item>
+                    </Menu>
+                  }
+                />
+              )}
+            </>
           </>
         );
       },
@@ -272,32 +312,36 @@ function FacilityBooking() {
   const adminratingColumn = [
     {
       title: "User ID",
-      dataIndex: "User_ID",
+      dataIndex: "user_id",
     },
     {
       dataIndex: "avatar",
       render: (avatar) => {
-        return <img src='/img/avatar3.png' alt="img" />;
+        return <img src="/img/avatar3.png" alt="img" />;
       },
     },
     {
       title: "Admin Name",
-      dataIndex: "Admin_Name",
+      dataIndex: "name",
     },
     {
       title: "Ratings Given",
-      dataIndex: "Ratings_Given",
-      render:(val)=>{
-        return <><Rate disabled defaultValue={val} /></>
-      }
+      dataIndex: "rating",
+      render: (val) => {
+        return (
+          <>
+            <Rate disabled defaultValue={val} />
+          </>
+        );
+      },
     },
     {
       title: "Remarks",
-      dataIndex: "Remarks",
+      dataIndex: "description",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
@@ -320,14 +364,20 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <AcceptTick/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <AcceptTick />
                       Accept
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <CancelCross/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <CancelCross />
                       Reject
                     </Link>
                   </Menu.Item>
@@ -338,7 +388,7 @@ function FacilityBooking() {
         );
       },
     },
-  ]
+  ];
   const classratingColumn = [
     {
       title: "User ID",
@@ -351,7 +401,7 @@ function FacilityBooking() {
     {
       dataIndex: "avatar",
       render: (avatar) => {
-        return <img src='/img/avatar3.png' alt="img" />;
+        return <img src="/img/avatar3.png" alt="img" />;
       },
     },
     {
@@ -361,9 +411,13 @@ function FacilityBooking() {
     {
       title: "Ratings Given",
       dataIndex: "Ratings_Given",
-      render:(val)=>{
-        return <><Rate disabled defaultValue={val} /></>
-      }
+      render: (val) => {
+        return (
+          <>
+            <Rate disabled defaultValue={val} />
+          </>
+        );
+      },
     },
     {
       title: "Remarks",
@@ -394,14 +448,20 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <AcceptTick/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <AcceptTick />
                       Accept
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <CancelCross/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <CancelCross />
                       Reject
                     </Link>
                   </Menu.Item>
@@ -412,7 +472,7 @@ function FacilityBooking() {
         );
       },
     },
-  ]
+  ];
   const showModal = () => {
     setIsModalOpen(true);
     // handleOk()
@@ -473,7 +533,15 @@ function FacilityBooking() {
   const operations = (
     <div className="mb-2 mr-3 d-flex align-items-center">
       <Button
-        onClick={showModal}
+        onClick={() => {
+          setAdminRating((preval) => {
+            return {
+              ...preval,
+              teacher_id: teacherData.id,
+            };
+          });
+          showModal();
+        }}
         className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
       >
         Performance Ratings
@@ -490,11 +558,11 @@ function FacilityBooking() {
       key: 1,
       children: (
         <div>
-          <div style={{width:'330px'}} className="d-flex mb-3">
+          <div style={{ width: "330px" }} className="d-flex mb-3">
             <Search
               placeholder="Search"
               onSearch={(value) => console.log(value)}
-              style={{width:'220px'}}
+              style={{ width: "220px" }}
             />
             <Button
               icon={<Icon component={CsvIcon} />}
@@ -519,11 +587,11 @@ function FacilityBooking() {
       key: 2,
       children: (
         <div>
-          <div style={{width:'330px'}} className="d-flex mb-3">
+          <div style={{ width: "330px" }} className="d-flex mb-3">
             <Search
               placeholder="Search"
               onSearch={(value) => console.log(value)}
-              style={{width:'220px'}}
+              style={{ width: "220px" }}
             />
             <Button
               icon={<Icon component={CsvIcon} />}
@@ -548,11 +616,11 @@ function FacilityBooking() {
       key: 3,
       children: (
         <div>
-          <div style={{width:'330px'}} className="d-flex mb-3">
+          <div style={{ width: "330px" }} className="d-flex mb-3">
             <Search
               placeholder="Search"
               onSearch={(value) => console.log(value)}
-              style={{width:'220px'}}
+              style={{ width: "220px" }}
             />
             <Button
               icon={<Icon component={CsvIcon} />}
@@ -561,7 +629,12 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={membershipRequestData} attribiue={leaveAppColumns} />
+          {leaveApp.length !== 0 && (
+            <Helper
+              clients={leaveApp.length !== 0 && leaveApp}
+              attribiue={leaveAppColumns}
+            />
+          )}
         </div>
       ),
     },
@@ -574,11 +647,11 @@ function FacilityBooking() {
       key: 4,
       children: (
         <div>
-          <div style={{width:'330px'}} className="d-flex mb-3">
+          <div style={{ width: "330px" }} className="d-flex mb-3">
             <Search
               placeholder="Search"
               onSearch={(value) => console.log(value)}
-              style={{width:'220px'}}
+              style={{ width: "220px" }}
             />
             <Button
               icon={<Icon component={CsvIcon} />}
@@ -587,7 +660,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={admins} attribiue={adminratingColumn} />
+          <Helper clients={adminRatingsList} attribiue={adminratingColumn} />
         </div>
       ),
     },
@@ -600,11 +673,11 @@ function FacilityBooking() {
       key: 5,
       children: (
         <div>
-          <div style={{width:'330px'}} className="d-flex mb-3">
+          <div style={{ width: "330px" }} className="d-flex mb-3">
             <Search
               placeholder="Search"
               onSearch={(value) => console.log(value)}
-              style={{width:'220px'}}
+              style={{ width: "220px" }}
             />
             <Button
               icon={<Icon component={CsvIcon} />}
@@ -650,6 +723,34 @@ function FacilityBooking() {
         console.log(err);
       });
   };
+  const getTeacherDetail = async () => {
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/get-teacher-by-id",
+      {
+        user_id: id,
+      }
+    );
+    let data = res1.data[0];
+    setTeacherData(data);
+    const res2 = await axios.get(
+      `http://18.140.159.50:3333/api/get-performance-rating/${data.id}`
+    );
+    console.log(res2.data);
+    setAdminRatingsList(res2.data);
+  };
+  const getLeaveApp = async () => {
+    const res1 = await axios.post(
+      "http://18.140.159.50:3333/api/leave-applications",
+      { teacher_id: "1" }
+    );
+    console.log(res1.data.data);
+    setLeaveApp(res1.data.data);
+  };
+
+  useEffect(() => {
+    getTeacherDetail();
+    getLeaveApp();
+  }, []);
 
   return (
     <div className="tabbarWhite">
@@ -669,7 +770,8 @@ function FacilityBooking() {
               <div>
                 <h5 className="m-0">Teacher</h5>
                 <div className="d-flex align-items-center">
-                  Jane Cooper <img className="ml-2" src="/img/female.png" />
+                  {teacherData !== null && teacherData.name}{" "}
+                  <img className="ml-2" src="/img/male.png" />
                 </div>
               </div>
             </div>
@@ -677,31 +779,47 @@ function FacilityBooking() {
             <div>
               <div>
                 <h5 className="m-0">Email ID</h5>
-                <p className="m-0">Janecooper@gmail.com</p>
+                <p className="m-0">
+                  {teacherData !== null && teacherData.email}
+                </p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />
             <div>
               <div>
                 <h5 className="m-0">Phone Number</h5>
-                <p className="m-0">+65 123 456</p>
+                <p className="m-0">
+                  {teacherData !== null && teacherData.phone_number}
+                </p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />
             <div>
               <div>
                 <h5 className="m-0">Last Login Date</h5>
-                <p className="m-0">1 Mar 2022</p>
+                <p className="m-0">
+                  {teacherData !== null &&
+                    moment(teacherData.lastLoginTime).format("DD MMM YYYY")}
+                </p>
               </div>
             </div>
           </div>
-            <div className="p-3 d-flex flex-column align-items-end">
-              <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">Active</h5>
-              <div>Since Monday, 1 Jan 2022</div>
+          <div className="p-3 d-flex flex-column align-items-end">
+            <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">
+              Active
+            </h5>
+            <div>
+              Since{" "}
+              {teacherData !== null &&
+                moment(teacherData.created_at).format("dddd, D MMM YYYY")}
             </div>
+          </div>
         </div>
       </div>
-      <Tabs tabBarExtraContent={tabKey >= 4 ?  operations : ''} onChange={(e)=>setTabKey(e)}>
+      <Tabs
+        tabBarExtraContent={tabKey >= 4 ? operations : ""}
+        onChange={(e) => setTabKey(e)}
+      >
         {items.map((item) => (
           <Tabs.TabPane tab={item.label} key={item.key}>
             {item.children}
@@ -751,15 +869,43 @@ function FacilityBooking() {
           </h3>
           <Divider />
           <h5 className="font-weight-bold">Teacher</h5>
-          <h5>Wade Smith</h5>
+          <h5> {teacherData !== null && teacherData.name}</h5>
           <br />
           <h5 className="font-weight-bold">Ratings</h5>
-          <Rate />
+          <Rate
+            value={adminRating.rating}
+            onChange={(e) => {
+              setAdminRating((preval) => {
+                return {
+                  ...preval,
+                  rating: e,
+                };
+              });
+            }}
+          />
           <br />
           <h5 className="font-weight-bold">Remarks</h5>
-          <TextArea rows={4} />
+          <TextArea
+            value={adminRating.description}
+            onChange={(e) => {
+              setAdminRating((preval) => {
+                return {
+                  ...preval,
+                  description: e.target.value,
+                };
+              });
+            }}
+            rows={4}
+          />
           <div>
-            <Button className="mt-3 bg-info text-white">Save</Button>
+            <Button
+              onClick={() => {
+                sendAdminRate();
+              }}
+              className="mt-3 bg-info text-white"
+            >
+              Save
+            </Button>
           </div>
         </div>
       </Modal>

@@ -180,3 +180,6 @@ th.ant-table-cell{
   line-height: 1;
   content: "*";
 }
+.whiteBack .ant-tabs-nav{
+  background-color: white;
+}

@@ -30,6 +30,7 @@ import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import { FileUnknownOutlined } from "@ant-design/icons";
+import moment from "moment";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -217,6 +218,7 @@ function FacilityBooking() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [courseMaterial, setCourseMaterial] = useState([])
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -590,20 +592,20 @@ function FacilityBooking() {
   const courseMatColumns = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "course_id",
     },
     {
       title: "Course Material Name",
-      dataIndex: "Course_Material_Name",
+      dataIndex: "course_material_name",
     },
     {
       title: "File Type",
-      dataIndex: "File_Type",
+      dataIndex: "file_type",
       render: (text) => {
         return (
           <div>
             {text === "pdf" && <PdfType />}
-            {text === "video" && <VideoType />}
+            {text === "mp4" && <VideoType />}
           </div>
         );
       },
@@ -614,23 +616,26 @@ function FacilityBooking() {
     },
     {
       title: "Created By",
-      dataIndex: "Created_By",
+      dataIndex: "created_by",
     },
     {
       title: "Created On",
-      dataIndex: "Created_On",
+      dataIndex: "created_at",
+      render:(date)=>{
+        return<>{moment(date).format("DD MMM YYYY")}</>
+      }
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
             className={`${
-              text === "Active" ? "text-success" : "text-danger"
+              text === 1 ? "text-success" : "text-danger"
             } font-weight-semibold`}
           >
-            {text}
+            {text === 1 ? "Active" : "Inactive"}
           </div>
         );
       },
@@ -644,7 +649,14 @@ function FacilityBooking() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
+                  <Menu.Item onClick={()=>{
+                    // axios.delete(`http://18.140.159.50:3333/api/course-curriculum/course-materials/${record.id}`).then((res)=>{
+                    //   console.log(res);
+                    // }).catch((err)=>{
+                    //   console.log(err);
+                    // })
+                    console.log("delete");
+                  }}>
                     <span>
                       {" "}
                       <DeleteOutlined className="mr-2 " />
@@ -861,7 +873,7 @@ function FacilityBooking() {
               </Link>
             </Button>
           </div>
-          <Helper clients={courseMaterials} attribiue={courseMatColumns} />
+          <Helper clients={courseMaterial} attribiue={courseMatColumns} />
         </div>
       ),
     },
@@ -899,19 +911,24 @@ function FacilityBooking() {
       });
   };
 
-  const showAlert = () => {
-    if (addParam == "certificate") {
-      setAlertSuccess(true);
-      setAlertText("Certification awarded successfully !");
-      setTimeout(() => {
-        history.push("/app/curriculam_details");
-        setAlertSuccess(false);
-      }, 2000);
-    }
-  };
+  // const showAlert = () => {
+  //   if (addParam == "certificate") {
+  //     setAlertSuccess(true);
+  //     setAlertText("Certification awarded successfully !");
+  //     setTimeout(() => {
+  //       history.push("/app/curriculam_details");
+  //       setAlertSuccess(false);
+  //     }, 2000);
+  //   }
+  // };
+  const getCourseMaterial = async () => {
+    const res1 = await axios.get('http://18.140.159.50:3333/api/course-curriculum/course-materials');
+    setCourseMaterial(res1.data)
+  }
 
   useEffect(() => {
-    showAlert();
+    // showAlert();
+    getCourseMaterial()
   }, []);
   return (
     <div className="tabbarWhite">

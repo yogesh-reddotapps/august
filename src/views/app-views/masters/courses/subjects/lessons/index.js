@@ -10,43 +10,46 @@ import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import Helper from "../../../../Helper";
 import { useLocation, useHistory } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
+import axios from "axios";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [lessonList, setLessonList] = useState([])
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
 
-  const addParam = queryParams.get("add");
+  const course_id = queryParams.get("course_id");
+  const subject_id = queryParams.get("subject_id");
   const attcolumn = [
     {
       title: "Sr No",
-      dataIndex: "Sr_No",
+      dataIndex: "id",
     },
     {
       title: "Lesson",
-      dataIndex: "Lesson_Module",
+      dataIndex: "lesson_name",
     },
     {
       title: "Lesson Type",
-      dataIndex: "Lesson_Type",
+      dataIndex: "lesson_type",
       render: (type) => {
         return (
           <> 
-          {type==='text' ? <FiletypeText/> :''}
-          {type==='video' ? <FiletypeVideo/> :''}
-          {type==='music' ? <FiletypeAudio/> :''}
-          {type==='question' ? <FiletypeQue/> :''}
-          {type==='arvr' ? <FileTypeArVr/> :''}
+          {type===0 ? <FiletypeText/> :''}
+          {type===1 ? <FiletypeVideo/> :''}
+          {type===2 ? <FiletypeAudio/> :''}
+          {type===3 ? <FiletypeQue/> :''}
+          {type===4 ? <FileTypeArVr/> :''}
           </>
         );
       },
     },
     {
       title: "Estimated Time (Mins)",
-      dataIndex: "Estimated_Time",
+      dataIndex: "estimated_time",
     },
     {
       title: "Action",
@@ -111,18 +114,25 @@ const ClassAttend = () => {
     zIndex: 2,
   };
   const showAlert = () => {
-    if (addParam == "subject") {
+    // if (addParam == "subject") {
       setAlertSuccess(true);
       setAlertText("New Lesson added successfully!");
       setTimeout(() => {
         history.push("/app/masters/courses/subjects/lessons");
         setAlertSuccess(false);
       }, 2000);
-    }
+    // }
   };
-
+  const getSubject = async () => {
+    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-lessons-by-subject',{ subject_id:subject_id,board_id:2,course_id:course_id })
+    console.log(res1.data);
+    setLessonList(res1.data);
+  }
   useEffect(() => {
-    showAlert();
+    // showAlert();
+    if (course_id&&subject_id) {
+      getSubject()
+    }
   }, []);
 
   return (
@@ -231,10 +241,10 @@ const ClassAttend = () => {
             />
         </div>
         <Button className="bg-info text-white">
-          <Link to={"lessons/add_new"}> + Add New Lesson Module</Link>
+          <Link to={`lessons/add_new?course_id=${course_id}&subject_id=${subject_id}`}> + Add New Lesson Module</Link>
         </Button>
       </div>
-      <Helper clients={attData} attribiue={attcolumn} />
+      <Helper clients={lessonList} attribiue={attcolumn} />
     </div>
   );
 };

@@ -22,6 +22,7 @@ function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
+  const [curriculamList, setCurriculamList] = useState([])
 
   const onDeleteData = (record, dataSet, Id) => {
     // console.log(Id)
@@ -42,40 +43,31 @@ function FacilityBooking() {
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "course_picture",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img style={{width:'70px',height:'70px',borderRadius:'50%'}} src={`${avatar}`} alt="..." />;
       },
     },
     {
       title: "Course Name",
-      dataIndex: "name",
-      width: 400,
+      dataIndex: "course_name",
+      // width: 400,
     },
     {
       title: "Course Category",
-      dataIndex: "Course_category",
+      dataIndex: "course_category",
     },
     {
       title: "Medium",
-      dataIndex: "date",
-      render: (avatar) => {
-        return <div>English</div>;
-      }
+      dataIndex: "medium",
     },
     {
       title: "Subject",
-      dataIndex: "venue",
-      render: (avatar) => {
-        return <div>25</div>;
-      }
+      dataIndex: "subjects_count",
     },
     {
       title: "Lessons",
-      dataIndex: "enroll",
-      render: (avatar) => {
-        return <div>25</div>;
-      }
+      dataIndex: "lesson_count",
     },
 
     {
@@ -171,6 +163,14 @@ function FacilityBooking() {
         console.log(err);
       });
   };
+  const getCurriculam = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-curriculum-list`)
+    setCurriculamList(res1.data);
+  }
+  useEffect(() => {
+   getCurriculam()
+  }, [])
+  
 
   return (
     <div>
@@ -200,7 +200,7 @@ function FacilityBooking() {
         </Link> */}
       </div>
       <div>
-        <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />
+        <Helper clients={curriculamList} attribiue={facilityBookingColumns} />
       </div>
     </div>
   );

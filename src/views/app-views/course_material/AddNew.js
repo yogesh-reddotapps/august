@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Button, Input } from "antd";
 import { UploadFileIcon } from "assets/svg/icon";
 import { CloseCircleOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 const AddNew = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [courseTitle, setCourseTitle] = useState('')
   let styles = {
     files: {
       listStyle: "none",
@@ -60,12 +62,26 @@ const AddNew = () => {
     });
     setSelectedFiles(AfterDeleteFile);
   };
+  const addCourseMaterial = async () => {
+    console.log(courseTitle,selectedFiles);
+    const data = {
+      course_id:24,
+      course_material_name:courseTitle,
+      file_type:'mp4',
+      file:selectedFiles,
+      URL:"https://www.africau.edu/images/default/sample.pdf",
+      created_by:"Admin",
+      status:1
+    }
+    // const res1 = await axios.post('http://18.140.159.50:3333/api/course-curriculum/course-materials',data)
+    // console.log(res1);
+  }
   return (
     <>
       <div className="border rounded p-3 mt-4 bg-white">
         <div className="w-50 mb-4 mt-3">
           <h5>Title</h5>
-          <Input placeholder="Type here" />
+          <Input value={courseTitle} onChange={(e)=>setCourseTitle(e.target.value)} placeholder="Type here" />
         </div>
         <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
           <svg
@@ -149,7 +165,7 @@ const AddNew = () => {
 
         <Button
           className="px-4 font-weight-semibold text-white bg-info"
-          htmlType="submit"
+          onClick={addCourseMaterial}
         >
           Save
         </Button>

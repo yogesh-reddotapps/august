@@ -24,6 +24,7 @@ import { UploadFileIcon } from "assets/svg/icon";
 import { Option } from "antd/lib/mentions";
 import moment from "moment";
 import axios from "../../../axios";
+import { useHistory } from "react-router-dom";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -33,20 +34,23 @@ const getBase64 = (file) =>
   });
 export default function AddNew() {
   const { TabPane } = Tabs;
-  const location = useLocation();
+  const history = useHistory();
   const [activeTab, setActiveTab] = useState("1");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
   const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
   const [succesmodaltext, setSuccesmodaltext] = useState({
     title: "Status Change",
     text: "Student status changed to terminated.",
   });
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewTitle, setPreviewTitle] = useState("");
   const successOk = () => {
     setSuccessModal(false);
   };
@@ -119,6 +123,24 @@ export default function AddNew() {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
+    if (id) {
+      let updateRes = await axios.post(
+        "http://18.140.159.50:3333/api/edit-student",
+        {
+          name: values.name,
+          email: values.email,
+          role: 2,
+          phone_number: values.phone_number,
+          dob: moment(values.dob).format("DD-MM-YYYY"),
+          user_id:id
+        }
+      );
+      if (updateRes.data.success) {
+        history.push("/app/Student_management");
+      }
+      console.log(updateRes);
+      return;
+    }
     console.log("Success:", values);
     try {
       console.log("Success:", values);
@@ -127,27 +149,23 @@ export default function AddNew() {
         email: values.email,
         // profile_pic: "1.amazonaws.com/profile_picture/6ZlZO4i2RqkKOhoXPe_Ok.png",
         password: "Student@123",
-        role: values.role,
+        role: 2,
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
       };
       console.log("test", data);
-      const response = await axios.post(
-        "/api/student-register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post("/api/student-register", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       console.log(response);
       if (response.status === 200) {
         setSuccesmodaltext({
           title: "Student Account Created Successfully!",
           text: "Student ID #TC-1234 jane cooper added.",
-        })
-        setSuccessModal(true)
+        });
+        setSuccessModal(true);
       }
     } catch (error) {
       console.log(error);
@@ -166,7 +184,9 @@ export default function AddNew() {
     }
     setPreviewImage(file.url || file.preview);
     setPreviewOpen(true);
-    setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf('/') + 1));
+    setPreviewTitle(
+      file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
+    );
   };
   console.log(location.pathname);
   function handleFileSelect(event) {
@@ -186,8 +206,27 @@ export default function AddNew() {
     });
     setSelectedFiles(AfterDeleteFile);
   };
+  const fetchStudent = async (id) => {
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/get-student-by-id",
+      {
+        user_id: id,
+      }
+    );
+    let data = res1.data[0];
+    form.setFieldsValue({
+      id: data.user_id,
+      name: data.name,
+      phone_number: data.phone_number === null ? "" : data.phone_number,
+      email: data.email,
+      dob: data.dob === null ? "" : moment(data.dob),
+    });
+    console.log(res1.data[0]);
+  };
   useEffect(() => {
-    
+    if (id) {
+      fetchStudent(id);
+    }
   }, []);
 
   const uploadButton = (
@@ -238,101 +277,95 @@ export default function AddNew() {
             key="1"
           >
             <div className="border rounded p-3 bg-white">
-                {" "}
-                <Form.Item name="images">
-                  <Upload
-                    // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                    onChange={handleChange}
+              {" "}
+              <Form.Item name="images">
+                <Upload
+                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  onChange={handleChange}
+                >
+                  {uploadButton}
+                </Upload>
+              </Form.Item>
+              <div style={{ gap: "60px" }} className="d-flex ">
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="id"
+                    label="Id"
+                    rules={[{ required: true, message: "Please enter Id" }]}
                   >
-                    {uploadButton}
-                  </Upload>
-                </Form.Item>
-                <div style={{ gap: "60px" }} className="d-flex ">
-                  <div style={{ width: "45%" }}>
-                    <Form.Item
-                      name="id"
-                      label="Id"
-                      rules={[
-                        { required: true, message: "Please enter Id" },
-                      ]}
-                    >
-                      <Input placeholder="Id" />
-                    </Form.Item>
-                    <Form.Item
-                      name="name"
-                      label="Full Name"
-                      rules={[
-                        { required: true, message: "Please enter full name" },
-                      ]}
-                    >
-                      <Input placeholder="Full Name" />
-                    </Form.Item>
-                  </div>
-                  <div style={{ width: "45%" }}>
-                    <Form.Item
-                      name="role"
-                      label="Role"
-                      rules={[
-                        { required: true, message: "Please enter Role" },
-                      ]}
-                    >
-                      <Input placeholder="Role" />
-                    </Form.Item>
-                    <Form.Item
-                      name="phone_number"
-                      label="Phone Number"
-                      rules={[
-                        { required: true, message: "Please enter Full Name" },
-                      ]}
-                    >
-                      <Input
+                    <Input placeholder="Id" />
+                  </Form.Item>
+                  <Form.Item
+                    name="name"
+                    label="Full Name"
+                    rules={[
+                      { required: true, message: "Please enter full name" },
+                    ]}
+                  >
+                    <Input placeholder="Full Name" />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="role"
+                    label="Role"
+                    // rules={[{ required: true, message: "Please enter Role" }]}
+                  >
+                    {/* <Input placeholder="Role" /> */}
+                    <div className="px-2">Student</div>
+                  </Form.Item>
+                  <Form.Item
+                    name="phone_number"
+                    label="Phone Number"
+                    rules={[
+                      { required: true, message: "Please enter Full Name" },
+                    ]}
+                  >
+                    <Input
                       addonBefore={
                         <Select
-                        defaultValue={'In'}
+                          defaultValue={"In"}
                           style={{
                             width: 80,
                           }}
-                          >
+                        >
                           <Option value="In">In</Option>
                           <Option value="SG">SG</Option>
                         </Select>
                       }
-                        style={{ width: "100%" }}
-                        placeholder="Phone number"
-                      />
-                    </Form.Item>
-                  </div>
-                </div>
-                <div style={{ gap: "60px" }} className="d-flex ">
-                  <div style={{ width: "45%" }}>
-                    <Form.Item
-                      name="email"
-                      label="Email Id"
-                      rules={[
-                        { required: true, message: "Please enter Email Id" },
-                      ]}
-                    >
-                      <Input
-                        style={{ width: "100%" }}
-                        placeholder="Email Id"
-                      />
-                    </Form.Item>
-                  </div>
-                  <div style={{ width: "45%" }}>
-                  <Form.Item
-                      name="dob"
-                      label="Date of Birth"
-                      rules={[{ required: true, message: "Please enter DOB" }]}
-                    >
-                      <DatePicker
-                        placeholder="Date of Birth"
-                        style={{ width: "100%" }}
-                      />
-                    </Form.Item>
-                  </div>
+                      style={{ width: "100%" }}
+                      placeholder="Phone number"
+                    />
+                  </Form.Item>
                 </div>
               </div>
+              <div style={{ gap: "60px" }} className="d-flex ">
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="email"
+                    label="Email Id"
+                    rules={[
+                      { required: true, message: "Please enter Email Id" },
+                    ]}
+                  >
+                    <Input style={{ width: "100%" }} placeholder="Email Id" />
+                  </Form.Item>
+                </div>
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="dob"
+                    label="Date of Birth"
+                    rules={[{ required: true, message: "Please enter DOB" }]}
+                  >
+                    <DatePicker
+                      placeholder="Date of Birth"
+                      style={{ width: "100%" }}
+                    />
+                  </Form.Item>
+                </div>
+              </div>
+            </div>
           </TabPane>
         </Tabs>
         <Form.Item>
@@ -340,13 +373,13 @@ export default function AddNew() {
             style={{ gap: "10px" }}
             className="mt-5 d-flex justify-content-end"
           >
-              <Button
-                className="px-4 font-weight-semibold"
-                htmlType="button"
-                onClick={handleBackClick}
-              >
-                Back
-              </Button>
+            <Button
+              className="px-4 font-weight-semibold"
+              htmlType="button"
+              onClick={handleBackClick}
+            >
+              Back
+            </Button>
             <Button className="px-4 font-weight-semibold" htmlType="button">
               Save As Draft
             </Button>
@@ -474,19 +507,22 @@ export default function AddNew() {
               fill="#00AB6F"
             />
           </svg>
-          <h3 className="font-weight-bold mt-4">
-            {succesmodaltext.title} 
-          </h3>
+          <h3 className="font-weight-bold mt-4">{succesmodaltext.title}</h3>
           <span className="text-center font-size-sm w-75 font-weight-semibold">
             {succesmodaltext.text}
           </span>
         </div>
       </Modal>
-      <Modal visible={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+      <Modal
+        visible={previewOpen}
+        title={previewTitle}
+        footer={null}
+        onCancel={handleCancel}
+      >
         <img
           alt="example"
           style={{
-            width: '100%',
+            width: "100%",
           }}
           src={previewImage}
         />

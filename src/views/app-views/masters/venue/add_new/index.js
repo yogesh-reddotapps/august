@@ -1,13 +1,43 @@
 import { Form, Input, Button, InputNumber, Select, Modal } from "antd";
 import axios from "../../../../../axios";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const MyForm = () => {
   const [form] = Form.useForm();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
   const [successModal, setSuccessModal] = useState(false);
   const onFinish = async (values) => {
     try {
       console.log("Success:", values);
+      if (id) {
+        let data = {
+          id:id,
+          venue_name: values.venueName,
+          venue_capacity: values.venueCapacity,
+          postal_code: values.postalCode,
+          block_number: values.blockNo,
+          street_number: values.streetNo,
+          unit_number: values.unitNo,
+          country: values.country,
+          level_no: "01",
+        };
+        const response = await axios.post("/api/admin-update-venues", data, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        console.log(response);
+        if (response.status === 200) {
+          setSuccessModal(true);
+          setTimeout(() => {
+            setSuccessModal(false);
+          }, 1200);
+        }
+        return
+      }
       let data = {
         venue_name: values.venueName,
         venue_capacity: values.venueCapacity,
@@ -18,16 +48,13 @@ const MyForm = () => {
         country: values.country,
         level_no: "01",
       };
+      
       console.log("test", data);
-      const response = await axios.post(
-        "/api/admin-add-venue",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post("/api/admin-add-venue", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       console.log(response);
       if (response.status === 200) {
         setSuccessModal(true);
@@ -44,7 +71,7 @@ const MyForm = () => {
     <>
       <Form form={form} onFinish={onFinish}>
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="text-info mb-4">Add New Venue</h5>
+          <h5 className="text-info mb-4">{id?"Edit":"Add"} New Venue</h5>
           <div className="mt-4">
             <h5>Venue Id</h5>
             <h5>#5</h5>

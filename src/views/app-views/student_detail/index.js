@@ -27,36 +27,38 @@ import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
 const CertiArray = [
   {
-      "ID": "001",
-      "Course_Name": "English Literature",
-      "Assessment": "Final Exam",
-      "Certification_Title": "Literature Proficiency",
-      "Awarded_On": "2023-05-01"
+    ID: "001",
+    Course_Name: "English Literature",
+    Assessment: "Final Exam",
+    Certification_Title: "Literature Proficiency",
+    Awarded_On: "2023-05-01",
   },
   {
-      "ID": "002",
-      "Course_Name": "Mathematics",
-      "Assessment": "Midterm Exam",
-      "Certification_Title": "Mathematics Proficiency",
-      "Awarded_On": "2023-05-05"
+    ID: "002",
+    Course_Name: "Mathematics",
+    Assessment: "Midterm Exam",
+    Certification_Title: "Mathematics Proficiency",
+    Awarded_On: "2023-05-05",
   },
   {
-      "ID": "003",
-      "Course_Name": "History",
-      "Assessment": "Final Project",
-      "Certification_Title": "History Proficiency",
-      "Awarded_On": "2023-05-10"
+    ID: "003",
+    Course_Name: "History",
+    Assessment: "Final Project",
+    Certification_Title: "History Proficiency",
+    Awarded_On: "2023-05-10",
   },
   {
-      "ID": "004",
-      "Course_Name": "Science",
-      "Assessment": "Final Exam",
-      "Certification_Title": "Science Proficiency",
-      "Awarded_On": "2023-05-15"
-  }
-]
+    ID: "004",
+    Course_Name: "Science",
+    Assessment: "Final Exam",
+    Certification_Title: "Science Proficiency",
+    Awarded_On: "2023-05-15",
+  },
+];
 
 var courses = [
   {
@@ -65,7 +67,7 @@ var courses = [
     Category: "Science",
     Language: "English",
     Date_of_Enroll: "2023-01-01",
-    Status: "Enrolled"
+    Status: "Enrolled",
   },
   {
     Id: 2,
@@ -73,7 +75,7 @@ var courses = [
     Category: "Social Science",
     Language: "English",
     Date_of_Enroll: "2023-02-01",
-    Status: "Enrolled"
+    Status: "Enrolled",
   },
   {
     Id: 3,
@@ -81,115 +83,128 @@ var courses = [
     Category: "Science",
     Language: "English",
     Date_of_Enroll: "2023-03-01",
-    Status: "Completed"
-  }
+    Status: "Completed",
+  },
 ];
 
 const BatchArray = [
   {
-      "Course_ID": "C001",
-      "Course_Name": "English Literature",
-      "Batch_ID": "B001",
-      "Start_Date": "2023-01-15",
-      "Total_Classes": 20,
-      "Status": "Active"
+    id: 1,
+    Course_ID: "C001",
+    Course_Name: "English Literature",
+    Batch_ID: "B001",
+    Start_Date: "2023-01-15",
+    Total_Classes: 20,
+    Status: "Active",
   },
   {
-      "Course_ID": "C002",
-      "Course_Name": "Mathematics",
-      "Batch_ID": "B002",
-      "Start_Date": "2023-02-10",
-      "Total_Classes": 15,
-      "Status": "Inactive"
+    id: 2,
+    Course_ID: "C002",
+    Course_Name: "Mathematics",
+    Batch_ID: "B002",
+    Start_Date: "2023-02-10",
+    Total_Classes: 15,
+    Status: "Inactive",
   },
   {
-      "Course_ID": "C003",
-      "Course_Name": "History",
-      "Batch_ID": "B003",
-      "Start_Date": "2023-03-05",
-      "Total_Classes": 18,
-      "Status": "Active"
+    id: 3,
+    Course_ID: "C003",
+    Course_Name: "History",
+    Batch_ID: "B003",
+    Start_Date: "2023-03-05",
+    Total_Classes: 18,
+    Status: "Active",
   },
   {
-      "Course_ID": "C004",
-      "Course_Name": "Science",
-      "Batch_ID": "B004",
-      "Start_Date": "2023-04-01",
-      "Total_Classes": 12,
-      "Status": "Active"
-  }
-]
+    id: 4,
+    Course_ID: "C004",
+    Course_Name: "Science",
+    Batch_ID: "B004",
+    Start_Date: "2023-04-01",
+    Total_Classes: 12,
+    Status: "Active",
+  },
+];
 
 const LeaveArray = [
   {
-      "ID": "001",
-      "Course_Name": "English Literature",
-      "Assessment": "Final Exam",
-      "Enrolled_On": "2023-01-10",
-      "Status": "Active"
+    ID: "001",
+    Course_Name: "English Literature",
+    Assessment: "Final Exam",
+    Enrolled_On: "2023-01-10",
+    Status: "Active",
   },
   {
-      "ID": "002",
-      "Course_Name": "Mathematics",
-      "Assessment": "Midterm Exam",
-      "Enrolled_On": "2023-02-05",
-      "Status": "Inactive"
+    ID: "002",
+    Course_Name: "Mathematics",
+    Assessment: "Midterm Exam",
+    Enrolled_On: "2023-02-05",
+    Status: "Inactive",
   },
   {
-      "ID": "003",
-      "Course_Name": "History",
-      "Assessment": "Final Project",
-      "Enrolled_On": "2023-03-01",
-      "Status": "Active"
+    ID: "003",
+    Course_Name: "History",
+    Assessment: "Final Project",
+    Enrolled_On: "2023-03-01",
+    Status: "Active",
   },
   {
-      "ID": "004",
-      "Course_Name": "Science",
-      "Assessment": "Final Exam",
-      "Enrolled_On": "2023-04-01",
-      "Status": "Active"
-  }
-]
-
+    ID: "004",
+    Course_Name: "Science",
+    Assessment: "Final Exam",
+    Enrolled_On: "2023-04-01",
+    Status: "Active",
+  },
+];
 
 function FacilityBooking() {
-  const [facilityBooking, setFacilityBooking] = useState(
-    courses
-  );
+  const [facilityBooking, setFacilityBooking] = useState(courses);
+  const [studentData, setStudentData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [courseEnroll, setCourseEnroll] = useState([]);
+  const [certificateList, setCertificateList] = useState([])
+  const [aassessmentList, setAassessmentList] = useState([]);
+  const [batchList, setBatchList] = useState([])
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const student_id = queryParams.get("student_id");
 
   const BatchesColumn = [
     {
       title: "Course ID",
-      dataIndex: "Course_ID",
+      dataIndex: "course_id",
     },
     {
       title: "Course Name",
-      dataIndex: "Course_Name"
+      dataIndex: "course_name",
     },
     {
       title: "Batch ID",
-      dataIndex: "Batch_ID",
+      dataIndex: "batch_id",
     },
     {
       title: "Start Date",
-      dataIndex: "Start_Date",
+      dataIndex: "start_date",
+      render:(date)=>{
+        return moment(date).format('YYYY-MM-DD')
+      }
     },
     {
       title: "Total Classes",
-      dataIndex: "Total_Classes"
+      dataIndex: "total_classes",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text === 0 ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            {text}
+            {text===0 ? 'Inactive':'Active'}
           </div>
         );
       },
@@ -204,8 +219,16 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="student_detail/classes">
-                      <EyeOutlined className="mr-2"/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to={`student_detail/classes?student_id=${student_id}&class_id=${record.id}&student=${studentData.name}&course=${record.Course_Name}`
+                        // state: {
+                        //   batchData: record,
+                        //   studentData: studentData,
+                        // }
+                      }
+                    >
+                      <EyeOutlined className="mr-2" />
                       View Classes
                     </Link>
                   </Menu.Item>
@@ -221,42 +244,45 @@ function FacilityBooking() {
   const leaveAppColumns = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "id",
     },
     {
       title: "Course Name",
-      dataIndex: "Course_Name",
+      dataIndex: "course_name",
     },
     {
       title: "Assessment",
-      dataIndex: "Assessment",
+      dataIndex: "assessment_title",
     },
     {
       title: "Enrolled On",
-      dataIndex: "Enrolled_On",
+      dataIndex: "enrollment_date",
+      render: (date) => {
+      return moment(date).format('YYYY-MM-DD')
+      },
     },
     {
       title: "Face Recognition",
       dataIndex: "Face_Recognition",
-      render: ()=>{
-        return<img src="/img/Avatar.png" alt="img"/>
-      }
+      render: () => {
+        return <img src="/img/Avatar.png" alt="img" />;
+      },
     },
     {
       title: "ID Uploaded",
       dataIndex: "ID_Uploaded",
       render: (avatar) => {
-        return <img src="/img/idcard.png" alt="img"/>;
+        return <img src="/img/idcard.png" alt="img" />;
       },
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text !== "accepted" ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
             {text}
@@ -274,22 +300,31 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="student_detail/assessments/view_result">
-                      <ViewResult/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="student_detail/assessments/view_result"
+                    >
+                      <ViewResult />
                       <span className="ml-2">View Result</span>
                     </Link>
                   </Menu.Item>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <AcceptTick/>
+                  <Menu.Item onClick={()=>handleAssessmentStatus(record.id,'accepted')}>
+                    <span
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <AcceptTick />
                       Accept
-                    </Link>
+                    </span>
                   </Menu.Item>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <CancelCross/>
+                  <Menu.Item onClick={()=>handleAssessmentStatus(record.id,'rejected')}>
+                    <span
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <CancelCross />
                       Reject
-                    </Link>
+                    </span>
                   </Menu.Item>
                 </Menu>
               }
@@ -302,11 +337,11 @@ function FacilityBooking() {
   const certificateColumn = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "id",
     },
     {
       title: "Course Name",
-      dataIndex: "Course_Name",
+      dataIndex: "course_id",
     },
     {
       title: "Assessment",
@@ -314,25 +349,21 @@ function FacilityBooking() {
     },
     {
       title: "Certification Title",
-      dataIndex: "Certification_Title",
+      dataIndex: "certification_title",
     },
     {
       title: "Awarded On",
-      dataIndex: "Awarded_On",
+      dataIndex: "issue_date",
       render: (text) => {
-        return (
-          <div>
-            {text}
-          </div>
-        );
+        return <div>{moment(text).format("YYYY-MM-DD")}</div>;
       },
     },
     {
-      title:'Certificate',
-      dataIndex:'Certificate',
-      render: ()=>{
-        return<img src="/img/3rd Certificate 1.png" alt="img" />
-      }
+      title: "Certificate",
+      dataIndex: "thumbnail",
+      render: (img) => {
+        return <img style={{width:'80px'}} src={img} alt="img" />;
+      },
     },
     {
       title: "Action",
@@ -346,8 +377,13 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link to="curriculam_details/award_certificate">
                       {" "}
-                    <div className="d-flex align-items-center"><span className="mr-1"> <AwardCerti /></span>
-                      Award Certificate</div> 
+                      <div className="d-flex align-items-center">
+                        <span className="mr-1">
+                          {" "}
+                          <AwardCerti />
+                        </span>
+                        Award Certificate
+                      </div>
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
@@ -364,8 +400,7 @@ function FacilityBooking() {
         );
       },
     },
-  ]
- 
+  ];
 
   const handleOk = () => {
     setTimeout(() => {
@@ -379,32 +414,35 @@ function FacilityBooking() {
   const facilityBookingColumns = [
     {
       title: "Id",
-      dataIndex: "Id",
+      dataIndex: "enrollment_id",
     },
     {
       title: "Course Name",
-      dataIndex: "Course_Name",
+      dataIndex: "course_name",
     },
     {
       title: "Category",
-      dataIndex: "Category",
+      dataIndex: "course_category",
     },
     {
       title: "Language",
-      dataIndex: "Language",
+      dataIndex: "language_name",
     },
     {
       title: "Date of Enroll",
-      dataIndex: "Date_of_Enroll",
+      dataIndex: "enrollment_date",
+      render: (date) => {
+        return <div>{moment(date).format("YYYY-MM-DD")}</div>;
+      },
     },
     {
       title: "Status",
-      dataIndex: "status",
-      render: (text) => {
+      // dataIndex: "status",
+      render: () => {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-success" : "text-danger"
+              true !== "Active" ? "text-success" : "text-danger"
             } font-weight-semibold`}
           >
             Active
@@ -422,14 +460,20 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <AcceptTick/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <AcceptTick />
                       Accept
                     </Link>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <CancelCross/>
+                    <Link
+                      className="d-flex align-items-center"
+                      to="curriculam_details/view_lesson_preview"
+                    >
+                      <CancelCross />
                       Reject
                     </Link>
                   </Menu.Item>
@@ -441,7 +485,12 @@ function FacilityBooking() {
       },
     },
   ];
- 
+
+  const  handleAssessmentStatus = async (id,status)=>{
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/accepet-or-reject-assessment/${id}`,{status:status})
+    console.log(res1);
+  }
+
   const items = [
     {
       label: (
@@ -473,10 +522,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper
-            clients={facilityBooking}
-            attribiue={facilityBookingColumns}
-          />
+          <Helper clients={courseEnroll} attribiue={facilityBookingColumns} />
         </div>
       ),
     },
@@ -510,10 +556,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper
-            clients={BatchArray}
-            attribiue={BatchesColumn}
-          />
+          <Helper clients={batchList} attribiue={BatchesColumn} />
         </div>
       ),
     },
@@ -547,7 +590,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={LeaveArray} attribiue={leaveAppColumns} />
+          <Helper clients={aassessmentList} attribiue={leaveAppColumns} />
         </div>
       ),
     },
@@ -581,15 +624,46 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={CertiArray} attribiue={certificateColumn} />
+          <Helper clients={certificateList} attribiue={certificateColumn} />
         </div>
       ),
     },
   ];
 
- 
+  const fetchStudent = async (id) => {
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/get-student-by-id",
+      {
+        user_id: id,
+      }
+    );
+    let data = res1.data[0];
+    setStudentData(data);
+    const res2 = await axios.get(
+      `http://18.140.159.50:3333/api/get-admin-student-course-enroll/${data.id}`
+    );
+    setCourseEnroll(res2.data.batches);
+    const res3 = await axios.get(
+      `http://18.140.159.50:3333/api/get-admin-student-batches/11`
+    );
+    setBatchList(res3.data.batches);
+  };
+  const getCertificates = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-certificates/16`);
+    setCertificateList(res1.data);
+  }
+  const getAssessment = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-assessment-by-student/16`);
+    setAassessmentList(res1.data)
+  }
 
-
+  useEffect(() => {
+    if (id) {
+      fetchStudent(id);
+      getCertificates()
+      getAssessment()
+    }
+  }, []);
 
   return (
     <div className="tabbarWhite">
@@ -609,7 +683,8 @@ function FacilityBooking() {
               <div>
                 <h5 className="m-0">Student</h5>
                 <div className="d-flex align-items-center">
-                  Janny Wilson <img className="ml-2" src="/img/female.png" />
+                  {studentData !== null && studentData.name}{" "}
+                  <img className="ml-2" src="/img/male.png" />
                 </div>
               </div>
             </div>
@@ -617,28 +692,41 @@ function FacilityBooking() {
             <div>
               <div>
                 <h5 className="m-0">Email ID</h5>
-                <p className="m-0">Janecooper@gmail.com</p>
+                <p className="m-0">
+                  {studentData !== null && studentData.email}
+                </p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />
             <div>
               <div>
                 <h5 className="m-0">Phone Number</h5>
-                <p className="m-0">+65 123 456</p>
+                <p className="m-0">
+                  {studentData !== null && studentData.phone_number}
+                </p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />
             <div>
               <div>
                 <h5 className="m-0">Last Login Date</h5>
-                <p className="m-0">1 Mar 2022</p>
+                <p className="m-0">
+                  {studentData !== null &&
+                    moment(studentData.lastLoginTime).format("DD MMM YYYY")}
+                </p>
               </div>
             </div>
           </div>
-            <div className="p-3 d-flex flex-column align-items-end">
-              <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">Active</h5>
-              <div>Since Monday, 1 Jan 2022</div>
+          <div className="p-3 d-flex flex-column align-items-end">
+            <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">
+              Active
+            </h5>
+            <div>
+              Since{" "}
+              {studentData !== null &&
+                moment(studentData.lastLoginTime).format("dddd, D MMM YYYY")}
             </div>
+          </div>
         </div>
       </div>
       <Tabs>

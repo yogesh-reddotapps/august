@@ -14,10 +14,12 @@ import { useState } from "react";
 import axios from "axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
-import Icon, {EyeOutlined} from "@ant-design/icons";
+import Icon, { EyeOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom";
+import moment from "moment";
 const classArray = [
   {
     Class_ID: "001",
@@ -55,7 +57,13 @@ const classArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const [classArr, setclassArr] = useState([])
+  const class_id = queryParams.get("class_id");
+  const studentName = queryParams.get("student");
+  const courseName = queryParams.get("course");
+  const student_id = queryParams.get("student_id");
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -68,32 +76,41 @@ function FacilityBooking() {
   const classColumn = [
     {
       title: "Class ID",
-      dataIndex: "Class_ID",
+      dataIndex: "class_name",
     },
     {
       title: "Date",
-      dataIndex: "Date",
+      dataIndex: "class_date",
+      render:(date)=>{
+        return<>{moment(date).format('YYYY-MM-DD')}</>
+      }
     },
     {
       title: "Start Time",
-      dataIndex: "Start_Time",
+      dataIndex: "start_time",
+      render:(time)=>{
+        return<>{moment(time, "HH:mm:ss").format("hh:mm A")}</>
+      }
     },
     {
       title: "End Time",
-      dataIndex: "End_Time",
+      dataIndex: "end_time",
+      render:(time)=>{
+        return<>{moment(time, "HH:mm:ss").format("hh:mm A")}</>
+      }
     },
     {
       title: "Teacher Assigned",
-      dataIndex: "Teacher_Assigned",
+      dataIndex: "name",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
             className={`${
-              text === "Completed" ? "text-success" : "text-warning"
+              text === "completed" ? "text-success" : "text-warning"
             } font-weight-semibold`}
           >
             {text}
@@ -113,7 +130,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="classes/class_details"
+                      to={`classes/class_details?id=${record.id}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Class Details
@@ -159,11 +176,40 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={classArray} attribiue={classColumn} />
+          <Helper clients={classArr} attribiue={classColumn} />
         </div>
       ),
     },
   ];
+
+  const getClassDet = async () => {
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/get-classes-By-batch-id",
+      { batch_id: 4 }
+    );
+    console.log(res1);
+    // setclassArr(res1.data.data);
+  };
+
+  const fetchDet = async () => {
+    const res3 = await axios.get(
+      `http://18.140.159.50:3333/api/get-admin-student-batches/12`
+    );
+    // console.log(res3.data);
+  };
+  const getClassesByStudentId = async () => {
+    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-classes-by-student',{ "student_id": 11});
+    setclassArr(res1.data.data);
+  }
+  useEffect(() => {
+    fetchDet();
+    if(student_id){
+      getClassesByStudentId()
+    }
+    if (class_id) {
+      getClassDet();
+    }
+  }, []);
 
   return (
     <div className="tabbarWhite">
@@ -183,8 +229,8 @@ function FacilityBooking() {
               <div>
                 <h5 className="m-0">Student</h5>
                 <div className="d-flex align-items-center">
-                  Janny Wilson{" "}
-                  <img className="ml-2" src="/img/female.png" alt="img" />
+                  {studentName}
+                  <img className="ml-2" src="/img/male.png" alt="img" />
                 </div>
               </div>
             </div>
@@ -196,7 +242,7 @@ function FacilityBooking() {
               <div style={{ width: "330px" }}>
                 <h5 className="m-0">Course</h5>
                 <div className="d-flex align-items-center">
-                  Workplace Safety and Health in Construction Sites
+                  {courseName}
                 </div>
               </div>
             </div>

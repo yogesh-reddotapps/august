@@ -28,6 +28,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { PlusOutlined,CloseCircleOutlined } from "@ant-design/icons";
 import { Option } from "antd/lib/mentions";
 import moment from "moment";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const managArray = [
   {
     value: "Manager 1",
@@ -113,6 +114,7 @@ const managArray = [
 export default function AddNew() {
   const { TabPane } = Tabs;
   const param = useParams();
+  const history = useHistory()
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -120,6 +122,8 @@ export default function AddNew() {
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
   const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id')
   const [succesmodaltext, setSuccesmodaltext] = useState({
     title: "Status Change",
     text: "teacher status changed.",
@@ -212,13 +216,33 @@ export default function AddNew() {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
+    if (id) {
+      let updateRes = await axios.post('http://18.140.159.50:3333/api/edit-teacher-details',{
+        "user_id": id,
+        name:values.name,
+        email: values.email,
+        role: 1,
+        phone_number: values.phone_number,
+        dob: moment(values.dob).format("DD-MM-YYYY"),
+        highest_qualification: values.highest_qualification,
+        university: values.university,
+        field_of_study: values.field_of_study,
+        education_start_date: moment(values.education_start_date).format("YYYY-MM-DD HH:mm:ss"),
+        education_end_date: moment(values.education_end_date).format("YYYY-MM-DD HH:mm:ss"),
+    })
+    if (updateRes.data.success) {
+      history.push('/app/staffManagement/teacher_management');
+    }
+    console.log(updateRes);
+      return
+    }
     try {
       console.log("Success:", values);
       let data = {
         name:values.name,
         email: values.email,
         password: values.password,
-        role: values.role,
+        role: 1,
         reference_code: "APPLYTEACHER",
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
@@ -342,7 +366,30 @@ export default function AddNew() {
       </div>
     </div>
   );
-
+  const fetchTeacher = async (id) => {
+    let res1 = await axios.post('http://18.140.159.50:3333/api/get-teacher-by-id',{
+        "user_id": id
+    })
+    let data = res1.data[0];
+    form.setFieldsValue({
+      id:data.user_id,
+      name:data.name,
+      phone_number:data.phone_number===null?"":data.phone_number,
+      email:data.email,
+      dob:data.dob===null?"":moment(data.dob),
+      highest_qualification:data.highest_qualification,
+      university:data.university,
+      field_of_study:data.field_of_study,
+      education_start_date:data.education_start_date===null?"":moment(data.education_start_date),
+      education_end_date:data.education_end_date===null?"":moment(data.education_end_date)
+    })
+    console.log(res1.data[0]);
+  }
+ useEffect(() => {
+  if (id) {
+     fetchTeacher(id)
+  }
+ }, [])
   return (
     <div className="">
       <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
@@ -413,11 +460,10 @@ export default function AddNew() {
                     <Form.Item
                       name="role"
                       label="Role"
-                      rules={[
-                        { required: true, message: "Please enter Role" },
-                      ]}
-                    >
-                      <Input placeholder="Role" />
+                       // rules={[{ required: true, message: "Please enter Role" }]}
+                  >
+                  {/* <Input placeholder="Role" /> */}
+                  <div className="px-2">Teacher</div>
                     </Form.Item>
                     <Form.Item
                       name="phone_number"
@@ -472,13 +518,15 @@ export default function AddNew() {
                     </Form.Item>
                   </div>
                 </div>
+                {
+                  !id && 
                 <div style={{ gap: "60px" }} className="d-flex ">
                   <div style={{ width: "45%" }}>
                     <Form.Item
                       name="password"
                       label="Password"
                       rules={[
-                        { required: true, message: "Please enter Password" },
+                        { required: !id?true:false, message: "Please enter Password" },
                       ]}
                     >
                         <Input.Password placeholder="Create Password" />
@@ -497,6 +545,7 @@ export default function AddNew() {
                     </Form.Item> */}
                   </div>
                 </div>
+                }
               </div>
             </TabPane>
           <TabPane

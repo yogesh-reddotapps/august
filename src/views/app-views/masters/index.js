@@ -182,7 +182,7 @@ const Masters = () => {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="course_enroll/assessment_submission">
+                    <Link to={`masters/venue/add_new?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
@@ -325,7 +325,7 @@ const Masters = () => {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="masters/courses/subjects">
+                    <Link to={`masters/courses/subjects?id=${record.id}`}>
                       <ViewSubject className="mr-2 " /> View Subjects
                     </Link>
                   </Menu.Item>
@@ -549,7 +549,7 @@ const Masters = () => {
   };
   const getAllCourses = () => {
     axios
-      .post(
+      .get(
         "http://18.140.159.50:3333/api/get-all-courses",
         {
           headers: {
@@ -559,7 +559,7 @@ const Masters = () => {
       )
       .then((res) => {
         setAllCourses(res.data);
-        // console.log(res.data);
+        console.log("getAllCourses",res);
       })
       .catch((error) => {
         console.log(error);
