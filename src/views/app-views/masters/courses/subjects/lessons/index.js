@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Divider, Button, Menu, Select } from "antd";
+import { Divider, Button, Menu, Select,Modal } from "antd";
 import Icon from "@ant-design/icons";
 import CustomIcon from 'components/util-components/CustomIcon'
 import SearchBox from "components/shared-components/SearchBox";
@@ -17,6 +17,8 @@ const ClassAttend = () => {
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [lessonList, setLessonList] = useState([])
+   const [modal2Open,setModal2Open]=useState(false);
+  const [idToDelete,setIdTodelete]=useState();
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -60,7 +62,7 @@ const ClassAttend = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
+                  <Menu.Item onClick={()=>onDeleteData(record.id)}>
                     <span><DeleteOutlined className="mr-2 " /> Delete</span>
                   </Menu.Item>
                   <Menu.Item>
@@ -79,6 +81,11 @@ const ClassAttend = () => {
       },
     },
   ];
+
+  const onDeleteData = (id) => {
+    setModal2Open(true);
+    setIdTodelete(id);
+  }
   const attData = [
     {
       Sr_No: 1,
@@ -134,6 +141,31 @@ const ClassAttend = () => {
       getSubject()
     }
   }, []);
+
+   const handleDelete = async (Oid) => {
+    let data = {
+      id:Oid
+    };
+    
+      const response = await axios.post(
+        "http://18.140.159.50:3333/api/admin-delete-lesson",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if(response.data.success){
+        getSubject();
+        
+      }
+      else{
+        alert("Cant Delete")
+      }
+      
+    
+  }
 
   return (
     <div>
@@ -245,6 +277,21 @@ const ClassAttend = () => {
         </Button>
       </div>
       <Helper clients={lessonList} attribiue={attcolumn} />
+      <Modal
+        // title="Vertically centered modal dialog"
+        centered
+        visible={modal2Open}
+        onOk={() =>{setModal2Open(false)
+            handleDelete(idToDelete);
+        }}
+        onCancel={() => setModal2Open(false)}
+        okText="Yes,Confirm"
+        cancelText="No,Cancel"
+        okButtonProps={{style: { backgroundColor: '#0068B3' ,width:"30%"} }}  
+      >
+       <div style={{color:"#000B23",fontSize:"18px",fontWeight:"600"}}>Sure you want to delete?</div>
+       <div>It will be delete from the system</div>
+      </Modal>
     </div>
   );
 };

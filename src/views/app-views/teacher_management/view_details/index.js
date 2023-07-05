@@ -27,6 +27,7 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { API_BASE_URL } from "constants/ApiConstant";
 const admins = [
   {
     User_ID: 1,
@@ -85,6 +86,7 @@ function FacilityBooking() {
   const [teacherData, setTeacherData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminRatingsList, setAdminRatingsList] = useState([]);
+  const [courseAccess,setCourseAccess]=useState();
   const [adminRating, setAdminRating] = useState({
     teacher_id: 0,
     admin_id: "15",
@@ -490,7 +492,7 @@ function FacilityBooking() {
   const facilityBookingColumns = [
     {
       title: "Sr No.",
-      dataIndex: "id",
+      dataIndex: "course_id",
     },
     {
       dataIndex: "avatar",
@@ -500,23 +502,23 @@ function FacilityBooking() {
     },
     {
       title: "Courses",
-      dataIndex: "name",
+      dataIndex: "course_name",
     },
     {
-      title: "Access",
-      dataIndex: "gender",
-      render: (text) => {
+      title: "Course Status",
+      // dataIndex: "course_status",
+      render: (record) => {
         return (
           <Switch
-            defaultChecked
-            onChange={(checked) => console.log(`switch to ${checked}`)}
+          defaultChecked={record.course_status?true:false}
+          onChange={(checked) => handleChange(record.course_id,checked)}
           />
         );
       },
     },
     {
-      title: "Course Status",
-      dataIndex: "status",
+      title: "Access",
+      dataIndex: "access",
       render: (text) => {
         return (
           <div
@@ -548,6 +550,17 @@ function FacilityBooking() {
       </Button>
     </div>
   );
+
+  const handleChange=async(Oid,checked)=>{
+    console.log(Oid);
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/teacher-course-access",
+      {
+        teacher_id: id,
+        course_id: Oid
+      }
+    );
+  }
   const items = [
     {
       label: (
@@ -572,7 +585,7 @@ function FacilityBooking() {
             </Button>
           </div>
           <Helper
-            clients={facilityBooking}
+            clients={courseAccess}
             attribiue={facilityBookingColumns}
           />
         </div>
@@ -738,6 +751,16 @@ function FacilityBooking() {
     console.log(res2.data);
     setAdminRatingsList(res2.data);
   };
+
+
+  const getCourseAccess=async()=>{
+    let res1 = await axios.get(
+      `${API_BASE_URL}/teacher-courses-access-data/${id}`,
+    );
+    // console.log(res1);
+    let data = res1.data.data;
+    setCourseAccess(data);
+  }
   const getLeaveApp = async () => {
     const res1 = await axios.post(
       "http://18.140.159.50:3333/api/leave-applications",
@@ -750,6 +773,7 @@ function FacilityBooking() {
   useEffect(() => {
     getTeacherDetail();
     getLeaveApp();
+    getCourseAccess();
   }, []);
 
   return (

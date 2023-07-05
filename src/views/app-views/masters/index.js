@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
-import { Button, Menu, Select } from "antd";
+import { Button, Menu, Select ,Modal } from "antd";
 import {
   FilterIcon,
   CsvIcon,
@@ -78,6 +78,9 @@ const Masters = () => {
   const [allLang, setAllLang] = useState([]);
   const [allCate, setallCate] = useState([]);
   const [allVenues, setallVenues] = useState([]);
+  const [modal2Open,setModal2Open]=useState(false);
+  const [type,setType]=useState();
+  const [idToDelete,setIdTodelete]=useState();
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -179,7 +182,7 @@ const Masters = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item onClick={()=>handleDelete('venue',record.id)}>
+                  <Menu.Item onClick={()=>onDeleteData('venue',record.id)}>
                     <span>
                       <DeleteOutlined className="mr-2 " /> Delete
                     </span>
@@ -198,7 +201,27 @@ const Masters = () => {
     },
   ];
 
+  
+  const onDeleteData = (type, id) => {
+    setModal2Open(true);
+    setType(type);
+    setIdTodelete(id);
+    // console.log(Id)
+    // console.log(record)
+    // Modal.confirm({
+    //   title: "Are you sure, you want to delete this members record ?",
+    //   okText: "Yes",
+    //   okType: "danger",
+    //   centered:"true",
+    //   width:"200",
+    //   bodyStyle:{
 
+    //   },
+    //   onOk: () => {
+    //     handleDelete(type,id)
+    //   }
+    // })
+  }
   const languageColumn = [
     {
       title: "ID",
@@ -230,7 +253,7 @@ const Masters = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item onClick={()=>handleDelete('language',record.id)}>
+                  <Menu.Item onClick={()=> onDeleteData('language',record.id)}>
                     <span>
                       <DeleteOutlined className="mr-2 " /> Delete
                     </span>
@@ -276,7 +299,7 @@ const Masters = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item onClick={()=>handleDelete('category',record.id)}>
+                  <Menu.Item onClick={()=> onDeleteData('category',record.id)}>
                     <span>
                       <DeleteOutlined className="mr-2 " /> Delete
                     </span>
@@ -336,7 +359,7 @@ const Masters = () => {
                       <ViewSubject className="mr-2 " /> View Subjects
                     </Link>
                   </Menu.Item>
-                  <Menu.Item onClick={()=>handleDelete('course',record.id)}>
+                  <Menu.Item onClick={()=> onDeleteData('course',record.id)}>
                     <span>
                       <DeleteOutlined className="mr-2 " /> Delete
                     </span>
@@ -663,6 +686,8 @@ const Masters = () => {
     showAlert();
   }, []);
 
+ 
+
   return (
     <div>
       {alertSuccess ? (
@@ -684,6 +709,21 @@ const Masters = () => {
           ))}
         </Tabs>
       </div>
+      <Modal
+        // title="Vertically centered modal dialog"
+        centered
+        visible={modal2Open}
+        onOk={() =>{setModal2Open(false)
+            handleDelete(type,idToDelete);
+        }}
+        onCancel={() => setModal2Open(false)}
+        okText="Yes,Confirm"
+        cancelText="No,Cancel"
+        okButtonProps={{style: { backgroundColor: '#0068B3' ,width:"30%"} }}  
+      >
+       <div style={{color:"#000B23",fontSize:"18px",fontWeight:"600"}}>Sure you want to delete?</div>
+       <div>It will be delete from the system</div>
+      </Modal>
     </div>
   );
 };

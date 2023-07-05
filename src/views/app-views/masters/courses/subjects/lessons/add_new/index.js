@@ -162,23 +162,23 @@ const AddNewLesson = () => {
       lesContentData=queData
     }
     formData.append("lesson_content", lesContentData);
-    formData.append("lesson_type", 0);
+    formData.append("lesson_type", lessonType);
     formData.append("estimated_time", estimateTime);
     formData.append("subject_id", subject_id);
     formData.append("course_id",course_id);
     formData.append("board_id", 2);
     formData.append("lesson_name", lessonName);
-    const dataObject = {
-      lesson_content: SendFile,
-      lesson_type: 0,
-      estimated_time: estimateTime,
-      subject_id: 15,
-      course_id: 23,
-      board_id: 2,
-      lesson_name: lessonName
-    };
+    // const dataObject = {
+    //   lesson_content: SendFile,
+    //   lesson_type: lessonType,
+    //   estimated_time: estimateTime,
+    //   subject_id: 15,
+    //   course_id: 23,
+    //   board_id: 2,
+    //   lesson_name: lessonName
+    // };
     
-    console.log("dataObject",dataObject);
+    // console.log("dataObject",dataObject);
     let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-lesson',formData)
     console.log(res1);
     // axios
@@ -232,7 +232,7 @@ const AddNewLesson = () => {
               },
               {
                 value: "2",
-                label: (<div className="d-flex align-items-center"> <LessonTypeMusic /> Music</div>),
+                label: (<div className="d-flex align-items-center"> <LessonTypeMusic /> Audio</div>),
               },
               {
                 value: "3",
@@ -339,7 +339,7 @@ const AddNewLesson = () => {
       )}
       {lessonType === "2" && (
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeMusic /> Music</div></h5>
+          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeMusic /> Audio</div></h5>
           {audioElements.length == 0 ? (
             <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
               <svg
