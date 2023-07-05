@@ -24,6 +24,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
+import { API_BASE_URL } from "constants/ApiConstant";
 const student = [
     {
         "User_ID": 1,
@@ -80,6 +81,7 @@ const subjectArray = [
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [subjectList, setSubjectList] = useState([])
+  const [student,setStudent]=useState([]);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
@@ -96,11 +98,11 @@ function FacilityBooking() {
   const classratingColumn = [
     {
       title: "User ID",
-      dataIndex: "User_ID",
+      dataIndex: "id",
     },
     {
       title: "Class ID",
-      dataIndex: "Class_ID",
+      dataIndex: "class_id",
     },
     {
       dataIndex: "avatar",
@@ -110,47 +112,47 @@ function FacilityBooking() {
     },
     {
       title: "Student",
-      dataIndex: "Student",
+      dataIndex: "student_name",
     },
     {
       title: "Ratings Given",
-      dataIndex: "Ratings_Given",
+      dataIndex: "rating",
       render:(val)=>{
         return <><Rate disabled defaultValue={val} /></>
       }
     },
     {
       title: "Remarks",
-      dataIndex: "Remarks",
+      dataIndex: "description",
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <AcceptTick/>
-                      Accept
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
-                      <CancelCross/>
-                      Reject
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+    //                   <AcceptTick/>
+    //                   Accept
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <Link className="d-flex align-items-center" to="curriculam_details/view_lesson_preview">
+    //                   <CancelCross/>
+    //                   Reject
+    //                 </Link>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ]
   const SubjectColumn = [
     {
@@ -290,6 +292,9 @@ function FacilityBooking() {
   const getSubjects = async () => {
     const res1 = await axios.get(`http://18.140.159.50:3333/api/get-subject-by-class/${id}`)
     setSubjectList(res1.data.data);
+
+    const res2 = await axios.get(`${API_BASE_URL}/classes-rating/${id}`);
+    setStudent(res2.data)
   }
   
   useEffect(() => {

@@ -1,22 +1,42 @@
 import React, { useState } from "react";
 import { Select, Input, InputNumber, Button, Modal } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory,useLocation } from "react-router-dom";
 import { List } from "antd";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DraggableIcon, DraggableItemDelIcon } from "assets/svg/icon";
+import axios from 'axios'
 const AddNewLesson = () => {
   const history = useHistory();
+  const location=useLocation();
   const items = [{ id: "1", content: "" }];
   const [listItems, setListItems] = useState(items);
   const [subjectName, setSubjectName] = useState("");
   const [successModal, setSuccessModal] = useState(false);
-  const onfinish = () => {
+  const onfinish =async () => {
     console.log(subjectName);
-    setSuccessModal(true);
-    setTimeout(() => {
-      setSuccessModal(false);
-    }, 1200);
+
+    const response = await axios.post(
+      "http://18.140.159.50:3333/api/admin-new-subject",
+      {
+        subject_name: subjectName,
+        board_id: "0",
+        course_id: location.state.id,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if(response.status===200){
+      setSuccessModal(true);
+      setTimeout(() => {
+        setSuccessModal(false);
+      }, 1200);
+    }
+      // console.log(response)
+    
   };
   // const handleDragEnd = (result) => {
   //   if (!result.destination) {
