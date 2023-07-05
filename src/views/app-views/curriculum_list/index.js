@@ -99,7 +99,13 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="curriculam_details">
+                    <Link to={{
+                      pathname:"curriculam_details",
+                      state:{
+                        id:record.id
+                      }
+                    }
+                    }>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Details

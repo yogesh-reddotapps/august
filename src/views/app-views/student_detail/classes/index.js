@@ -76,7 +76,7 @@ function FacilityBooking() {
   const classColumn = [
     {
       title: "Class ID",
-      dataIndex: "class_name",
+      dataIndex: "id",
     },
     {
       title: "Date",
@@ -198,7 +198,7 @@ function FacilityBooking() {
     // console.log(res3.data);
   };
   const getClassesByStudentId = async () => {
-    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-classes-by-student',{ "student_id": 11});
+    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-classes-by-student',{ "student_id":student_id});
     setclassArr(res1.data.data);
   }
   useEffect(() => {

@@ -19,6 +19,7 @@ import { Tabs } from "antd";
 import { useLocation, Link, useHistory } from "react-router-dom";
 import Search from "antd/lib/transfer/search";
 import axios from "../../../axios";
+import { formatDate } from "constants/DateConstant";
 
 const { Option } = Select;
 const languageArr = [
@@ -163,9 +164,11 @@ const Masters = () => {
     {
       title: "Updated On",
       dataIndex: "updated_at",
-      // render: (text) => {
-      //   return <div>2 Jan 2023</div>;
-      // },
+      render(text) {
+        return {
+          children: formatDate(text),
+        };
+      },
     },
     {
       title: "Action",
@@ -212,8 +215,10 @@ const Masters = () => {
     {
       title: "Updated On",
       dataIndex: "updated_at",
-      render: (val) => {
-        return <>{val === null ? "2023-05-17" : val}</>;
+      render(text) {
+        return {
+          children: formatDate(text),
+        };
       },
     },
     {
@@ -256,8 +261,10 @@ const Masters = () => {
     {
       title: "Updated On",
       dataIndex: "updated_at",
-      render: (val) => {
-        return <>{val === null ? "2023-05-17" : val}</>;
+      render(text) {
+        return {
+          children: formatDate(text),
+        };
       },
     },
     {
@@ -361,7 +368,13 @@ const Masters = () => {
           },
         }
       );
-      console.log(response);
+      if(response.data.success){
+        getAllVenues();
+        
+      }
+      else{
+        alert("Cant Delete")
+      }
       
     }
     if (type==='language') {
@@ -374,7 +387,13 @@ const Masters = () => {
           },
         }
       );
-      console.log(response);
+      if(response.data.success){
+        getAllLanguage();
+
+      }
+      else{
+        alert("Cant Delete")
+      }
       
     }
     if (type==='category') {
@@ -387,7 +406,13 @@ const Masters = () => {
           },
         }
       );
-      console.log(response);
+      if(response.data.success){
+        getAllCourseCate();
+        
+      }
+      else{
+        alert("Cant Delete")
+      }
       
     }
   }

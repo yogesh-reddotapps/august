@@ -345,7 +345,7 @@ function FacilityBooking() {
     },
     {
       title: "Assessment",
-      dataIndex: "Assessment",
+      dataIndex: "assessment_title",
     },
     {
       title: "Certification Title",
@@ -644,24 +644,25 @@ function FacilityBooking() {
     );
     setCourseEnroll(res2.data.batches);
     const res3 = await axios.get(
-      `http://18.140.159.50:3333/api/get-admin-student-batches/11`
+      `http://18.140.159.50:3333/api/get-admin-student-batches/${data.id}`
     );
     setBatchList(res3.data.batches);
+    // const getCertificates = async () => {
+      const res4 = await axios.get(`http://18.140.159.50:3333/api/get-certificates/${data.id}`);
+      setCertificateList(res4.data);
+    // }
+    // const getAssessment = async () => {
+      const res5 = await axios.get(`http://18.140.159.50:3333/api/get-assessment-by-student/${data.id}`);
+      setAassessmentList(res5.data)
+    // }
   };
-  const getCertificates = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-certificates/16`);
-    setCertificateList(res1.data);
-  }
-  const getAssessment = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-assessment-by-student/16`);
-    setAassessmentList(res1.data)
-  }
+ 
 
   useEffect(() => {
     if (id) {
       fetchStudent(id);
-      getCertificates()
-      getAssessment()
+      // getCertificates()
+      // getAssessment()
     }
   }, []);
 

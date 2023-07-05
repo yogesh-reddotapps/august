@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { Form, Button, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import axios from "../../../../axios";
+import {useHistory} from 'react-router-dom'
 const ScheduleNewClass = () => {
   const [form] = Form.useForm();
+  const history = useHistory();
   const [successModal, setSuccessModal] = useState(false);
   const onFinish = async (values) => {
     try {
@@ -24,9 +26,11 @@ const ScheduleNewClass = () => {
       );
       console.log(response);
       if (response.status === 200) {
+        
         setSuccessModal(true);
         setTimeout(() => {
           setSuccessModal(false);
+          history.push("/app/masters");
         }, 1200);
       }
     } catch (error) {
@@ -70,7 +74,7 @@ const ScheduleNewClass = () => {
       </div>
       <div className="d-flex justify-content-end mt-3">
         <Form.Item>
-          <Button className="mr-3" type="default">
+          <Button onClick={()=>history.goBack()} className="mr-3" type="default">
             Cancel
           </Button>
         </Form.Item>
