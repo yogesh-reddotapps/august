@@ -73,10 +73,10 @@ const Masters = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
-  const [allCourses, setAllCourses] = useState([])
-  const [allLang, setAllLang] = useState([])
-  const [allCate, setallCate] = useState([])
-  const [allVenues, setallVenues] = useState([])
+  const [allCourses, setAllCourses] = useState([]);
+  const [allLang, setAllLang] = useState([]);
+  const [allCate, setallCate] = useState([]);
+  const [allVenues, setallVenues] = useState([]);
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -143,7 +143,6 @@ const Masters = () => {
   //   },
   // ];
 
-
   const assessmentcolumn = [
     {
       title: "Id",
@@ -177,13 +176,13 @@ const Masters = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
-                    <Link to="course_enroll/assessment_submission">
+                  <Menu.Item onClick={()=>handleDelete('venue',record.id)}>
+                    <span>
                       <DeleteOutlined className="mr-2 " /> Delete
-                    </Link>
+                    </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="course_enroll/assessment_submission">
+                    <Link to={`masters/venue/add_new?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
@@ -195,53 +194,7 @@ const Masters = () => {
       },
     },
   ];
-  const facilityBookingColumns = [
-    {
-      title: "ID",
-      dataIndex: "Id",
-    },
-    {
-      dataIndex: "avatar",
-      render: (avatar) => {
-        return <img src={`/img/avatar.png`} alt="..." />;
-      },
-    },
-    {
-      title: "Course Name",
-      dataIndex: "Course_Category",
-    },
-    {
-      title: "Updated On",
-      dataIndex: "Updated_On",
-    },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
-                      <DeleteOutlined className="mr-2 " /> Delete
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
-                      <CustomIcon className="mr-2" svg={Edit} /> Edit
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
-  ];
-  
+
 
   const languageColumn = [
     {
@@ -259,9 +212,9 @@ const Masters = () => {
     {
       title: "Updated On",
       dataIndex: "updated_at",
-      render:(val)=>{
-        return<>{val===null ? "2023-05-17":val}</>
-      }
+      render: (val) => {
+        return <>{val === null ? "2023-05-17" : val}</>;
+      },
     },
     {
       title: "Action",
@@ -272,10 +225,10 @@ const Masters = () => {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
+                  <Menu.Item onClick={()=>handleDelete('language',record.id)}>
+                    <span>
                       <DeleteOutlined className="mr-2 " /> Delete
-                    </Link>
+                    </span>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="course_enroll/assignment_submission">
@@ -292,48 +245,48 @@ const Masters = () => {
   ];
 
   const Course_Category = [
-  {
-    title: "ID",
-    dataIndex: "id",
-  },
-  {
-    title: "Course Name",
-    dataIndex: "course_category",
-  },
-  {
-    title: "Updated On",
-    dataIndex: "updated_at",
-    render:(val)=>{
-      return<>{val===null ? "2023-05-17":val}</>
-    }
-  },
-  {
-    title: "Action",
-    // dataIndex: 'action',
-    render: (record) => {
-      return (
-        <>
-          <EllipsisDropdown
-            menu={
-              <Menu>
-                <Menu.Item>
-                  <Link to="course_enroll/assignment_submission">
-                    <DeleteOutlined className="mr-2 " /> Delete
-                  </Link>
-                </Menu.Item>
-                <Menu.Item>
-                  <Link to="course_enroll/assignment_submission">
-                    <CustomIcon className="mr-2" svg={Edit} /> Edit
-                  </Link>
-                </Menu.Item>
-              </Menu>
-            }
-          />
-        </>
-      );
+    {
+      title: "ID",
+      dataIndex: "id",
     },
-  },
-];
+    {
+      title: "Course Name",
+      dataIndex: "course_category",
+    },
+    {
+      title: "Updated On",
+      dataIndex: "updated_at",
+      render: (val) => {
+        return <>{val === null ? "2023-05-17" : val}</>;
+      },
+    },
+    {
+      title: "Action",
+      // dataIndex: 'action',
+      render: (record) => {
+        return (
+          <>
+            <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item onClick={()=>handleDelete('category',record.id)}>
+                    <span>
+                      <DeleteOutlined className="mr-2 " /> Delete
+                    </span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to="course_enroll/assignment_submission">
+                      <CustomIcon className="mr-2" svg={Edit} /> Edit
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
+        );
+      },
+    },
+  ];
   const certificatecolumn = [
     {
       title: "ID",
@@ -356,7 +309,7 @@ const Masters = () => {
     {
       title: "Language Available",
       dataIndex: "medium",
-      width:300
+      width: 300,
     },
     {
       title: "Duration",
@@ -372,14 +325,14 @@ const Masters = () => {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="masters/courses/subjects">
+                    <Link to={`masters/courses/subjects?id=${record.id}`}>
                       <ViewSubject className="mr-2 " /> View Subjects
                     </Link>
                   </Menu.Item>
-                  <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
+                  <Menu.Item onClick={()=>handleDelete('course',record.id)}>
+                    <span>
                       <DeleteOutlined className="mr-2 " /> Delete
-                    </Link>
+                    </span>
                   </Menu.Item>
                   <Menu.Item>
                     <Link to="course_enroll/assignment_submission">
@@ -394,6 +347,50 @@ const Masters = () => {
       },
     },
   ];
+  const handleDelete = async (type,id) => {
+    let data = {
+      id:id
+    };
+    if (type==='venue') {
+      const response = await axios.post(
+        "http://18.140.159.50:3333/api/admin-delete-venues",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      
+    }
+    if (type==='language') {
+      const response = await axios.post(
+        "http://18.140.159.50:3333/api/admin-delete-languages",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      
+    }
+    if (type==='category') {
+      const response = await axios.post(
+        "http://18.140.159.50:3333/api/admin-delete-category",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response);
+      
+    }
+  }
   const items = [
     {
       label: `Languages`,
@@ -481,18 +478,22 @@ const Masters = () => {
           <div className="membershipPlanTableSearchFilter d-flex justify-content-between mb-3">
             <div className="d-flex">
               <div className="d-flex">
-              <Search
-                placeholder="Search"
-                onSearch={(value) => console.log(value)}
-              />
-              <Button
-                icon={<Icon component={ExportIcon} />}
-                className="d-flex align-items-center ml-2"
-              >
-                Export
-              </Button>
+                <Search
+                  placeholder="Search"
+                  onSearch={(value) => console.log(value)}
+                />
+                <Button
+                  icon={<Icon component={ExportIcon} />}
+                  className="d-flex align-items-center ml-2"
+                >
+                  Export
+                </Button>
               </div>
-              <Select className="ml-2" style={{width:200}} placeholder='Course Category'>
+              <Select
+                className="ml-2"
+                style={{ width: 200 }}
+                placeholder="Course Category"
+              >
                 <Option value="text">Test</Option>
               </Select>
             </div>
@@ -548,8 +549,8 @@ const Masters = () => {
   };
   const getAllCourses = () => {
     axios
-      .post(
-        "/api/get-all-courses",
+      .get(
+        "http://18.140.159.50:3333/api/get-all-courses",
         {
           headers: {
             "Content-Type": "application/json",
@@ -558,16 +559,16 @@ const Masters = () => {
       )
       .then((res) => {
         setAllCourses(res.data);
-        // console.log(res.data);
+        console.log("getAllCourses",res);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
   const getAllLanguage = () => {
     axios
       .post(
-        "/api/admin-languages",
+        "http://18.140.159.50:3333/api/admin-languages",
         {
           headers: {
             "Content-Type": "application/json",
@@ -581,11 +582,11 @@ const Masters = () => {
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
   const getAllCourseCate = () => {
     axios
       .post(
-        "/api/admin-category",
+        "http://18.140.159.50:3333/api/admin-category",
         {
           headers: {
             "Content-Type": "application/json",
@@ -599,11 +600,11 @@ const Masters = () => {
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
   const getAllVenues = () => {
     axios
       .post(
-        "/api/admin-venues",
+        "http://18.140.159.50:3333/api/admin-venues",
         {
           headers: {
             "Content-Type": "application/json",
@@ -611,18 +612,29 @@ const Masters = () => {
         }
       )
       .then((res) => {
-        setallVenues(res.data.data);
+        console.log(res.data.data);
+        setallVenues(
+          res.data.data.map((elem) => {
+            return {
+              id: elem.id,
+              venue_name: elem.venue_name,
+              venue_capacity: elem.venue_capacity,
+              updated_at: elem.updated_at,
+              postal_code:`${elem.postal_code} ${elem.street_number} ${elem.block_number} ${elem.unit_number} ${elem.country}`
+            };
+          })
+        );
         // console.log(res.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
   useEffect(() => {
-    getAllCourseCate()
-    getAllCourses()
-    getAllLanguage()
-    getAllVenues()
+    getAllCourseCate();
+    getAllCourses();
+    getAllLanguage();
+    getAllVenues();
     showAlert();
   }, []);
 
@@ -652,6 +664,3 @@ const Masters = () => {
 };
 
 export default Masters;
-
-
-

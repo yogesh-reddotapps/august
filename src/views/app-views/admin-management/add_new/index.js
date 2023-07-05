@@ -8,13 +8,19 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Option } from "antd/lib/mentions";
 import axios from "../../../../axios";
 import moment from "moment";
-
+import { useEffect } from "react";
+import { useLocation} from "react-router-dom/cjs/react-router-dom";
+import { useHistory } from 'react-router-dom';
 export default function AddNew() {
   const { TabPane } = Tabs;
+  const history = useHistory();
   const [activeTab, setActiveTab] = useState("1");
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
   const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
   const [successModal, setSuccessModal] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id')
   const [succesmodaltext, setSuccesmodaltext] = useState({
     title: "Staff Status Change Successfully!",
     text: "Staff status changed to terminated.",
@@ -46,13 +52,28 @@ export default function AddNew() {
 
   const [form] = Form.useForm();
   const onFinish = async (values) => {
+    if (id) {
+      let updateRes = await axios.post('http://18.140.159.50:3333/api/update-admins',{
+        "name": values.name,
+        "email": values.email,
+        "phone_number":values.phone_number,
+        "dob":moment(values.dob).format("DD-MM-YYYY"),
+        "profile_pic": "https://cristofori.s3.ap-southeast-1.amazonaws.com/profile_picture/uRRHh_kjwGrn3DUX3D_3S.png",
+        "user_id": id
+    })
+    if (updateRes.data.success) {
+      history.push('/app/staffManagement/admin_management');
+    }
+    console.log(updateRes);
+      return
+    }
     try {
       console.log("Success:", values);
       let data = {
         name: values.name,
-        profile_pic: "1.amazonaws.com/profile_picture/6ZlZO4i2RqkKOhoXPe_Ok.png",
+        profile_pic: "",
         password: values.password,
-        role: values.role,
+        role: 0,
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
         email: values.email,
@@ -98,7 +119,26 @@ export default function AddNew() {
       </div>
     </div>
   );
-
+  const fetchAdmin = async (id) => {
+    let res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-by-id',{
+        "user_id": id
+    })
+    let data = res1.data[0];
+    form.setFieldsValue({
+      id:data.user_id,
+      name:data.name,
+      phone_number:data.phone_number===null?"":data.phone_number,
+      email:data.email,
+      dob:data.dob===null?"":moment(data.dob)
+    })
+    console.log(res1.data[0]);
+  }
+ useEffect(() => {
+  if (id) {
+     fetchAdmin(id)
+  }
+ }, [])
+ 
   return (
     <div className="">
       <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
@@ -167,9 +207,10 @@ export default function AddNew() {
                   <Form.Item
                     name="role"
                     label="Role"
-                    rules={[{ required: true, message: "Please enter Role" }]}
+                    // rules={[{ required: true, message: "Please enter Role" }]}
                   >
-                    <Input placeholder="Role" />
+                    {/* <Input placeholder="Role" /> */}
+                    <div className="px-2">Admin</div>
                   </Form.Item>
                   <Form.Item
                     name="phone_number"
@@ -221,13 +262,15 @@ export default function AddNew() {
                   </Form.Item>
                 </div>
               </div>
+              {
+                !id && 
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item
                     name="password"
                     label="Password"
                     rules={[
-                      { required: true, message: "Please enter Password" },
+                      { required: !id?true:false, message: "Please enter Password" },
                     ]}
                   >
                     <Input.Password placeholder="Create Password" />
@@ -239,7 +282,7 @@ export default function AddNew() {
                     label="Confirm Password"
                     rules={[
                       {
-                        required: true,
+                        required: !id?true:false,
                         message: "Please enter Confirm Password",
                       },
                     ]}
@@ -248,6 +291,7 @@ export default function AddNew() {
                   </Form.Item>
                 </div>
               </div>
+              }
             </div>
           </TabPane>
         </Tabs>

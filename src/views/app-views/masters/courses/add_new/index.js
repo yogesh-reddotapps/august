@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { Form, Input, Select, InputNumber, Button, Modal } from "antd";
-import { DollarTwoTone, CloseCircleOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { Form, Input, Select, InputNumber, Button, Modal, Switch } from "antd";
+import { DollarTwoTone, CloseCircleOutlined,DeleteOutlined } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
+import axios from "axios";
 let styles = {
   files: {
     listStyle: "none",
@@ -48,6 +49,24 @@ const MyForm = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [uploadfileErr, setUploadfileErr] = useState(false)
   const [successModal, setSuccessModal] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [dataArray, setDataArray] = useState([]);
+  const [certiTog, setCertiTog] = useState(false);
+  const [languageslist, setLanguageslist] = useState([])
+  const [coursecategorylist, setCoursecategorylist] = useState([])
+
+  const addItem = () => {
+    if (inputValue !== "") {
+      setDataArray([...dataArray, inputValue]);
+      setInputValue("");
+    }
+  };
+
+  const deleteItem = (index) => {
+    const updatedArray = [...dataArray];
+    updatedArray.splice(index, 1);
+    setDataArray(updatedArray);
+  };
   function handleFileSelect(event) {
     const fileList = event.target.files;
     const newSelectedFiles = [];
@@ -69,14 +88,29 @@ const MyForm = () => {
     form.setFieldsValue({ [name]: value });
   };
 
-  const onFinish = (e) => {
+  const onFinish = async (e) => {
+    console.log(e,dataArray);
+    let langSplit = e.language.split(',')
     if (selectedFiles.length===0) {
       setUploadfileErr(true)
       return
     } else{
       setUploadfileErr(false)
     }
-    console.log(e);
+    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-course',{
+      "course_category": e.course_category,
+      "course_name": e.course_name,
+      "medium": langSplit[1],
+      "languages": langSplit[0],
+      "course_duration": e.course_duration,
+      "course_price": e.course_price,
+      "description": e.description,
+      "course_picture": "",
+      "content":JSON.stringify(dataArray),
+      "sdf":e.SDF,
+      "certificate":certiTog?1:0
+    })
+    console.log(res1);
     setSuccessModal(true);
     setTimeout(() => {
       setSuccessModal(false);
@@ -88,6 +122,28 @@ const MyForm = () => {
     });
     setSelectedFiles(AfterDeleteFile);
   };
+  async function getCourseCate() {
+    try {
+      let res1 = await axios.post('http://18.140.159.50:3333/api/admin-category')
+      setCoursecategorylist(res1.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  async function getLanguage() {
+    try {
+      let res1 = await axios.post('http://18.140.159.50:3333/api/admin-languages')
+      setLanguageslist(res1.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    getCourseCate()
+    getLanguage()
+  }, [])
+  
   return (
     <Form
       form={form}
@@ -117,7 +173,11 @@ const MyForm = () => {
           placeholder="Select"
           onChange={(value) => handleInputChange("course_category", value)}
         >
-          <Option value="test">test</Option>
+          {
+            coursecategorylist.map((elem,i)=>{
+              return <><Option key={i} value={elem.id}>{elem.course_category}</Option></>
+            })
+          }
         </Select>
       </Form.Item>
       <Form.Item label="Languages Available" name="language"
@@ -132,7 +192,12 @@ const MyForm = () => {
           placeholder="Select"
           onChange={(value) => handleInputChange("language", value)}
         >
-          <Option value="English">English</Option>
+          {
+            languageslist.map((elem,i)=>{
+              return<><Option key={i} value={`${elem.id},${elem.language_name}`}>{elem.language_name}</Option></>
+            })
+          }
+          
         </Select>
       </Form.Item>
       <Form.Item label="Description" name="description"
@@ -165,6 +230,34 @@ const MyForm = () => {
           addonBefore={<DollarTwoTone />}
           style={{ width: "50%" }}
         />
+      </Form.Item>
+      <Form.Item label="SDF" name="SDF">
+        <InputNumber
+          placeholder="0"
+          style={{ width: "50%" }}
+        />
+      </Form.Item>
+      <Form.Item label="Content" name="content">
+      <div>
+      <Input
+       style={{ width: "50%" }}
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        placeholder="Enter text"
+      />
+      <Button className="ml-2" onClick={addItem}>Add</Button>
+
+        {dataArray.map((item, index) => (
+          <div className="p-2 d-flex" key={index}>
+           <div style={{ width: "50%",wordWrap:"break-word" }} > {item}</div>
+            <Button danger className="ml-2" onClick={() => deleteItem(index)}><DeleteOutlined /></Button>
+          </div>
+        ))}
+    </div>
+    </Form.Item>
+      <Form.Item label="Certificate" name="Certificate">
+      <Switch defaultChecked onChange={(checked) => setCertiTog(checked)} />
       </Form.Item>
       <Form.Item label="Course Duration" name="course_duration"
       rules={[

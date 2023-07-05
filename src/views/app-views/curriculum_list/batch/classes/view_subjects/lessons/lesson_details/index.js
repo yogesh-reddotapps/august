@@ -54,6 +54,7 @@ const assignmentArray = [
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const searchParams = new URLSearchParams(document.location.search);
+  const [lessonData, setLessonData] = useState(null)
   const type = searchParams.get("type");
   const id = searchParams.get("id");
 
@@ -158,41 +159,10 @@ function FacilityBooking() {
               {" "}
               <LessonTypeText /> <span>Text</span>
             </h5>
-            <h5>Estimated Time: 60 Mins</h5>
+            <h5>Estimated Time: {(lessonData!==null && lessonData.estimated_time!==null)?lessonData.estimated_time:'60'} Mins</h5>
           </div>
           <div className="mt-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsthe industry's standard
+            {lessonData!==null && lessonData.description}
           </div>
         </div>
       ),
@@ -235,7 +205,15 @@ function FacilityBooking() {
       ),
     },
   ];
+  const getLessons = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/lessons/lesson-details/23`);
+    setLessonData(res1.data);
+  }
 
+  useEffect(() => {
+    getLessons()
+  }, [])
+  
   return (
     <div className="tabbarWhite">
       <div className="p-3 bg-white">
@@ -251,7 +229,7 @@ function FacilityBooking() {
               <div>
                 <div>
                   <h5 className="m-0">ID</h5>
-                  <p className="m-0">#24</p>
+                  <p className="m-0">{lessonData!==null && lessonData.lesson_id}</p>
                 </div>
               </div>
             </div>
@@ -289,7 +267,7 @@ function FacilityBooking() {
             <div>
               <div>
                 <h5 className="m-0">Lesson Name</h5>
-                <p className="m-0">Workplace Safety Introduction</p>
+                <p className="m-0">{lessonData!==null && lessonData.lesson_name}</p>
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />

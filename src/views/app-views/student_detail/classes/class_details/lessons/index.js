@@ -20,40 +20,44 @@ import { useState } from "react";
 import axios from "axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
-import Icon, {EyeOutlined} from "@ant-design/icons";
+import Icon, { EyeOutlined } from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 const subjectArray = [
-    {
-        "Sr_No": 1,
-        "Lesson": "Introduction to English",
-        "Lesson_Type": "text",
-        "Estimated_Time": "30 minutes"
-    },
-    {
-        "Sr_No": 2,
-        "Lesson": "Mathematical Equations",
-        "Lesson_Type": "video",
-        "Estimated_Time": "45 minutes"
-    },
-    {
-        "Sr_No": 3,
-        "Lesson": "Science Experiment",
-        "Lesson_Type": "audio",
-        "Estimated_Time": "20 minutes"
-    },
-    {
-        "Sr_No": 4,
-        "Lesson": "History Quiz",
-        "Lesson_Type": "question",
-        "Estimated_Time": "15 minutes"
-    }
-]
-
+  {
+    Sr_No: 1,
+    Lesson: "Introduction to English",
+    Lesson_Type: "text",
+    Estimated_Time: "30 minutes",
+  },
+  {
+    Sr_No: 2,
+    Lesson: "Mathematical Equations",
+    Lesson_Type: "video",
+    Estimated_Time: "45 minutes",
+  },
+  {
+    Sr_No: 3,
+    Lesson: "Science Experiment",
+    Lesson_Type: "audio",
+    Estimated_Time: "20 minutes",
+  },
+  {
+    Sr_No: 4,
+    Lesson: "History Quiz",
+    Lesson_Type: "question",
+    Estimated_Time: "15 minutes",
+  },
+];
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [lessonList, setLessonList] = useState([]);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
 
   const handleOk = () => {
     setTimeout(() => {
@@ -64,26 +68,34 @@ function FacilityBooking() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  
+
   const SubjectColumn = [
     {
-      title: "Sr No",
-      dataIndex: "Sr_No",
+      title: "ID",
+      dataIndex: "id",
     },
     {
       title: "Lesson",
-      dataIndex: "Lesson",
+      dataIndex: "lesson_name",
     },
     {
       title: "Lesson Type",
-      dataIndex: "Lesson_Type",
+      dataIndex: "lesson_type",
       render: (text) => {
-        return <FileTypeUsingProp type={text}/>;
+        return (
+          <>
+          {text==0 && <FileTypeUsingProp type='text' />}
+          {text==1 && <FileTypeUsingProp type='video' />}
+          {text==2 && <FileTypeUsingProp type='audio' />}
+          {text==3 && <FileTypeUsingProp type='question' />}
+            
+          </>
+        );
       },
     },
     {
       title: "Estimated Time (Mins)",
-      dataIndex: "Estimated_Time",
+      dataIndex: "estimated_time",
     },
     {
       title: "Action",
@@ -143,12 +155,22 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={subjectArray} attribiue={SubjectColumn} />
+          <Helper clients={lessonList} attribiue={SubjectColumn} />
         </div>
       ),
-    }
+    },
   ];
-  
+  const getLessons = async () => {
+    const res1 = await axios.get(
+      `http://18.140.159.50:3333/api/view-lessons-by-subject/${id}`
+    );
+    setLessonList(res1.data);
+  };
+  useEffect(() => {
+    if (id) {
+      getLessons();
+    }
+  }, []);
 
   return (
     <div className="tabbarWhite">
@@ -174,7 +196,10 @@ function FacilityBooking() {
               </div>
             </div>
             <Divider style={{ height: "60px" }} type="vertical" />
-            <div style={{ gap: "10px",width:'200px' }} className="d-flex align-items-top">
+            <div
+              style={{ gap: "10px", width: "200px" }}
+              className="d-flex align-items-top"
+            >
               <div>
                 <img height={40} width={40} src="/img/avatar3.png" alt="img" />
               </div>
@@ -206,7 +231,6 @@ function FacilityBooking() {
                 <p className="m-0">Workplace Safety</p>
               </div>
             </div>
-            
           </div>
           <div className="p-3 d-flex flex-column align-items-end">
             <h5 className="px-4 py-1 rounded text-white bg-success m-0 d-inline">

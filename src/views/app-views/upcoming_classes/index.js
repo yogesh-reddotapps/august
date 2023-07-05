@@ -1,5 +1,5 @@
 import { Button, Menu, Modal, Form, Input, Select, DatePicker } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ExportIcon, FilterIcon,Edit, ViewAttend } from "assets/svg/icon";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import { Link } from "react-router-dom";
@@ -10,10 +10,13 @@ import CustomIcon from 'components/util-components/CustomIcon'
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
+import axios from "axios";
+import moment from "moment";
 
 function TeacherManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
+  const [classList, setClassList] = useState([])
   const [form] = Form.useForm();
   const dummyArray = [
     {
@@ -49,57 +52,70 @@ function TeacherManagement() {
   ];
 
   const assesmentColumn = [
+    // {
+    //   title: "Id",
+    //   dataIndex: "class_id",
+    // },
     {
       title: "Course ID",
-      dataIndex: "id",
+      dataIndex: "course_id",
     },
     {
-      title: "Upcoming Courses",
-      dataIndex: "Assessment",
+      title: "Upcoming Classes",
+      dataIndex: "course_name",
     },
     {
       title: "Batch ID",
-      dataIndex: "Assessment_Questions",
-      render:()=>{
-        return<>Woodland</>
-      }
+      dataIndex: "batch_id",
+      // render:()=>{
+      //   return<>Woodland</>
+      // }
     },
     {
       title: "Class ID",
-      dataIndex: "Assessment_Questions",
-      render:()=>{
-        return<>Woodland</>
-      }
+      dataIndex: "class_id",
+      // render:()=>{
+      //   return<>Woodland</>
+      // }
     },
     {
       title: "Class Date",
-      dataIndex: "Attended_By",
+      dataIndex: "class_date",
+      render:(date)=>{
+        return<>{moment(date).format('DD-MMM-YYYY')}</>
+      }
     },
     {
       title: "Start Time",
-      dataIndex: "Due_Date",
-      render:(text)=>{
-        return <>{text.slice(0,8)}</>
+      dataIndex: "start_time",
+      render:(date)=>{
+        return<>{moment(date, 'HH:mm:ss').format('h:mm A')}</>
       }
     },
     {
       title: "End Time",
-      dataIndex: "Due_Date",
-      render:(text)=>{
-        return <>{text.slice(10,19)}</>
+      dataIndex: "end_time",
+      render:(date)=>{
+        return<>{moment(date, 'HH:mm:ss').format('h:mm A')}</>
       }
     },
     {
       title: "Teachers Invited",
-      dataIndex: "Created_By",
+      dataIndex: "teacher_id",
     },
     {
       title: "Accepted By",
       dataIndex: "Created_On",
+      render:()=>{
+        return<>25</>
+      }
     },
     {
       title: "Rejected By",
       dataIndex: "invite_sent",
+      render:()=>{
+        return<>10</>
+      }
     },
     {
       title: "Action",
@@ -110,19 +126,19 @@ function TeacherManagement() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
-                    <Link to="facility_booking">
-                      {" "}
-                      
-                      <DeleteOutlined className='mr-2' />Delete
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
+                  <Menu.Item onClick={()=>deleteUpcomingClass(record.class_id)}>
                     <span>
                       {" "}
                       
-                      <CustomIcon className='mr-1' svg={Edit} />Reschedule
+                      <DeleteOutlined className='mr-2' />Delete
                     </span>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to={`/app/upcoming_classes/schedule_new_class?id=${record.class_id}`}>
+                      {" "}
+                      
+                      <CustomIcon className='mr-1' svg={Edit} />Reschedule
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
                   <Link to="upcoming_classes/class_attendance">
@@ -138,6 +154,13 @@ function TeacherManagement() {
       },
     },
   ];
+  const deleteUpcomingClass = async (id) => {
+    console.log(id);
+    const res1 = await axios.delete(`http://18.140.159.50:3333/api/students/course/classes/${id}`)
+    if(res1.status===200){
+      window.location.reload()
+    }
+  }
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -160,6 +183,15 @@ function TeacherManagement() {
     color: "white",
     transition:'all 0.5s ease 0s'
   };
+  const getAllClasses = async () => {
+    const res1 = await axios.get('http://18.140.159.50:3333/api/admin-get-upcoming-classes');
+    console.log(res1);
+    setClassList(res1.data);
+  }
+  useEffect(() => {
+   getAllClasses()
+  }, [])
+  
 
   return (
     <div>
@@ -319,7 +351,7 @@ function TeacherManagement() {
       </Modal> */}
 
       <div className="mb-3">
-        <Helper clients={dummyArray} attribiue={assesmentColumn} />
+        <Helper clients={classList} attribiue={assesmentColumn} />
       </div>
     </div>
   );

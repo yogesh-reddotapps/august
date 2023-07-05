@@ -5,6 +5,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { AudioUploadImage, DraggableItemDelIcon, LessonTypeArVr, LessonTypeMusic, LessonTypeQuestion, LessonTypeText, LessonTypeVideo } from "assets/svg/icon";
 import axios from "axios";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 // https://edu-portal.inkapps.io/api/teacher-course-lesson_item-new
 let styles = {
   uploadFile: {
@@ -36,16 +37,21 @@ let styles = {
 
 const AddNewLesson = () => {
   const history = useHistory();
+  const location = useLocation();
   const [lessonType, setLessonType] = useState("0");
   const [estimateTime, setEstimateTime] = useState(0);
   const [senFileVideo, setSenFileVideo] = useState(null);
   const [senFileAudio, setSenFileAudio] = useState(null);
   const [questionTitle, setQuestionTitle] = useState(null)
+  const [lessonName, setLessonName] = useState('')
   const [SendFile, setSendFile] = useState(null)
   const [notiText, setNotiText] = useState("");
   const [queOpt, setQueOpt] = useState(1);
   const [videos, setVideos] = useState([]);
   const [ar, setAr] = useState([]);
+  const queryParams = new URLSearchParams(location.search);
+  const course_id = queryParams.get("course_id");
+  const subject_id = queryParams.get("subject_id");
   const [audioElements, setAudioElements] = useState([]);
   const [queOptions, setQueOptions] = useState([
     { text: "" },
@@ -139,45 +145,58 @@ const AddNewLesson = () => {
     setQueOptions(updatedOptions);
   };
 
-  const SaveLesson = () => {
+  const SaveLesson = async () => {
     const formData = new FormData();
+    let lesContentData;
     if (lessonType==0) {
-      setSendFile(notiText)
+      lesContentData=notiText;
     }
     if (lessonType==1) {
-      setSendFile(senFileVideo)
+      lesContentData=senFileVideo
     }
     if (lessonType==2) {
-      setSendFile(senFileAudio)
+      lesContentData=senFileAudio
     }
     if (lessonType==3) {
      const queData = {title:questionTitle, image:'placeholder', options:queOptions, correct_option:1,}
-     setSendFile(queData)
+      lesContentData=queData
     }
-    formData.append("lesson_item_content", SendFile);
-    formData.append("lesson_item_type", 1);
-    formData.append("lesson_item_time", estimateTime);
-    // const data = {
-    //   lesson_item_type: 1,
-    //   lesson_item_time: estimateTime,
-    //   lesson_item_content: senFileVideo,
-    // };
-    axios
-      .post(
-        "https://edu-portal.inkapps.io/api/teacher-course-lesson_item-new",
-        formData,
-        {
-          headers: {
-            Authorization:
-              "Bearer Y2xndnYwcmZsMDAwY3h1OWlmcXpxMW56aA.ChtwxTL_hPLQO_hgHjxhg_h25RjeBSM1L5vXrY65v8wqjf4pAiW_xK7t0xpG",
-          },
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-      });
+    formData.append("lesson_content", lesContentData);
+    formData.append("lesson_type", 0);
+    formData.append("estimated_time", estimateTime);
+    formData.append("subject_id", subject_id);
+    formData.append("course_id",course_id);
+    formData.append("board_id", 2);
+    formData.append("lesson_name", lessonName);
+    const dataObject = {
+      lesson_content: SendFile,
+      lesson_type: 0,
+      estimated_time: estimateTime,
+      subject_id: 15,
+      course_id: 23,
+      board_id: 2,
+      lesson_name: lessonName
+    };
+    
+    console.log("dataObject",dataObject);
+    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-lesson',formData)
+    console.log(res1);
+    // axios
+    //   .post(
+    //     "https://edu-portal.inkapps.io/api/teacher-course-lesson_item-new",
+    //     formData,
+    //     {
+    //       headers: {
+    //         Authorization:
+    //           "Bearer Y2xndnYwcmZsMDAwY3h1OWlmcXpxMW56aA.ChtwxTL_hPLQO_hgHjxhg_h25RjeBSM1L5vXrY65v8wqjf4pAiW_xK7t0xpG",
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log(response.data);
+    //   });
 
-    history.push("/app/masters/courses/subjects/lessons/?add=subject");
+    // history.push("/app/masters/courses/subjects/lessons/?add=subject");
   };
 
   return (
@@ -186,7 +205,7 @@ const AddNewLesson = () => {
         <h5 className="text-info mb-4">Add New Lesson</h5>
         <div className="mt-4 w-50">
           <h5>Lesson Name</h5>
-          <Input placeholder="Lesson Name" />
+          <Input placeholder="Lesson Name" value={lessonName} onChange={(e)=>setLessonName(e.target.value)}/>
         </div>
         <div className="mt-4">
           <h5>Estimated Time (Mins)</h5>

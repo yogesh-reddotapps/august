@@ -4,65 +4,59 @@ import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { membershipFacilityBooking } from "../data";
-import {
-  EyeOutlined,
-} from "@ant-design/icons";
+import { EyeOutlined } from "@ant-design/icons";
 import Helper from "../Helper";
 import { useState } from "react";
 import axios from "axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
+import moment from "moment";
 
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
 
- 
-
   const facilityBookingColumns = [
     {
       title: "Course Id",
-      dataIndex: "id",
+      dataIndex: "course_id",
     },
     {
       dataIndex: "avatar",
       render: (avatar) => {
-        return <img src={`${avatar}`} alt="..." />;
+        // return <img src={`${avatar}`} alt="..." />;
+        return <div>img</div>
       },
     },
     {
       title: "Course Name",
-      dataIndex: "name",
+      dataIndex: "batch_id",
     },
     {
       title: "Batch ID",
-      dataIndex: "Course_category",
-      render: (avatar) => {
-        return <>#WS-B56</>;
-      },
+      dataIndex: "id"
     },
     {
       title: "Start Date",
-      dataIndex: "date",
+      dataIndex: "start_date",
       render: (date) => {
-        return <div>{date.slice(0,11)}</div>;
-      }
+        // return <img src={`${avatar}`} alt="..." />;
+        return <div>{moment(date).format("DD-MM-YY")}</div>
+      },
     },
     {
       title: "End Date",
-      dataIndex: "date",
+      dataIndex: "end_date",
       render: (date) => {
-        return <div>{date.replace("Mar", "Jun").slice(0,11)}</div>;
-      }
+        // return <img src={`${avatar}`} alt="..." />;
+        return <div>{moment(date).format("DD-MM-YY")}</div>
+      },
     },
     {
-      title: "Capacity",
-      dataIndex: "venue",
-      render: (avatar) => {
-        return <div>25</div>;
-      }
+      title: "capacity",
+      dataIndex: "capacity"
     },
     {
       title: "Status",
@@ -71,7 +65,7 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "active" ? "text-danger" : "text-success"
+              text !== 1 ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
             {text}
@@ -89,7 +83,7 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="curriculam_details">
+                    <Link to={`curriculam_details?id=${record.id}`}>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Details
@@ -154,12 +148,21 @@ function FacilityBooking() {
       });
   };
 
+  useEffect(() => {
+    axios.get("http://18.140.159.50:3333/api/batches").then((res)=>{
+      console.log("resm",res.data);
+      setFacilityBooking(res.data)
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }, []);
+
   return (
     <div>
       <div className="d-flex justify-content-between mb-3">
         <div className="" style={{ display: "flex" }}>
           <SearchBox />
-          <Filter type={'course_curriculam'}>
+          <Filter type={"course_curriculam"}>
             <Button
               icon={<Icon component={FilterIcon} />}
               className="d-flex align-items-center ml-2"
@@ -175,12 +178,13 @@ function FacilityBooking() {
           </Button>
         </div>
         <Button className="bg-info">
-        <Link
-          to="course_batches/add_new_batch"
-          className="d-flex align-items-center rounded text-white font-weight-semibold"
-        >
-          + Add New Batch
-        </Link></Button>
+          <Link
+            to="course_batches/add_new_batch"
+            className="d-flex align-items-center rounded text-white font-weight-semibold"
+          >
+            + Add New Batch
+          </Link>
+        </Button>
       </div>
       <div>
         <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />
