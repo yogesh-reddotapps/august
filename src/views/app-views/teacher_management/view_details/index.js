@@ -505,20 +505,20 @@ function FacilityBooking() {
       dataIndex: "course_name",
     },
     {
-      title: "Course Status",
+      title: "Access",
       // dataIndex: "course_status",
       render: (record) => {
         return (
           <Switch
-          defaultChecked={record.course_status?true:false}
+          defaultChecked={record.access?true:false}
           onChange={(checked) => handleChange(record.course_id,checked)}
           />
         );
       },
     },
     {
-      title: "Access",
-      dataIndex: "access",
+      title: "Course Status",
+      dataIndex: "course_status",
       render: (text) => {
         return (
           <div
