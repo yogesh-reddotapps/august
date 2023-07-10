@@ -37,22 +37,23 @@ export default function MembershipRequest() {
     setVisible(false);
   };
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modal2Open,setModal2Open]=useState(false);
+  const [idToDelete,setIdTodelete]=useState();
 
-  const showModal = () => {
-    setIsModalOpen(true);
-    handleOk();
-  };
+  // const showModal = () => {
+  //   setIsModalOpen(true);
+  //   handleOk();
+  // };
 
-  const handleOk = () => {
-    setTimeout(() => {
-      setIsModalOpen(false);
-    }, 5000);
-  };
+  // const handleOk = () => {
+  //   setTimeout(() => {
+  //     setIsModalOpen(false);
+  //   }, 5000);
+  // };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  // };
 
   const getEvents = () => {
     axios
@@ -67,24 +68,32 @@ export default function MembershipRequest() {
       });
   };
 
-  const onDeleteData = (record) => {
-    Modal.confirm({
-      title: "Are you sure, you want to delete this members record ?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: async () => {
-        let res1 = await axios.post(
-          "http://18.140.159.50:3333/api/delete-admin",
-          {
-            user_id: record,
-          }
-        );
-        if(res1.data.success){
-          console.log(refereshTog);
-          setRefereshTog(refereshTog?false:true)
-        }
-      },
-    });
+  const onDeleteData = (id) => {
+    setModal2Open(true);
+    setIdTodelete(id);
+  }
+  const handleDelete = async (Oid) => {
+    let data = {
+      user_id:Oid
+    };
+    const response = await axios.post(
+      "http://18.140.159.50:3333/api/delete-admin",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if(response.data.success){
+      setRefereshTog(refereshTog?false:true)
+      
+    }
+    else{
+      alert("Cant Delete")
+    }
+    
+
   };
 
   useEffect(() => {
@@ -205,6 +214,21 @@ export default function MembershipRequest() {
           attribiue={membershipRequestColumns}
         />
       </div>
+      <Modal
+        // title="Vertically centered modal dialog"
+        centered
+        visible={modal2Open}
+        onOk={() =>{setModal2Open(false)
+            handleDelete(idToDelete);
+        }}
+        onCancel={() => setModal2Open(false)}
+        okText="Yes,Confirm"
+        cancelText="No,Cancel"
+        okButtonProps={{style: { backgroundColor: '#0068B3' ,width:"30%"} }}  
+      >
+       <div style={{color:"#000B23",fontSize:"18px",fontWeight:"600"}}>Sure you want to delete?</div>
+       <div>It will be delete from the system</div>
+      </Modal>
     </div>
   );
 }
