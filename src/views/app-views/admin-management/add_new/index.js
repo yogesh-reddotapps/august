@@ -278,7 +278,7 @@ export default function AddNew() {
                     label="Password"
                     rules={[
                       { required: !id?true:false, message: "Please enter Password" },
-                      { min: 6, message: 'Username must be minimum 5 characters.' },
+                      { min: 6, message: 'Password must be minimum 6 characters.' },
                     ]}
                   >
                     <Input.Password placeholder="Create Password" />

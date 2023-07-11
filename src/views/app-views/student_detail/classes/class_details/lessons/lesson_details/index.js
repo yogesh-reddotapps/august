@@ -19,6 +19,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import CustomIcon from "components/util-components/CustomIcon";
+import { API_BASE_URL } from "constants/ApiConstant";
 const assignmentArray = [
   {
     ID: 1,
@@ -55,12 +56,35 @@ function FacilityBooking() {
   const searchParams = new URLSearchParams(document.location.search);
   const type = searchParams.get("type");
   const id = searchParams.get("id");
-
+  const lessonId = searchParams.get("lessonId");
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
     }, 10000);
   };
+
+  useEffect(() => {
+
+      getLessonDetails();
+    
+  }, []);
+
+  const getLessonDetails = ()=>{
+    axios.post(`${API_BASE_URL}/view-lesson`,
+    {
+      headers:{
+        "Content-Type": "application/json",
+      },
+      data:{
+        lesson_id:parseInt(lessonId),
+        subject_id:parseInt(id)
+      }
+    }).then((response)=>{
+      console.log(response);
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
 
   const handleCancel = () => {
     setIsModalOpen(false);

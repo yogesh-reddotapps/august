@@ -553,13 +553,18 @@ function FacilityBooking() {
 
   const handleChange=async(Oid,checked)=>{
     console.log(Oid);
-    let res1 = await axios.post(
+   await axios.post(
       "http://18.140.159.50:3333/api/teacher-course-access",
       {
-        teacher_id: id,
+        teacher_id: parseInt(id),
         course_id: Oid
       }
-    );
+    ).then((res1)=>{
+      console.log(res1);
+    }).catch((err)=>{
+      console.log(err);
+    });
+   
   }
   const items = [
     {

@@ -61,3 +61,24 @@ const [modal2Open,setModal2Open]=useState(false);
  <div style={{color:"#000B23",fontSize:"18px",fontWeight:"600"}}>Sure you want to delete?</div>
  <div>It will be delete from the system</div>
 </Modal>
+
+
+
+//API
+
+axios
+.post(
+  "/api/get-students",
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+)
+.then((res) => {
+  setmembershipRequestData(res.data);
+  // console.log(res.data);
+})
+.catch((error) => {
+  console.log(error);
+});

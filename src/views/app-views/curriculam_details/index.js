@@ -930,7 +930,7 @@ function FacilityBooking() {
 
   const getTeacherEnroll = async () => {
     const res1 = await axios.get(`${API_BASE_URL}/get-classes-by-course/${location.state.id}`);
-    setTeacherEnroll(res1.data.data);
+    // setTeacherEnroll(res1.data.data);
   }
 
   const getStudentEnroll = async () => {
