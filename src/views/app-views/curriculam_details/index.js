@@ -32,6 +32,7 @@ import { Tabs } from "antd";
 import { FileUnknownOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { API_BASE_URL } from "constants/ApiConstant";
+import { formatDate } from "constants/DateConstant";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -378,6 +379,7 @@ function FacilityBooking() {
     {
       title: "Start Date",
       dataIndex: "Start_Date",
+    
     },
     {
       title: "Due Date",
@@ -453,10 +455,16 @@ function FacilityBooking() {
     {
       title: "Start Date",
       dataIndex: "start_date",
+        render:(text)=>{
+        return formatDate(text);
+      }
     },
     {
       title: "End Date",
       dataIndex: "end_date",
+        render:(text)=>{
+        return formatDate(text);
+      }
     },
     {
       title: "Classes Done",
@@ -924,13 +932,14 @@ function FacilityBooking() {
   //   }
   // };
   const getCourseMaterial = async () => {
-    const res1 = await axios.get('http://18.140.159.50:3333/api/course-curriculum/course-materials');
-    setCourseMaterial(res1.data)
+    const res1 = await axios.get(`${API_BASE_URL}/course-curriculum/course-materials/courseId/${location.state.id}`);
+    setCourseMaterial(res1.data.data);
+    // console.log(res1.data);
   }
 
   const getTeacherEnroll = async () => {
     const res1 = await axios.get(`${API_BASE_URL}/get-classes-by-course/${location.state.id}`);
-    // setTeacherEnroll(res1.data.data);
+    setTeacherEnroll(res1.data.data);
   }
 
   const getStudentEnroll = async () => {

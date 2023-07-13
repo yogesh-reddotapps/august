@@ -57,6 +57,7 @@ function FacilityBooking() {
   const type = searchParams.get("type");
   const id = searchParams.get("id");
   const lessonId = searchParams.get("lessonId");
+  const [lessonDetail,setLessonDetail]=useState([]);
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -70,17 +71,20 @@ function FacilityBooking() {
   }, []);
 
   const getLessonDetails = ()=>{
-    axios.post(`${API_BASE_URL}/view-lesson`,
-    {
-      headers:{
-        "Content-Type": "application/json",
+    axios({
+      method: 'post',
+      data: {
+        lesson_id:lessonId,
+        subject_id:id
+          },
+      url: `${API_BASE_URL}/view-lesson`,
+      headers: {
+          "content-type": "application/json",
+          // Authorization: localStorage.getItem('token')
       },
-      data:{
-        lesson_id:parseInt(lessonId),
-        subject_id:parseInt(id)
-      }
-    }).then((response)=>{
-      console.log(response);
+  }).then((response)=>{
+    setLessonDetail(response.data.data[0]);
+      // console.log(response);
     }).catch((err)=>{
       console.log(err);
     })
@@ -181,41 +185,10 @@ function FacilityBooking() {
               {" "}
               <LessonTypeText /> <span>Text</span>
             </h5>
-            <h5>Estimated Time: 60 Mins</h5>
+            <h5>Estimated Time: {lessonDetail.estimated_time} Mins</h5>
           </div>
           <div className="mt-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsthe industry's standard
+           {lessonDetail.description}
           </div>
         </div>
       ),
@@ -338,7 +311,7 @@ function FacilityBooking() {
         </div>
       </div>
       <Tabs>
-        {items.map((item) => (
+        {lessonDetail.length!==0 && items.map((item) => (
           <Tabs.TabPane tab={item.label} key={item.key}>
             {item.children}
           </Tabs.TabPane>

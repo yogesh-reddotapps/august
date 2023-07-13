@@ -8,7 +8,7 @@ import { IntlProvider } from "react-intl";
 import { ConfigProvider } from 'antd';
 import { APP_PREFIX_PATH, AUTH_PREFIX_PATH } from 'configs/AppConfig'
 import useBodyClass from 'hooks/useBodyClass';
-import Login from "components/Login/Login";
+
 
 export const Views = (props) => {
   const { locale, location, direction } = props;
@@ -29,9 +29,9 @@ export const Views = (props) => {
           <Route path={APP_PREFIX_PATH}>
             <AppLayout direction={direction} location={location}/>
           </Route>
-          <Route path="/login">
+          {/* <Route path="/login">
             <Login/>
-          </Route>
+          </Route> */}
         </Switch>
       </ConfigProvider>
     </IntlProvider>
