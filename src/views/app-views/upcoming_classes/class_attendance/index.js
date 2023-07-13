@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
+import { useEffect } from "react";
 import { Divider, Button } from "antd";
 import Icon from "@ant-design/icons";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import { FilterIcon, CsvIcon } from "assets/svg/icon";
 import Helper from "../../Helper";
+import axios from "axios";
+import { API_BASE_URL } from "constants/ApiConstant";
 const ClassAttend = () => {
+  const [attData,setAttData]=useState([]);
   const attcolumn = [
     {
       title: "Id",
-      dataIndex: "Id",
+      dataIndex: "id",
     },
     {
       dataIndex: "avatar",
@@ -62,45 +66,67 @@ const ClassAttend = () => {
       },
     },
   ];
-  const attData = [
-    {
-      Id: 1,
-      student_name: "John Doe",
-      age: 18,
-      gender: "Male",
-      contact_no: "1234567890",
-      email: "johndoe@example.com",
-      attendance: "Present",
-    },
-    {
-      Id: 2,
-      student_name: "Jane Smith",
-      age: 19,
-      gender: "Female",
-      contact_no: "9876543210",
-      email: "janesmith@example.com",
-      attendance: "Absent",
-    },
-    {
-      Id: 3,
-      student_name: "Tom Johnson",
-      age: 17,
-      gender: "Male",
-      contact_no: "7890123456",
-      email: "tomjohnson@example.com",
-      attendance: "Present",
-    },
-    {
-      Id: 4,
-      student_name: "Alice Brown",
-      age: 18,
-      gender: "Female",
-      contact_no: "3456789012",
-      email: "alicebrown@example.com",
-      attendance: "Absent",
-    },
-  ];
+  // const attData = [
+  //   {
+  //     Id: 1,
+  //     student_name: "John Doe",
+  //     age: 18,
+  //     gender: "Male",
+  //     contact_no: "1234567890",
+  //     email: "johndoe@example.com",
+  //     attendance: "Present",
+  //   },
+  //   {
+  //     Id: 2,
+  //     student_name: "Jane Smith",
+  //     age: 19,
+  //     gender: "Female",
+  //     contact_no: "9876543210",
+  //     email: "janesmith@example.com",
+  //     attendance: "Absent",
+  //   },
+  //   {
+  //     Id: 3,
+  //     student_name: "Tom Johnson",
+  //     age: 17,
+  //     gender: "Male",
+  //     contact_no: "7890123456",
+  //     email: "tomjohnson@example.com",
+  //     attendance: "Present",
+  //   },
+  //   {
+  //     Id: 4,
+  //     student_name: "Alice Brown",
+  //     age: 18,
+  //     gender: "Female",
+  //     contact_no: "3456789012",
+  //     email: "alicebrown@example.com",
+  //     attendance: "Absent",
+  //   },
+  // ];
 
+  useEffect(()=>{
+    getAttendance();
+  },[])
+
+  const getAttendance = async()=>{
+    axios({
+      method:'post',
+      url:`${API_BASE_URL}/get-attendance`,
+      data:{
+        class_id:1,
+        batch_id:4
+      },
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response)=>{
+      console.log(response);
+      setAttData(response.data.data);
+    }).catch((error)=>{
+      console.log(error);
+    })
+  }
   return (
     <div>
       <div className="p-3 mb-4 bg-white">
