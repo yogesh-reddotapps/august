@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
+import { API_BASE_URL } from "constants/ApiConstant";
+import axios from "axios";
 let styles = {
   files: {
     listStyle: "none",
@@ -76,6 +78,28 @@ function Submission() {
     setQuestion(updatedQuestions);
   };
 
+  useEffect(()=>{
+    getSubmission();
+  },[])
+const getSubmission = ()=>{
+  axios
+.get(
+  `${API_BASE_URL}/view-submission/16`,
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }
+)
+.then((res) => {
+  // setmembershipRequestData(res.data);
+  // console.log(res.data);
+})
+.catch((error) => {
+  console.log(error);
+});
+}
+ 
   return (
     <div>
       <div className="border rounded p-3 mb-4 bg-white">

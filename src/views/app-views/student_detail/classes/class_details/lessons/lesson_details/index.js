@@ -19,6 +19,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import CustomIcon from "components/util-components/CustomIcon";
+import { API_BASE_URL } from "constants/ApiConstant";
 const assignmentArray = [
   {
     ID: 1,
@@ -55,12 +56,39 @@ function FacilityBooking() {
   const searchParams = new URLSearchParams(document.location.search);
   const type = searchParams.get("type");
   const id = searchParams.get("id");
-
+  const lessonId = searchParams.get("lessonId");
+  const [lessonDetail,setLessonDetail]=useState([]);
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
     }, 10000);
   };
+
+  useEffect(() => {
+
+      getLessonDetails();
+    
+  }, []);
+
+  const getLessonDetails = ()=>{
+    axios({
+      method: 'post',
+      data: {
+        lesson_id:lessonId,
+        subject_id:id
+          },
+      url: `${API_BASE_URL}/view-lesson`,
+      headers: {
+          "content-type": "application/json",
+          // Authorization: localStorage.getItem('token')
+      },
+  }).then((response)=>{
+    setLessonDetail(response.data.data[0]);
+      // console.log(response);
+    }).catch((err)=>{
+      console.log(err);
+    })
+  }
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -157,41 +185,10 @@ function FacilityBooking() {
               {" "}
               <LessonTypeText /> <span>Text</span>
             </h5>
-            <h5>Estimated Time: 60 Mins</h5>
+            <h5>Estimated Time: {lessonDetail.estimated_time} Mins</h5>
           </div>
           <div className="mt-2">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsum is simply dummy text of the printing and
-            typesetting industry. Lorem Ipsum has been the industry's standard
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard Lorem Ipsum
-            is simply dummy text of the printing and typesetting industry. Lorem
-            Ipsum has been the industry's standard Lorem Ipsum is simply dummy
-            text of the printing and typesetting industry. Lorem Ipsum has been
-            the industry's standard Lorem Ipsum is simply dummy text of the
-            printing and typesetting industry. Lorem Ipsum has been the
-            industry's standard Lorem Ipsum is simply dummy text of the printing
-            and typesetting industry. Lorem Ipsum has been the industry's
-            standard Lorem Ipsthe industry's standard
+           {lessonDetail.description}
           </div>
         </div>
       ),
@@ -314,7 +311,7 @@ function FacilityBooking() {
         </div>
       </div>
       <Tabs>
-        {items.map((item) => (
+        {lessonDetail.length!==0 && items.map((item) => (
           <Tabs.TabPane tab={item.label} key={item.key}>
             {item.children}
           </Tabs.TabPane>

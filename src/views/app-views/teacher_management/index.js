@@ -137,25 +137,36 @@ function TeacherManagement() {
   const [batchesOpt, setBatchesOpt] = useState([])
   const [classOpt, setClassOpt] = useState([])
   const [form] = Form.useForm();
+  const [modal2Open,setModal2Open]=useState(false);
+  const [idToDelete,setIdTodelete]=useState();
 
-  const onDeleteData = async (record) => {
-    Modal.confirm({
-      title: "Are you sure, you want to delete this members record ?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: async () => {
-        let res1 = await axios.post(
-          "http://18.140.159.50:3333/api/delete-teacher",
-          {
-            user_id: record,
-          }
-        );
-        if (res1.data.success) {
-          console.log(refereshTog);
-          setRefereshTog(refereshTog ? false : true);
-        }
-      },
-    });
+  const onDeleteData = (id) => {
+    setModal2Open(true);
+    setIdTodelete(id);
+  }
+  
+  const handleDelete = async (Oid) => {
+    let data = {
+      user_id:Oid
+    };
+    const response = await axios.post(
+      "http://18.140.159.50:3333/api/delete-teacher",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if(response.data.success){
+      setRefereshTog(refereshTog?false:true)
+      
+    }
+    else{
+      alert("Cant Delete")
+    }
+    
+    
   };
 
   const assesmentColumn = [
@@ -497,6 +508,21 @@ function TeacherManagement() {
       <div className="mb-3">
         <Helper clients={data} attribiue={assesmentColumn} />
       </div>
+      <Modal
+  // title="Vertically centered modal dialog"
+  centered
+  visible={modal2Open}
+  onOk={() =>{setModal2Open(false)
+      handleDelete(idToDelete);
+  }}
+  onCancel={() => setModal2Open(false)}
+  okText="Yes,Confirm"
+  cancelText="No,Cancel"
+  okButtonProps={{style: { backgroundColor: '#0068B3' ,width:"30%"} }}  
+>
+ <div style={{color:"#000B23",fontSize:"18px",fontWeight:"600"}}>Sure you want to delete?</div>
+ <div>It will be delete from the system</div>
+</Modal>
     </div>
   );
 }
