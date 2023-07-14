@@ -3,6 +3,7 @@ import { Modal, Upload } from "antd";
 import { useState } from "react";
 import { Form, Input, Button } from "antd";
 import axios from "../../../../../axios";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -31,6 +32,7 @@ const AddCategoryForm = () => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
+  const history = useHistory();
   const handleChange = (e) => {
     setFileList(e.fileList);
   };
@@ -70,6 +72,7 @@ const AddCategoryForm = () => {
         setSuccessModal(true);
         setTimeout(() => {
           setSuccessModal(false);
+          history.goBack();
         }, 1200);
       }
     } catch (error) {
@@ -107,7 +110,7 @@ const AddCategoryForm = () => {
       </div>
       <div className="d-flex mt-3 justify-content-end">
         <Form.Item>
-          <Button>Cancel</Button>
+          <Button onClick={()=>history.goBack()}>Cancel</Button>
         </Form.Item>
         <Form.Item>
           <Button className="text-white bg-info ml-3" htmlType="submit">

@@ -26,9 +26,9 @@ const ScheduleNewClass = () => {
       "start_time": moment(e.start_time).format('HH:mm:ss'),
       "end_time": moment(e.end_time).format('HH:mm:ss'),
       "subject_id":e.subject,
-      "status":3
+      "status":3,   
   }
-  const res1 = await axios.post('http://18.140.159.50:3333/api/students/course/classes',sendData)
+  const res1 = await axios.put(`http://18.140.159.50:3333/api/students/course/classes/${id}`,sendData)
   if(res1.status===201){
     history.goBack();
   }
@@ -235,7 +235,7 @@ const ScheduleNewClass = () => {
     </div>
     <div className="d-flex justify-content-end mt-3">
         <Form.Item>
-          <Button className="mr-3" type="default">
+          <Button onClick={()=>history.goBack()} className="mr-3" type="default">
             Cancel
           </Button>
         </Form.Item>

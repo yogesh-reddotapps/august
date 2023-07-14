@@ -259,7 +259,7 @@ const Masters = () => {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
+                    <Link to={`masters/language/edit_language?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
