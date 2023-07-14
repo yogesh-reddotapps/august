@@ -77,6 +77,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/student_detail/course_enroll/assessment_submission`} component={lazy(() => import(`./student_detail/course_enroll/assessment_submission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters`} component={lazy(() => import(`./masters`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/language/add_new_language`} component={lazy(() => import(`./masters/add_new_language`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/language/edit_language`} component={lazy(() => import(`./masters/add_new_language`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/course_category/add_new`} component={lazy(() => import(`./masters/course_category/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/venue/add_new`} component={lazy(() => import(`./masters/venue/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/add_new`} component={lazy(() => import(`./masters/courses/add_new`))} />
