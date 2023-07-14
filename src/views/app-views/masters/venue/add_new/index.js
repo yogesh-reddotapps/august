@@ -2,6 +2,7 @@ import { Form, Input, Button, InputNumber, Select, Modal } from "antd";
 import axios from "../../../../../axios";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const MyForm = () => {
   const [form] = Form.useForm();
@@ -9,6 +10,7 @@ const MyForm = () => {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const [successModal, setSuccessModal] = useState(false);
+  const history = useHistory();
   const onFinish = async (values) => {
     try {
       console.log("Success:", values);
@@ -60,6 +62,7 @@ const MyForm = () => {
         setSuccessModal(true);
         setTimeout(() => {
           setSuccessModal(false);
+          history.goBack();
         }, 1200);
       }
     } catch (error) {
@@ -131,7 +134,7 @@ const MyForm = () => {
         </div>
         <div className="d-flex mt-3 justify-content-end">
           <Form.Item>
-            <Button>Cancel</Button>
+            <Button onClick={()=>history.goBack()}>Cancel</Button>
           </Form.Item>
           <Form.Item>
             <Button className="text-white bg-info ml-3" htmlType="submit">

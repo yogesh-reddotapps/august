@@ -68,7 +68,7 @@ function Login() {
             autoComplete="off"
           >
             <Form.Item
-              label="Username"
+              label="Email"
               name="username"
               rules={[
                 {
@@ -77,7 +77,7 @@ function Login() {
                 },
               ]}
             >
-              <Input placeholder="NRIC/FIN Number" />
+              <Input placeholder="Email Id" />
             </Form.Item>
 
             <Form.Item
@@ -90,7 +90,7 @@ function Login() {
                 },
               ]}
             >
-              <Input.Password placeholder="4 Digit Pin" />
+              <Input.Password placeholder="Password" />
             </Form.Item>
 
             <Form.Item name="remember" valuePropName="checked">
