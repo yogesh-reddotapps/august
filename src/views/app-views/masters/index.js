@@ -188,7 +188,7 @@ const Masters = () => {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to={`masters/venue/add_new?id=${record.id}`}>
+                    <Link to={`masters/venue/edit?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
@@ -305,7 +305,7 @@ const Masters = () => {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
+                    <Link to={`/app/masters/course_category/edit?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
@@ -365,7 +365,7 @@ const Masters = () => {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to="course_enroll/assignment_submission">
+                    <Link to={`/app/masters/courses/edit?id=${record.id}`}>
                       <CustomIcon className="mr-2" svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
