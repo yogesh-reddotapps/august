@@ -172,7 +172,7 @@ const MyForm = () => {
 
 
   useEffect(() => {
-    if(location.pathname!=="app/masters/venue/edit"){
+    if(location.pathname==="app/masters/courses/edit"){
       getCourses();
     }
     getCourseCate()
