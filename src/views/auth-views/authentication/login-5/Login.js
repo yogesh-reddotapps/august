@@ -1,16 +1,39 @@
 import React from "react";
 import "./Login.css";
-import { Form, Input, Checkbox, Button } from "antd";
+import { Form, Input, Checkbox, Button, message } from "antd";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "constants/ApiConstant";
+import { APP_PREFIX_PATH } from "configs/AppConfig";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-const onFinish = (values) => {
-  console.log("Success:", values);
-};
-const onFinishFailed = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
+
 function Login() {
+  const history = useHistory();
+  const onFinish =async (values) => {
+    console.log("Success:", values);
+    
+      await axios({
+        method:"POST",
+        url:`http://18.140.159.50:3333/api/admin-login`,
+        data:{
+          email:values.username,
+          password:values.password,
+        },
+        headers:{
+          "content-type": "application/json",
+        }
+      }).then((response)=>{
+          localStorage.setItem("token",response.data.token.token);
+          history.push("/app");
+      }).catch((error)=>{
+        console.log(error);
+      })
+    
+    
+  };
+
   const onChange = (e) => {
     console.log(`checked = ${e.target.checked}`);
   };
@@ -41,7 +64,7 @@ function Login() {
               remember: true,
             }}
             onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
+            // onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
             <Form.Item
@@ -73,7 +96,7 @@ function Login() {
             <Form.Item name="remember" valuePropName="checked">
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
-            <div
+            {/* <div
               style={{
                 textAlign: "center",
                 marginTop: "22px",
@@ -83,7 +106,7 @@ function Login() {
               Forgot your Login 4 Digit PIN?
               <br />
               <span style={{ color: "#0068B3" }}>Reset your PIN</span>
-            </div>
+            </div> */}
             <Form.Item>
               <Button
                 type="primary"

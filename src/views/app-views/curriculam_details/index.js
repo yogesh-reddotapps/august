@@ -31,6 +31,8 @@ import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import { FileUnknownOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { API_BASE_URL } from "constants/ApiConstant";
+import { formatDate } from "constants/DateConstant";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -219,10 +221,13 @@ function FacilityBooking() {
   const queryParams = new URLSearchParams(location.search);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [courseMaterial, setCourseMaterial] = useState([])
+  const [teacherEnroll,setTeacherEnroll]=useState([]);
+  const [studentEnroll,setStudentEnroll]=useState([]);
+  const [batchDetails,setBatchDetails]=useState([]);
+
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
-
   const addParam = queryParams.get("add");
   const dummyData = [
     {
@@ -374,6 +379,7 @@ function FacilityBooking() {
     {
       title: "Start Date",
       dataIndex: "Start_Date",
+    
     },
     {
       title: "Due Date",
@@ -437,46 +443,52 @@ function FacilityBooking() {
       },
     },
   ];
-  const lessonColumns = [
+  const batchColumns = [
     {
       title: "Sr No",
-      dataIndex: "Sr_No",
+      dataIndex: "id",
     },
     {
       title: "Batch ID",
-      dataIndex: "Batch_ID",
+      dataIndex: "batch_id",
     },
     {
       title: "Start Date",
-      dataIndex: "Start_Date",
+      dataIndex: "start_date",
+        render:(text)=>{
+        return formatDate(text);
+      }
     },
     {
       title: "End Date",
-      dataIndex: "End_Date",
+      dataIndex: "end_date",
+        render:(text)=>{
+        return formatDate(text);
+      }
     },
     {
       title: "Classes Done",
-      dataIndex: "Classes_Done",
+      dataIndex: "complete_class",
     },
     {
       title: "Classes Remaining",
-      dataIndex: "Classes_Remaining",
+      dataIndex: "remaining_class",
     },
     {
       title: "Capacity",
-      dataIndex: "Capacity",
+      dataIndex: "capacity",
     },
     {
       title: "Enroll Students",
-      dataIndex: "Enroll_Students",
+      dataIndex: "student_enroll",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
-          <div className={text === "Active" ? "text-success" : "text-danger"}>
-            {text}
+          <div className={text === 1 ? "text-success" : "text-danger"}>
+            {text===1?"Active":"Inactive"}
           </div>
         );
       },
@@ -505,10 +517,10 @@ function FacilityBooking() {
       },
     },
   ];
-  const facilityBookingColumns = [
+  const StundentEnrollColumns = [
     {
       title: "User Id",
-      dataIndex: "userId",
+      dataIndex: "id",
     },
     {
       dataIndex: "avatar",
@@ -518,30 +530,28 @@ function FacilityBooking() {
     },
     {
       title: "Teacher Name",
-      dataIndex: "teacherName",
+      dataIndex: "teacher_name",
     },
 
     {
       title: "Email Id",
-      dataIndex: "emailId",
+      dataIndex: "teacher_email",
     },
     {
       title: "Batch ID",
-      dataIndex: "Batch_ID",
-      render: () => {
-        return <>#B002</>;
-      },
+      dataIndex: "batch_id",
+      // render: () => {
+      //   return <>#B002</>;
+      // },
     },
     {
       title: "Class ID",
-      dataIndex: "Class_ID",
-      render: () => {
-        return <>#C002</>;
-      },
+      dataIndex: "course_id",
+     
     },
     {
       title: "Assigned on",
-      dataIndex: "assignedOn",
+      dataIndex: "created_at",
     },
     {
       title: "Status",
@@ -550,10 +560,10 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text !== 1 ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            inactive
+            {text}
           </div>
         );
       },
@@ -709,7 +719,7 @@ function FacilityBooking() {
             </Button>
           </div>
 
-          <Helper clients={dummyData} attribiue={facilityBookingColumns} />
+          <Helper clients={teacherEnroll} attribiue={StundentEnrollColumns} />
         </div>
       ),
     },
@@ -740,7 +750,7 @@ function FacilityBooking() {
             </Button>
           </div>
           <Helper
-            clients={membershipRequestData}
+            clients={studentEnroll}
             attribiue={membershipRequestColumns}
           />
         </div>
@@ -791,7 +801,7 @@ function FacilityBooking() {
               ]}
             />
           </div>
-          <Helper clients={lessonData} attribiue={lessonColumns} />
+          <Helper clients={batchDetails} attribiue={batchColumns} />
         </div>
       ),
     },
@@ -922,13 +932,33 @@ function FacilityBooking() {
   //   }
   // };
   const getCourseMaterial = async () => {
-    const res1 = await axios.get('http://18.140.159.50:3333/api/course-curriculum/course-materials');
-    setCourseMaterial(res1.data)
+    const res1 = await axios.get(`${API_BASE_URL}/course-curriculum/course-materials/courseId/${location.state.id}`);
+    setCourseMaterial(res1.data.data);
+    // console.log(res1.data);
   }
+
+  const getTeacherEnroll = async () => {
+    const res1 = await axios.get(`${API_BASE_URL}/get-classes-by-course/${location.state.id}`);
+    setTeacherEnroll(res1.data.data);
+  }
+
+  const getStudentEnroll = async () => {
+    const res1 = await axios.get(`${API_BASE_URL}/get-student-enroll/${location.state.id}`);
+    setStudentEnroll(res1.data.data);
+  }
+
+  const getBatchesDetail = async ()=>{
+    const res1 = await axios.get(`${API_BASE_URL}/get-batches-bycourse/${location.state.id}`);
+    setBatchDetails(res1.data.data);
+  }
+  
 
   useEffect(() => {
     // showAlert();
     getCourseMaterial()
+    getStudentEnroll();
+    getTeacherEnroll();
+    getBatchesDetail();
   }, []);
   return (
     <div className="tabbarWhite">

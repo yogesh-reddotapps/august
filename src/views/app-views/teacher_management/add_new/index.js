@@ -376,7 +376,7 @@ export default function AddNew() {
       name:data.name,
       phone_number:data.phone_number===null?"":data.phone_number,
       email:data.email,
-      dob:data.dob===null?"":moment(data.dob),
+      dob:data.dob===null?"":moment(data.dob,"DD-MM-YYYY"),
       highest_qualification:data.highest_qualification,
       university:data.university,
       field_of_study:data.field_of_study,
@@ -440,11 +440,11 @@ export default function AddNew() {
                     <Form.Item
                       name="id"
                       label="Id"
-                      rules={[
-                        { required: true, message: "Please enter Id" },
-                      ]}
+                      // rules={[
+                      //   { required: true, message: "Please enter Id" },
+                      // ]}
                     >
-                      <Input placeholder="Id" />
+                      <Input disabled={true}/>
                     </Form.Item>
                     <Form.Item
                       name="name"
@@ -527,6 +527,7 @@ export default function AddNew() {
                       label="Password"
                       rules={[
                         { required: !id?true:false, message: "Please enter Password" },
+                        { min: 6, message: 'Password must be minimum 6 characters.' }
                       ]}
                     >
                         <Input.Password placeholder="Create Password" />

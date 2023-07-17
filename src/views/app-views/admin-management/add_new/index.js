@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Modal, DatePicker, Upload } from "antd";
+import { Button, Form, Input, Select, Modal, DatePicker, Upload, message } from "antd";
 import { BasicDetail } from "assets/svg/icon";
 
 import React from "react";
@@ -44,10 +44,11 @@ export default function AddNew() {
   };
 
   function handleBackClick() {
-    if (activeTab > 1 && activeTab <= 7) {
-      let actnum = Number(activeTab) - 1;
-      setActiveTab(actnum.toString());
-    }
+    // if (activeTab > 1 && activeTab <= 7) {
+    //   let actnum = Number(activeTab) - 1;
+    //   setActiveTab(actnum.toString());
+    // }
+    history.goBack();
   }
 
   const [form] = Form.useForm();
@@ -92,12 +93,18 @@ export default function AddNew() {
       if (response.status === 200) {
         setSuccesmodaltext({
           title: "New Admin added successfully!",
-          text: "Admin ID 1234 john smith added to the system.",
+          text: `Admin ID ${response.data.user.id} ${values.name} added to the system.`,
         });
         setSuccessModal(true);
+        setTimeout(()=>{
+          history.push('/app/staffManagement/admin_management');
+        },2000)
+      }
+      else{
+        message.warn(response.data.email)
       }
     } catch (error) {
-      console.log("error", error);
+      message.warn("Email is already in use")
     }
   };
   
@@ -129,7 +136,7 @@ export default function AddNew() {
       name:data.name,
       phone_number:data.phone_number===null?"":data.phone_number,
       email:data.email,
-      dob:data.dob===null?"":moment(data.dob)
+      dob:moment(data.dob,"DD-MM-YYYY")
     })
     console.log(res1.data[0]);
   }
@@ -189,9 +196,9 @@ export default function AddNew() {
                   <Form.Item
                     name="id"
                     label="Id"
-                    rules={[{ required: true, message: "Please enter Id" }]}
+                    
                   >
-                    <Input placeholder="Id" />
+                    <Input disabled={true}  />
                   </Form.Item>
                   <Form.Item
                     name="name"
@@ -256,7 +263,7 @@ export default function AddNew() {
                     rules={[{ required: true, message: "Please enter DOB" }]}
                   >
                     <DatePicker
-                      placeholder="Event Date"
+                      placeholder="Date of birth"
                       style={{ width: "100%" }}
                     />
                   </Form.Item>
@@ -271,6 +278,7 @@ export default function AddNew() {
                     label="Password"
                     rules={[
                       { required: !id?true:false, message: "Please enter Password" },
+                      { min: 6, message: 'Password must be minimum 6 characters.' },
                     ]}
                   >
                     <Input.Password placeholder="Create Password" />
