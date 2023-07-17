@@ -148,7 +148,7 @@ export default function AddNew() {
  
   return (
     <div className="">
-      <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
+     {location.pathname!=="/app/staffManagement/admin_management/add_new"&& <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
         <Button
           style={{ border: "1.6px solid #3e79f7" }}
           className="px-4 font-weight-semibold text-info"
@@ -164,6 +164,7 @@ export default function AddNew() {
           Deactivate Account
         </Button>
       </div>
+  }
       <Form
         layout="vertical"
         onFinish={onFinish}
@@ -234,8 +235,8 @@ export default function AddNew() {
                             width: 80,
                           }}
                         >
-                          <Option value="In">In</Option>
-                          <Option value="SG">SG</Option>
+                          <Option value="In">+91</Option>
+                          <Option value="SG">+65</Option>
                         </Select>
                       }
                       style={{ width: "100%" }}

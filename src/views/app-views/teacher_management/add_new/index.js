@@ -519,7 +519,7 @@ export default function AddNew() {
                   </div>
                 </div>
                 {
-                  !id && 
+                  id && 
                 <div style={{ gap: "60px" }} className="d-flex ">
                   <div style={{ width: "45%" }}>
                     <Form.Item
