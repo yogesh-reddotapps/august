@@ -80,6 +80,9 @@ export default function AddNew() {
       let actnum = Number(activeTab) - 1;
       setActiveTab(actnum.toString());
     }
+    else{
+      history.goBack();
+    }
   }
 
   let styles = {
@@ -294,9 +297,9 @@ export default function AddNew() {
                   <Form.Item
                     name="id"
                     label="Id"
-                    rules={[{ required: true, message: "Please enter Id" }]}
+                   
                   >
-                    <Input placeholder="Id" />
+                    <Input disabled={true}/>
                   </Form.Item>
                   <Form.Item
                     name="name"
