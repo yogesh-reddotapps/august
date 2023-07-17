@@ -253,21 +253,21 @@ function FacilityBooking() {
   const membershipRequestColumns = [
     {
       title: "User ID",
-      dataIndex: "id",
+      dataIndex: "user_id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img style={{width:'60px',borderRadius:'50%',height:'60px',objectFit:'cover'}} src={`${avatar}`} alt="..." />;
       },
     },
     {
       title: "Student Name",
-      dataIndex: "applicant_name",
+      dataIndex: "student_name",
     },
     {
       title: "Date of Birth",
-      dataIndex: "event_time",
+      dataIndex: "student_dob"
     },
     {
       title: "Gender",
@@ -283,24 +283,27 @@ function FacilityBooking() {
     },
     {
       title: "Mobile Number",
-      dataIndex: "phone",
+      dataIndex: "student_phone_number",
     },
     {
       title: "Email ID",
-      dataIndex: "email",
+      dataIndex: "student_email",
     },
     {
       title: "Date of enroll",
-      dataIndex: "event_time",
+      dataIndex: "enrollment_date",
+      render:(date)=>{
+        return moment(date).format("DD-MMM-YYYY")
+      }
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "student_status",
       render: (text) => {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text !== "active" ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
             {text}
@@ -953,8 +956,7 @@ function FacilityBooking() {
 
   const getStudentEnroll = async () => {
     const res1 = await axios.get(`${API_BASE_URL}/get-student-enroll/${location.state.id}`);
-    setStudentEnroll(res1.data.data);
-   
+    setStudentEnroll(res1.data);
   }
 
   const getAssesment = async () => {

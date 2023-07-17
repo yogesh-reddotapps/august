@@ -90,6 +90,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/edit`} component={lazy(() => import(`./masters/courses/subjects/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons`} component={lazy(() => import(`./masters/courses/subjects/lessons`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons/add_new`} component={lazy(() => import(`./masters/courses/subjects/lessons/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons/edit`} component={lazy(() => import(`./masters/courses/subjects/lessons/add_new`))} />
         {/* <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list`} component={lazy(() => import(`./Facility`))} />
         <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list/add_new`} component={lazy(() => import(`./Facility/AddNew.js`))} />
         <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list/:facility_types`} component={lazy(() => import(`./Facility/FacilityType.js`))} />

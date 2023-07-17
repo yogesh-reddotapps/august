@@ -36,6 +36,7 @@ export default function AddNew() {
   const { TabPane } = Tabs;
   const history = useHistory();
   const [activeTab, setActiveTab] = useState("1");
+  const [phoneCode, setPhoneCode] = useState("+65")
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
   const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
@@ -132,7 +133,7 @@ export default function AddNew() {
           role: 2,
           phone_number: values.phone_number,
           dob: moment(values.dob).format("DD-MM-YYYY"),
-          user_id:id
+          user_id: id,
         }
       );
       if (updateRes.data.success) {
@@ -149,8 +150,9 @@ export default function AddNew() {
         email: values.email,
         // profile_pic: "1.amazonaws.com/profile_picture/6ZlZO4i2RqkKOhoXPe_Ok.png",
         password: "Student@123",
+        gender:values.gender,
         role: 2,
-        phone_number: values.phone_number,
+        phone_number: `${phoneCode}${values.phone_number}`,
         dob: moment(values.dob).format("DD-MM-YYYY"),
       };
       console.log("test", data);
@@ -325,13 +327,14 @@ export default function AddNew() {
                     <Input
                       addonBefore={
                         <Select
-                          defaultValue={"In"}
+                          value={phoneCode}
                           style={{
                             width: 80,
                           }}
+                          onChange={(e)=>setPhoneCode(e)}
                         >
-                          <Option value="In">In</Option>
-                          <Option value="SG">SG</Option>
+                          <Option value="+91">+91</Option>
+                          <Option value="+65">+65</Option>
                         </Select>
                       }
                       style={{ width: "100%" }}
@@ -362,6 +365,22 @@ export default function AddNew() {
                       placeholder="Date of Birth"
                       style={{ width: "100%" }}
                     />
+                  </Form.Item>
+                </div>
+              </div>
+              <div style={{ gap: "60px" }} className="d-flex ">
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="gender"
+                    label="Gender"
+                    rules={[
+                      { required: true, message: "Please select gender." },
+                    ]}
+                  >
+                    <Radio.Group>
+                      <Radio value={"male"}>Male</Radio>
+                      <Radio value={"female"}>Female</Radio>
+                    </Radio.Group>
                   </Form.Item>
                 </div>
               </div>

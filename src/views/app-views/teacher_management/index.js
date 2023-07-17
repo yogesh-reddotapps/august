@@ -232,7 +232,7 @@ function TeacherManagement() {
                 <Menu>
                   <Menu.Item>
                     <Link
-                      to={`/app/staffManagement/teacher_management/teacher_detail?id=${record.user_id}`}
+                      to={`/app/staffManagement/teacher_management/teacher_detail?id=${record.user_id}&teacherId=${record.id}`}
                     >
                       {" "}
                       <EyeOutlined className="mr-2 " />

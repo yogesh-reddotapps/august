@@ -26,6 +26,8 @@ function Login() {
         }
       }).then((response)=>{
           localStorage.setItem("token",response.data.token.token);
+          localStorage.setItem("userData",JSON.stringify(response.data.userData));
+          // console.log(response.data.userData);
           history.push("/app");
       }).catch((error)=>{
         console.log(error);
