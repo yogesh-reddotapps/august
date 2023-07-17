@@ -48,6 +48,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/curriculam_details/award_certificate`} component={lazy(() => import(`./curriculam_details/award_certificate`))} />
         <Route exact path={`${APP_PREFIX_PATH}/assessment`} component={lazy(() => import(`./assessment`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/add_new`} component={lazy(() => import(`./assessment/AddNew`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/edit`} component={lazy(() => import(`./assessment/AddNew`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/submission`} component={lazy(() => import(`./assessment/Submission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/submission/view-submission`} component={lazy(() => import(`./assessment/ViewSubmission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/assignment`} component={lazy(() => import(`./assignment/index`))} />

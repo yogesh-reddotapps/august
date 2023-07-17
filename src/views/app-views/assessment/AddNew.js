@@ -163,7 +163,7 @@ const AddNew = () => {
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item name="id" label="Assessment Id">
-                    <h4>25</h4>
+                  <Input disabled={true} />
                   </Form.Item>
                   <Form.Item name="period" label="Assessment Details">
                     <TextArea
