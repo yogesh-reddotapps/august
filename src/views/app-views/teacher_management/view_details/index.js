@@ -83,6 +83,7 @@ function FacilityBooking() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const teacherId = queryParams.get("teacherId");
   const [teacherData, setTeacherData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminRatingsList, setAdminRatingsList] = useState([]);
@@ -141,47 +142,53 @@ function FacilityBooking() {
   const membershipRequestColumns = [
     {
       title: "Batch ID",
-      dataIndex: "id",
+      dataIndex: "batch_id",
     },
     {
       title: "Class ID",
-      dataIndex: "id",
-      render: (avatar) => {
-        return <>#WS-001</>;
-      },
+      dataIndex: "class_id",
     },
     {
       title: "Course Name",
-      dataIndex: "applicant_name",
-      render: (avatar) => {
-        return <>Workplace Safety an Health in Construction Sites</>;
-      },
+      dataIndex: "course_name",
+      // render: (avatar) => {
+      //   return <>Workplace Safety an Health in Construction Sites</>;
+      // },
     },
     {
       title: "Class Date",
-      dataIndex: "event_time",
+      dataIndex: "class_date",
+      render: (date) => {
+        return moment(date).format("DD MMM YYYY, hh:mm:ss A")
+      },
     },
     {
       title: "Start Time",
-      dataIndex: "time",
-      render: (avatar) => {
-        return <>10:00 AM</>;
+      dataIndex: "start_time",
+      render: (date) => {
+        return moment(date, "HH:mm:ss").format("hh:mm:A")
       },
     },
     {
       title: "End Time",
-      dataIndex: "time",
-      render: (avatar) => {
-        return <>12:00 PM</>;
+      dataIndex: "end_time",
+      render: (date) => {
+        return moment(date, "HH:mm:ss").format("hh:mm:A")
       },
     },
     {
       title: "Date of Invite",
-      dataIndex: "event_time",
+      dataIndex: "invite_date",
+      render:(date)=>{
+        return moment(date).format("DD MMM YYYY, hh:mm:ss A")
+      }
     },
     {
       title: "Date of Accept/Reject",
-      dataIndex: "event_time",
+      dataIndex: "date_of_action",
+      render:(date)=>{
+        return moment(date).format("DD MMM YYYY, hh:mm:ss A")
+      }
     },
     {
       title: "Status",
@@ -283,23 +290,23 @@ function FacilityBooking() {
                 <EllipsisDropdown
                   menu={
                     <Menu>
-                      <Menu.Item>
-                        <Link
+                      <Menu.Item onClick={()=>acceptApp(record)}>
+                        <span
                           className="d-flex align-items-center"
                           to="curriculam_details/view_lesson_preview"
                         >
                           <AcceptTick />
                           Accept
-                        </Link>
+                        </span>
                       </Menu.Item>
-                      <Menu.Item>
-                        <Link
+                      <Menu.Item onClick={()=>rejecttApp(record)}>
+                        <span
                           className="d-flex align-items-center"
                           to="curriculam_details/view_lesson_preview"
                         >
                           <CancelCross />
                           Reject
-                        </Link>
+                        </span>
                       </Menu.Item>
                     </Menu>
                   }
@@ -556,7 +563,7 @@ function FacilityBooking() {
    await axios.post(
       "http://18.140.159.50:3333/api/teacher-course-access",
       {
-        teacher_id: parseInt(id),
+        teacher_id: parseInt(teacherId),
         course_id: Oid
       }
     ).then((res1)=>{
@@ -775,10 +782,15 @@ function FacilityBooking() {
     setLeaveApp(res1.data.data);
   };
 
+  const getClassInvites = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-class-invites/${teacherId}`)
+    setmembershipRequestData(res1.data.data);
+  }
   useEffect(() => {
     getTeacherDetail();
     getLeaveApp();
     getCourseAccess();
+    getClassInvites();
   }, []);
 
   return (

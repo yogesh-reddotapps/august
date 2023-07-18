@@ -1,8 +1,11 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import axios from "../../../../../axios";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
+
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -16,6 +19,10 @@ const AddCategoryForm = () => {
   const [successModal, setSuccessModal] = useState(false);
   const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState([]);
+  const [form] = Form.useForm();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id')
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
     setPreviewOpen(true);
@@ -31,6 +38,7 @@ const AddCategoryForm = () => {
       file.name || file.url.substring(file.url.lastIndexOf("/") + 1)
     );
   };
+  const history = useHistory();
   const handleChange = (e) => {
     setFileList(e.fileList);
   };
@@ -70,15 +78,48 @@ const AddCategoryForm = () => {
         setSuccessModal(true);
         setTimeout(() => {
           setSuccessModal(false);
+          history.goBack();
         }, 1200);
       }
     } catch (error) {
       console.log(error);
     }
   };
+  const getCourseData=async()=>{
+    try{
+      axios({
+        method:"post",
+        url:`${API_BASE_URL}/get-category-by-id`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data:{
+          id:id
+        }
+      }).then((response)=>{
+        // console.log(response.data.data[0]);
+        const data = response.data.data[0];
+        
+        form.setFieldsValue({
+          ...data
+        })
+      })
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+
+  useEffect(()=>{
+    // console.log(location);
+    if(location.pathname==="/app/masters/course_category/edit"){
+      getCourseData();
+    }
+  },[])
 
   return (
-    <Form layout="vertical" onFinish={onFinish}>
+    <Form form={form} layout="vertical" onFinish={onFinish}>
       <div className="border rounded p-3 mb-4 bg-white">
         <h5 className="text-info mb-4">Add New Category</h5>
 
@@ -91,9 +132,17 @@ const AddCategoryForm = () => {
         >
           {fileList.length >= 8 ? null : uploadButton}
         </Upload>
-
         <Form.Item
-          name="courseCategory"
+          name="id"
+          label="Course Id"
+          // rules={[
+          //   { required: true, message: "Please enter course category" }
+          // ]}
+        >
+          <Input disabled={true} className="w-50" />
+        </Form.Item>
+        <Form.Item
+          name="course_category"
           label="Course Category"
           // rules={[
           //   { required: true, message: "Please enter course category" }
@@ -107,7 +156,7 @@ const AddCategoryForm = () => {
       </div>
       <div className="d-flex mt-3 justify-content-end">
         <Form.Item>
-          <Button>Cancel</Button>
+          <Button onClick={()=>history.goBack()}>Cancel</Button>
         </Form.Item>
         <Form.Item>
           <Button className="text-white bg-info ml-3" htmlType="submit">

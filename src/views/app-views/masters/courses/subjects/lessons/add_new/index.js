@@ -1,9 +1,17 @@
-import React, { useState } from "react";
-import { Select, Input, InputNumber, Button, Radio, Space } from "antd";
+import React, { useEffect, useState } from "react";
+import { Select, Input, InputNumber, Button, Radio, Space, Modal } from "antd";
 import { Link, useHistory } from "react-router-dom";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { AudioUploadImage, DraggableItemDelIcon, LessonTypeArVr, LessonTypeMusic, LessonTypeQuestion, LessonTypeText, LessonTypeVideo } from "assets/svg/icon";
+import {
+  AudioUploadImage,
+  DraggableItemDelIcon,
+  LessonTypeArVr,
+  LessonTypeMusic,
+  LessonTypeQuestion,
+  LessonTypeText,
+  LessonTypeVideo,
+} from "assets/svg/icon";
 import axios from "axios";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 // https://edu-portal.inkapps.io/api/teacher-course-lesson_item-new
@@ -42,17 +50,19 @@ const AddNewLesson = () => {
   const [estimateTime, setEstimateTime] = useState(0);
   const [senFileVideo, setSenFileVideo] = useState(null);
   const [senFileAudio, setSenFileAudio] = useState(null);
-  const [questionTitle, setQuestionTitle] = useState(null)
-  const [lessonName, setLessonName] = useState('')
-  const [SendFile, setSendFile] = useState(null)
+  const [questionTitle, setQuestionTitle] = useState(null);
+  const [lessonName, setLessonName] = useState("");
+  const [SendFile, setSendFile] = useState(null);
   const [notiText, setNotiText] = useState("");
   const [queOpt, setQueOpt] = useState(1);
   const [videos, setVideos] = useState([]);
   const [ar, setAr] = useState([]);
   const queryParams = new URLSearchParams(location.search);
+  const lesson_id = queryParams.get("lesson_id");
   const course_id = queryParams.get("course_id");
   const subject_id = queryParams.get("subject_id");
   const [audioElements, setAudioElements] = useState([]);
+  const [successModal, setSuccessModal] = useState(false);
   const [queOptions, setQueOptions] = useState([
     { text: "" },
     { text: "" },
@@ -148,24 +158,29 @@ const AddNewLesson = () => {
   const SaveLesson = async () => {
     const formData = new FormData();
     let lesContentData;
-    if (lessonType==0) {
-      lesContentData=notiText;
+    if (lessonType == 0) {
+      lesContentData = notiText;
     }
-    if (lessonType==1) {
-      lesContentData=senFileVideo
+    if (lessonType == 1) {
+      lesContentData = senFileVideo;
     }
-    if (lessonType==2) {
-      lesContentData=senFileAudio
+    if (lessonType == 2) {
+      lesContentData = senFileAudio;
     }
-    if (lessonType==3) {
-     const queData = {title:questionTitle, image:'placeholder', options:queOptions, correct_option:1,}
-      lesContentData=queData
+    if (lessonType == 3) {
+      const queData = {
+        title: questionTitle,
+        image: "placeholder",
+        options: queOptions,
+        correct_option: 1,
+      };
+      lesContentData = queData;
     }
     formData.append("lesson_content", lesContentData);
     formData.append("lesson_type", lessonType);
     formData.append("estimated_time", estimateTime);
     formData.append("subject_id", subject_id);
-    formData.append("course_id",course_id);
+    formData.append("course_id", course_id);
     formData.append("board_id", 2);
     formData.append("lesson_name", lessonName);
     // const dataObject = {
@@ -177,9 +192,12 @@ const AddNewLesson = () => {
     //   board_id: 2,
     //   lesson_name: lessonName
     // };
-    
+
     // console.log("dataObject",dataObject);
-    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-lesson',formData)
+    let res1 = await axios.post(
+      "http://18.140.159.50:3333/api/admin-new-lesson",
+      formData
+    );
     console.log(res1);
     // axios
     //   .post(
@@ -195,17 +213,50 @@ const AddNewLesson = () => {
     //   .then((response) => {
     //     console.log(response.data);
     //   });
-
-    // history.push("/app/masters/courses/subjects/lessons/?add=subject");
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+      history.goBack();
+    }, 1200);
   };
+  const getLesson = async (lesson_id,subject_id) => {
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/view-lesson`,{
+      "lesson_id": lesson_id,
+      "subject_id": subject_id
+  })
+  const data = res1.data.data[0];
+  setLessonName(data.lesson_name)
+  setEstimateTime(data.estimated_time)
+  setLessonType(data.lesson_type.toString())
+  const audioElement = (
+    <audio
+      className="customAudio"
+      // key={i}
+      src={data.lesson_content} // Set the audio source to the local file URL
+      controls // Enable audio controls for play, pause, etc.
+      style={{ margin: "0 10px 10px 0" }} // Apply inline styles for audio element
+    />
+  );
+
+  setAudioElements(audioElement)
+  }
+  useEffect(() => {
+    getLesson(lesson_id,subject_id);
+  }, []);
 
   return (
     <>
       <div className="border rounded p-3 mb-4 bg-white">
-        <h5 className="text-info mb-4">Add New Lesson</h5>
+        <h5 className="text-info mb-4">
+          {lesson_id ? "Edit" : "Add New"} Lesson
+        </h5>
         <div className="mt-4 w-50">
           <h5>Lesson Name</h5>
-          <Input placeholder="Lesson Name" value={lessonName} onChange={(e)=>setLessonName(e.target.value)}/>
+          <Input
+            placeholder="Lesson Name"
+            value={lessonName}
+            onChange={(e) => setLessonName(e.target.value)}
+          />
         </div>
         <div className="mt-4">
           <h5>Estimated Time (Mins)</h5>
@@ -219,28 +270,59 @@ const AddNewLesson = () => {
           <h5>Lesson Type</h5>
           <Select
             className="w-50"
-            defaultValue={<div className="d-flex align-items-center"> <LessonTypeText /> Text</div>}
+            value={lessonType}
+            defaultValue={
+              <div className="d-flex align-items-center">
+                {" "}
+                <LessonTypeText /> Text
+              </div>
+            }
             onChange={(val) => setLessonType(val)}
             options={[
               {
                 value: "0",
-                label: (<div className="d-flex align-items-center"> <LessonTypeText /> Text</div>),
+                label: (
+                  <div className="d-flex align-items-center">
+                    {" "}
+                    <LessonTypeText /> Text
+                  </div>
+                ),
               },
               {
                 value: "1",
-                label: (<div className="d-flex align-items-center"> <LessonTypeVideo /> Video</div>),
+                label: (
+                  <div className="d-flex align-items-center">
+                    {" "}
+                    <LessonTypeVideo /> Video
+                  </div>
+                ),
               },
               {
                 value: "2",
-                label: (<div className="d-flex align-items-center"> <LessonTypeMusic /> Audio</div>),
+                label: (
+                  <div className="d-flex align-items-center">
+                    {" "}
+                    <LessonTypeMusic /> Audio
+                  </div>
+                ),
               },
               {
                 value: "3",
-                label: (<div className="d-flex align-items-center"> <LessonTypeQuestion /> Question</div>),
+                label: (
+                  <div className="d-flex align-items-center">
+                    {" "}
+                    <LessonTypeQuestion /> Question
+                  </div>
+                ),
               },
               {
                 value: "4",
-                label: (<div className="d-flex align-items-center"> <LessonTypeArVr /> AR/VR</div>),
+                label: (
+                  <div className="d-flex align-items-center">
+                    {" "}
+                    <LessonTypeArVr /> AR/VR
+                  </div>
+                ),
               },
             ]}
           />
@@ -248,7 +330,12 @@ const AddNewLesson = () => {
       </div>
       {lessonType === "0" && (
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeText /> Text</div></h5>
+          <h5 className="mb-4">
+            <div className="d-flex align-items-center">
+              {" "}
+              <LessonTypeText /> Text
+            </div>
+          </h5>
           <ReactQuill
             style={{ height: "200px", marginBottom: "49px" }}
             theme="snow"
@@ -259,7 +346,12 @@ const AddNewLesson = () => {
       )}
       {lessonType === "1" && (
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeVideo /> Video</div></h5>
+          <h5 className="mb-4">
+            <div className="d-flex align-items-center">
+              {" "}
+              <LessonTypeVideo /> Video
+            </div>
+          </h5>
           {videos.length != 0 ? (
             <>
               <div
@@ -339,7 +431,12 @@ const AddNewLesson = () => {
       )}
       {lessonType === "2" && (
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeMusic /> Audio</div></h5>
+          <h5 className="mb-4">
+            <div className="d-flex align-items-center">
+              {" "}
+              <LessonTypeMusic /> Audio
+            </div>
+          </h5>
           {audioElements.length == 0 ? (
             <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
               <svg
@@ -423,8 +520,18 @@ const AddNewLesson = () => {
       {lessonType === "3" && (
         <div className="border rounded p-3 mb-4 bg-white">
           <div className="w-50">
-            <h5><div className="d-flex align-items-center"> <LessonTypeQuestion /> Question</div></h5>
-            <Input className="my-4" value={questionTitle} onChange={(e)=>setQuestionTitle(e.target.value)} placeholder="Question Title" />
+            <h5>
+              <div className="d-flex align-items-center">
+                {" "}
+                <LessonTypeQuestion /> Question
+              </div>
+            </h5>
+            <Input
+              className="my-4"
+              value={questionTitle}
+              onChange={(e) => setQuestionTitle(e.target.value)}
+              placeholder="Question Title"
+            />
             <Radio.Group
               onChange={(e) => setQueOpt(e.target.value)}
               value={queOpt}
@@ -464,7 +571,12 @@ const AddNewLesson = () => {
       )}
       {lessonType === "4" && (
         <div className="border rounded p-3 mb-4 bg-white">
-          <h5 className="mb-4"><div className="d-flex align-items-center"> <LessonTypeVideo /> AR/VR</div></h5>
+          <h5 className="mb-4">
+            <div className="d-flex align-items-center">
+              {" "}
+              <LessonTypeVideo /> AR/VR
+            </div>
+          </h5>
           {ar.length != 0 ? (
             <>
               <div
@@ -543,12 +655,32 @@ const AddNewLesson = () => {
         </div>
       )}
       <div className="d-flex mt-3 justify-content-end">
-        <Button>Cancel</Button>
+        <Button onClick={() => history.goBack()}>Cancel</Button>
         <Button className="text-white bg-info ml-3" onClick={SaveLesson}>
           {" "}
           Save{" "}
         </Button>
       </div>
+      <Modal width={500} footer={null} visible={successModal}>
+        <div className="d-flex my-3 align-items-center flex-column justify-content-center">
+          {/* <CustomIcon svg={Verified} /> */}
+          <svg
+            width="65"
+            height="64"
+            viewBox="0 0 65 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M32.5 0C37.4636 0 42.1609 1.13082 46.358 3.14781C44.64 4.50697 43.0471 5.81176 41.5629 7.06762C38.7358 6.04009 35.6859 5.48012 32.5054 5.48012C25.1823 5.48012 18.5496 8.44852 13.7545 13.2491C8.95396 18.0496 5.98556 24.6769 5.98556 32C5.98556 39.3231 8.95396 45.9504 13.7545 50.7509C18.555 55.5515 25.1823 58.5199 32.5054 58.5199C39.8286 58.5199 46.4613 55.5515 51.2564 50.7509C56.0569 45.9504 59.0253 39.3231 59.0253 32C59.0253 30.2603 58.8568 28.5532 58.536 26.9059C59.9115 25.1118 61.3196 23.3231 62.7603 21.5508C63.8911 24.8236 64.5054 28.3411 64.5054 32C64.5054 40.8345 60.9227 48.8372 55.1327 54.6273C49.3427 60.4173 41.34 64 32.5054 64C23.6709 64 15.6682 60.4173 9.87819 54.6273C4.08274 48.8372 0.5 40.8345 0.5 32C0.5 23.1655 4.08274 15.1628 9.87275 9.37275C15.6628 3.58274 23.6655 0 32.5 0ZM17.5928 26.7428L25.3998 26.6395L25.9815 26.7917C27.5581 27.6996 29.0423 28.738 30.4286 29.9123C31.429 30.7604 32.3858 31.6847 33.2938 32.685C36.0936 28.178 39.0783 24.0408 42.2316 20.2351C45.6838 16.0652 49.3481 12.2813 53.1973 8.82909L53.9584 8.53551H62.4776L60.7596 10.4438C55.4806 16.3099 50.691 22.3717 46.3634 28.6239C42.0359 34.8814 38.165 41.3401 34.7236 47.9891L33.6526 50.055L32.6685 47.9511C30.8527 44.053 28.6781 40.4757 26.0848 37.279C23.4915 34.0822 20.4742 31.2443 16.9567 28.8304L17.5928 26.7428Z"
+              fill="#00AB6F"
+            />
+          </svg>
+          <h3 className="font-weight-bold mt-4 text-center">
+            New subject created successfully!
+          </h3>
+        </div>
+      </Modal>
     </>
   );
 };

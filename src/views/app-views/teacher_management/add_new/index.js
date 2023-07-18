@@ -8,6 +8,7 @@ import {
   DatePicker,
   Upload,
   Switch,
+  message,
 } from "antd";
 import {
   AddressDetail,
@@ -246,6 +247,7 @@ export default function AddNew() {
         reference_code: "APPLYTEACHER",
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
+        gender:values.gender,
         // profile_pic: "",
         // status: "",
         highest_qualification: values.highest_qualification,
@@ -275,7 +277,10 @@ export default function AddNew() {
         setSuccessModal(true)
       }
     } catch (error) {
-      console.log(error);
+      if (error.response.data.email) {
+        message.error(error.response.data.email)
+      }
+      // console.log(error.response.data.email);
     }
   };
   const onFinishFailed = (errorInfo) => {
@@ -519,8 +524,24 @@ export default function AddNew() {
                   </div>
                 </div>
                 {
-                  !id && 
+                  id && 
                 <div style={{ gap: "60px" }} className="d-flex ">
+                  {/* <div style={{ gap: "60px" }} className="d-flex "> */}
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="gender"
+                    label="Gender"
+                    rules={[
+                      { required: true, message: "Please select gender." },
+                    ]}
+                  >
+                    <Radio.Group>
+                      <Radio value={"male"}>Male</Radio>
+                      <Radio value={"female"}>Female</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </div>
+              {/* </div> */}
                   <div style={{ width: "45%" }}>
                     <Form.Item
                       name="password"
@@ -534,7 +555,7 @@ export default function AddNew() {
                     </Form.Item>
                     <Button danger>Reset Password</Button>
                   </div>
-                  <div style={{ width: "45%" }}>
+                  {/* <div style={{ width: "45%" }}> */}
                     {/* <Form.Item
                       name="c_password"
                       label="Confirm Password"
@@ -544,7 +565,7 @@ export default function AddNew() {
                     >
                         <Input.Password placeholder="Confirm Password" />
                     </Form.Item> */}
-                  </div>
+                  {/* </div> */}
                 </div>
                 }
               </div>

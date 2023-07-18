@@ -56,18 +56,18 @@ const selectedFiles = [
 function Submission() {
   const [assignmentType, setAssignmentType] = useState("MCQ");
   const [question, setQuestion] = useState([
-    {
-      question:
-        "1. What is the leading cause of construction workh5lace fatalities?",
-      options: ["Option A", "Option B", "Option C", "Option D"],
-      value: "Option A",
-    },
-    {
-      question:
-        "1. What is the leading cause of construction workh5lace fatalities?",
-      options: ["Option A", "Option B", "Option C", "Option D"],
-      value: "Option B",
-    },
+    // {
+    //   question:
+    //     "1. What is the leading cause of construction workh5lace fatalities?",
+    //   options: ["Option A", "Option B", "Option C", "Option D"],
+    //   value: "Option A",
+    // },
+    // {
+    //   question:
+    //     "1. What is the leading cause of construction workh5lace fatalities?",
+    //   options: ["Option A", "Option B", "Option C", "Option D"],
+    //   value: "Option B",
+    // },
   ]);
   const onChange = (ind, e) => {
     const updatedQuestions = [...question];
@@ -84,7 +84,7 @@ function Submission() {
 const getSubmission = ()=>{
   axios
 .get(
-  `${API_BASE_URL}/view-submission/16`,
+  `${API_BASE_URL}/view-submission/14/16`,//assesmentId/studentId
   {
     headers: {
       "Content-Type": "application/json",
@@ -93,7 +93,8 @@ const getSubmission = ()=>{
 )
 .then((res) => {
   // setmembershipRequestData(res.data);
-  // console.log(res.data);
+  console.log(JSON.parse(res.data.data[0].description));
+  setQuestion(JSON.parse(res.data.data[0].description));
 })
 .catch((error) => {
   console.log(error);
@@ -205,24 +206,24 @@ const getSubmission = ()=>{
                   borderTopRightRadius: "0.625rem",
                 }}
               >
-                <h4 style={{ color: "#6292FC" }}>Question 1/25</h4>
+                <h4 style={{ color: "#6292FC" }}>Question {ind+1}/{question.length}</h4>
                 <h5 style={{ margin: 0 }}>Mark : 1</h5>
               </div>
               <div className="p-3">
-                <h5>{elem.question}</h5>
+                <h5>{elem.title}</h5>
               </div>
               <div className="px-4 pb-3">
                 <Radio.Group
                   style={{ width: "600px" }}
                   onChange={(e) => onChange(ind, e)}
-                  value={elem.value}
+                  value={elem.choosen_option}
                 >
                   <Space className="w-100" direction="vertical">
                     {elem.options.map((eleme, i) => {
                       return (
                         <div
                           className={
-                            elem.value === eleme ? "correctOpt" : "normalOpt"
+                            elem.correct_option === eleme ? "correctOpt" : "normalOpt"
                           }
                         >
                           <Radio disabled className="p-2" value={eleme}>

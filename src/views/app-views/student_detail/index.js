@@ -302,7 +302,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="student_detail/assessments/view_result"
+                      to={`student_detail/assessments/view_result?id=${record.id}`}
                     >
                       <ViewResult />
                       <span className="ml-2">View Result</span>

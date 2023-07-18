@@ -54,7 +54,7 @@ const ClassAttend = () => {
                   </Menu.Item>
                   <Menu.Item>
                     <Link
-                      to={`event_list/update/`}
+                      to={`subjects/edit?${record.id}`}
                       className="d-flex align-items-center"
                     >
                      <CustomIcon className='mr-2' svg={Edit} /> Edit

@@ -26,6 +26,8 @@ function Login() {
         }
       }).then((response)=>{
           localStorage.setItem("token",response.data.token.token);
+          localStorage.setItem("userData",JSON.stringify(response.data.userData));
+          // console.log(response.data.userData);
           history.push("/app");
       }).catch((error)=>{
         console.log(error);
@@ -68,7 +70,7 @@ function Login() {
             autoComplete="off"
           >
             <Form.Item
-              label="Username"
+              label="Email"
               name="username"
               rules={[
                 {
@@ -77,7 +79,7 @@ function Login() {
                 },
               ]}
             >
-              <Input placeholder="NRIC/FIN Number" />
+              <Input placeholder="Email Id" />
             </Form.Item>
 
             <Form.Item
@@ -90,7 +92,7 @@ function Login() {
                 },
               ]}
             >
-              <Input.Password placeholder="4 Digit Pin" />
+              <Input.Password placeholder="Password" />
             </Form.Item>
 
             <Form.Item name="remember" valuePropName="checked">

@@ -1,4 +1,4 @@
-import { Button, Form, Input, Select, Modal, DatePicker, Upload, message } from "antd";
+import { Button, Form, Input, Select, Modal, DatePicker, Upload, message, Radio } from "antd";
 import { BasicDetail } from "assets/svg/icon";
 
 import React from "react";
@@ -78,6 +78,7 @@ export default function AddNew() {
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
         email: values.email,
+        gender:values.gender
       };
       console.log("test", data);
       const response = await axios.post(
@@ -148,7 +149,7 @@ export default function AddNew() {
  
   return (
     <div className="">
-      <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
+     {location.pathname!=="/app/staffManagement/admin_management/add_new"&& <div style={{ gap: "10px" }} className="mb-2 d-flex justify-content-end">
         <Button
           style={{ border: "1.6px solid #3e79f7" }}
           className="px-4 font-weight-semibold text-info"
@@ -164,6 +165,7 @@ export default function AddNew() {
           Deactivate Account
         </Button>
       </div>
+  }
       <Form
         layout="vertical"
         onFinish={onFinish}
@@ -234,8 +236,8 @@ export default function AddNew() {
                             width: 80,
                           }}
                         >
-                          <Option value="In">In</Option>
-                          <Option value="SG">SG</Option>
+                          <Option value="In">+91</Option>
+                          <Option value="SG">+65</Option>
                         </Select>
                       }
                       style={{ width: "100%" }}
@@ -300,6 +302,22 @@ export default function AddNew() {
                 </div>
               </div>
               }
+              <div style={{ gap: "60px" }} className="d-flex ">
+                <div style={{ width: "45%" }}>
+                  <Form.Item
+                    name="gender"
+                    label="Gender"
+                    rules={[
+                      { required: true, message: "Please select gender." },
+                    ]}
+                  >
+                    <Radio.Group>
+                      <Radio value={"male"}>Male</Radio>
+                      <Radio value={"female"}>Female</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </div>
+              </div>
             </div>
           </TabPane>
         </Tabs>

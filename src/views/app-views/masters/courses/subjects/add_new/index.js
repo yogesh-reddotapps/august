@@ -33,6 +33,7 @@ const AddNewLesson = () => {
       setSuccessModal(true);
       setTimeout(() => {
         setSuccessModal(false);
+        history.goBack();
       }, 1200);
     }
       // console.log(response)
@@ -143,7 +144,7 @@ const AddNewLesson = () => {
         </h5> */}
       </div>
       <div className="d-flex mt-3 justify-content-end">
-        <Button>Cancel</Button>
+        <Button onClick={()=>history.goBack()}>Cancel</Button>
         <Button className="text-white bg-info ml-3" onClick={onfinish}>
           {" "}
           Save{" "}

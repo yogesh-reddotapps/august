@@ -3,6 +3,9 @@ import { Form, Input, Select, InputNumber, Button, Modal, Switch } from "antd";
 import { DollarTwoTone, CloseCircleOutlined,DeleteOutlined } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
 import axios from "axios";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
 let styles = {
   files: {
     listStyle: "none",
@@ -54,7 +57,10 @@ const MyForm = () => {
   const [certiTog, setCertiTog] = useState(false);
   const [languageslist, setLanguageslist] = useState([])
   const [coursecategorylist, setCoursecategorylist] = useState([])
-
+  const history = useHistory();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id')
   const addItem = () => {
     if (inputValue !== "") {
       setDataArray([...dataArray, inputValue]);
@@ -139,7 +145,36 @@ const MyForm = () => {
       console.log(error);
     }
   }
+  const getCourses = async()=>{
+    try{
+      axios({
+        method:"post",
+        url:`${API_BASE_URL}/get-course-by-id`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data:{
+          course_id:id
+        }
+      }).then((response)=>{
+        // console.log(response.data.data[0]);
+        const data = response.data.data[0];
+        form.setFieldsValue({
+          ...data,
+        })
+        setDataArray(JSON.parse(data.content));
+      })
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+
   useEffect(() => {
+    if(location.pathname==="app/masters/courses/edit"){
+      getCourses();
+    }
     getCourseCate()
     getLanguage()
   }, [])
@@ -152,6 +187,15 @@ const MyForm = () => {
       layout="vertical"
     >
       <h5 className="text-info mb-4">Add New Course</h5>
+      <Form.Item
+          name="id"
+          label="Course Id"
+          // rules={[
+          //   { required: true, message: "Please enter course category" }
+          // ]}
+        >
+          <Input disabled={true} className="w-50" />
+        </Form.Item>
       <Form.Item label="Course Name" name="course_name"
       rules={[
         { 
@@ -209,7 +253,7 @@ const MyForm = () => {
       >
         <TextArea className="w-50" rows={4} placeholder="Type here..." />
       </Form.Item>
-      <Form.Item label="Course Type" name="course_type"
+      <Form.Item label="Course Type" name="type"
       rules={[
         { 
           required: true,
@@ -345,7 +389,7 @@ const MyForm = () => {
         </div>
       </div>
       <div className="d-flex mt-3 justify-content-end">
-        <Button>Cancel</Button>
+        <Button onClick={()=>history.goBack()}>Cancel</Button>
         <Button
           type="primary"
           className="text-white bg-info ml-3"

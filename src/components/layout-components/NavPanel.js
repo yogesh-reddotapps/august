@@ -142,10 +142,11 @@ import { connect } from "react-redux";
 import { DIR_RTL } from "constants/ThemeConstant";
 import { EditPro, HaveNoti, Noti, SignOut } from "assets/svg/icon";
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 const NavPanel = ({ locale }) => {
   const [visible, setVisible] = useState(false);
+  const userData = JSON.parse(localStorage.getItem("userData"))
   const history = useHistory()
   const showDrawer = () => {
     setVisible(true);
@@ -157,7 +158,7 @@ const NavPanel = ({ locale }) => {
 
  useEffect(() => {
   if(!localStorage.getItem("token")){
-    history.push("/auth/login")
+  history.push("/auth/login")
   }
     
  }, [])
@@ -167,6 +168,11 @@ const NavPanel = ({ locale }) => {
     // Implement the logic for NotiToggle if needed
   };
 
+  const signOut = async () => {
+    console.log('signOut');
+    localStorage.clear()
+    history.push('/auth/login')
+  }
   return (
     <>
       <div className="d-flex align-items-center">
@@ -233,7 +239,7 @@ const NavPanel = ({ locale }) => {
                 <img src="/img/Avatar.png" alt="img" />
               </div>
               <div className="ml-3">
-                <h4 className="m-0">John Smith</h4>
+                <h4 className="m-0">{userData && userData.name}</h4>
                 <p className="m-0">System Admin</p>
               </div>
             </div>
@@ -242,10 +248,12 @@ const NavPanel = ({ locale }) => {
                 <EditPro />
               </div>
               <div className="ml-3">
+                <Link to={`/app/staffManagement/admin_management/edit?id=${userData && userData.user_id}`}>
                 <h4 className="m-0">Edit Profile</h4>
+                </Link>
               </div>
             </div>
-            <div style={{ width: '250px' }} className="d-flex px-3 py-1 pb-2 align-items-center">
+            <div onClick={signOut} style={{ width: '250px' }} className="d-flex px-3 py-1 pb-2 align-items-center">
               <div className="mt-1">
                 <SignOut />
               </div>
@@ -256,7 +264,7 @@ const NavPanel = ({ locale }) => {
           </Menu.SubMenu>
         </Menu>
         <div className="">
-          <h5 className="m-0 text-white">John Smith</h5>
+          <h5 className="m-0 text-white">{userData && userData.name}</h5>
           <h5 style={{ color: 'grey' }} className="m-0">System Admin</h5>
         </div>
       </div>

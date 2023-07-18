@@ -1,7 +1,9 @@
 import { Form, Input, Button, InputNumber, Select, Modal } from "antd";
 import axios from "../../../../../axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
 
 const MyForm = () => {
   const [form] = Form.useForm();
@@ -9,6 +11,7 @@ const MyForm = () => {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const [successModal, setSuccessModal] = useState(false);
+  const history = useHistory();
   const onFinish = async (values) => {
     try {
       console.log("Success:", values);
@@ -60,6 +63,7 @@ const MyForm = () => {
         setSuccessModal(true);
         setTimeout(() => {
           setSuccessModal(false);
+          history.goBack();
         }, 1200);
       }
     } catch (error) {
@@ -67,24 +71,58 @@ const MyForm = () => {
     }
   };
 
+  const getVenueData=async()=>{
+    try{
+      axios({
+        method:"post",
+        url:`${API_BASE_URL}/get-venues-by-id`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data:{
+          id:id
+        }
+      }).then((response)=>{
+        // console.log(response.data.data[0]);
+        const data = response.data.data[0];
+        
+        form.setFieldsValue({
+          ...data
+        })
+      })
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+  useEffect(()=>{
+    // console.log(location);
+    if(location.pathname!=="/app/masters/venue/add_new"){
+      getVenueData();
+    }
+  },[])
+
   return (
     <>
       <Form form={form} onFinish={onFinish}>
         <div className="border rounded p-3 mb-4 bg-white">
           <h5 className="text-info mb-4">{id?"Edit":"Add"} New Venue</h5>
-          <div className="mt-4">
-            <h5>Venue Id</h5>
-            <h5>#5</h5>
-          </div>
+          <h5>Venue Id</h5>
+          <Form.Item
+          name="id"
+        >
+          <Input disabled={true} className="w-50" />
+        </Form.Item>
           <div className="mt-4">
             <h5>Venue Name</h5>
-            <Form.Item name="venueName">
+            <Form.Item name="venue_name">
               <Input className="w-50" placeholder="Venue Name" />
             </Form.Item>
           </div>
           <div className="mt-4">
             <h5>Venue Capacity</h5>
-            <Form.Item name="venueCapacity">
+            <Form.Item name="venue_capacity">
               <InputNumber className="w-50" defaultValue={0} />
             </Form.Item>
           </div>
@@ -92,31 +130,31 @@ const MyForm = () => {
           <h5 className="mt-4">Address</h5>
           <div>
             <h5>Residential/Postal Code</h5>
-            <Form.Item name="postalCode">
+            <Form.Item name="postal_code">
               <Input className="w-50" placeholder="Residential/Postal Code" />
             </Form.Item>
           </div>
           <div className="mt-4">
             <h5>Block No</h5>
-            <Form.Item name="blockNo">
+            <Form.Item name="block_number">
               <Input className="w-50" placeholder="Block No" />
             </Form.Item>
           </div>
           <div className="mt-4">
             <h5>Street No</h5>
-            <Form.Item name="streetNo">
+            <Form.Item name="street_number">
               <Input className="w-50" placeholder="Street No" />
             </Form.Item>
           </div>
           <div className="mt-4">
             <h5>Unit No (if applicable)</h5>
-            <Form.Item name="unitNo">
+            <Form.Item name="unit_number">
               <Input className="w-50" placeholder="Unit No" />
             </Form.Item>
           </div>
           <div className="mt-4">
             <h5>Level No</h5>
-            <Form.Item name="levelNo">
+            <Form.Item name="level_no">
               <Input className="w-50" placeholder="Level No" />
             </Form.Item>
           </div>
@@ -131,7 +169,7 @@ const MyForm = () => {
         </div>
         <div className="d-flex mt-3 justify-content-end">
           <Form.Item>
-            <Button>Cancel</Button>
+            <Button onClick={()=>history.goBack()}>Cancel</Button>
           </Form.Item>
           <Form.Item>
             <Button className="text-white bg-info ml-3" htmlType="submit">

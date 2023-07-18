@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import { Form, Button, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import axios from "../../../../axios";
-import {useHistory} from 'react-router-dom'
+import {useHistory,useLocation} from 'react-router-dom'
+import { useEffect } from "react";
+import { API_BASE_URL } from "constants/ApiConstant";
 const ScheduleNewClass = () => {
   const [form] = Form.useForm();
   const history = useHistory();
   const [successModal, setSuccessModal] = useState(false);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id')
+  const [languageData,setLanguageData]=useState();
   const onFinish = async (values) => {
     try {
       console.log("Success:", values);
@@ -38,6 +44,37 @@ const ScheduleNewClass = () => {
     }
   };
 
+  const getLanguageData=async()=>{
+    try{
+      axios({
+        method:"post",
+        url:`${API_BASE_URL}/get-language-by-id`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data:{
+          id:id
+        }
+      }).then((response)=>{
+        // console.log(response.data.data[0]);
+        const data = response.data.data[0];
+        form.setFieldsValue({
+          ...data
+        })
+      })
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
+
+  useEffect(()=>{
+    // console.log(location);
+    if(location.pathname==="/app/masters/language/edit_language"){
+      getLanguageData();
+    }
+  },[])
   return (
     <Form
       layout="vertical"
@@ -48,6 +85,14 @@ const ScheduleNewClass = () => {
     >
       <div className="border rounded p-3 bg-white">
         <h5 className="text-info">Add New Language</h5>
+        <Form.Item
+          className="w-75"
+          name="id"
+          label="Language Id"
+
+        >
+          <Input  disabled={true} />
+        </Form.Item>
         <Form.Item
           className="w-75"
           name="language_name"

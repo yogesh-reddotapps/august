@@ -48,6 +48,7 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/curriculam_details/award_certificate`} component={lazy(() => import(`./curriculam_details/award_certificate`))} />
         <Route exact path={`${APP_PREFIX_PATH}/assessment`} component={lazy(() => import(`./assessment`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/add_new`} component={lazy(() => import(`./assessment/AddNew`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/edit`} component={lazy(() => import(`./assessment/AddNew`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/submission`} component={lazy(() => import(`./assessment/Submission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculam_details/assessment/submission/view-submission`} component={lazy(() => import(`./assessment/ViewSubmission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/assignment`} component={lazy(() => import(`./assignment/index`))} />
@@ -77,13 +78,19 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/student_detail/course_enroll/assessment_submission`} component={lazy(() => import(`./student_detail/course_enroll/assessment_submission`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters`} component={lazy(() => import(`./masters`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/language/add_new_language`} component={lazy(() => import(`./masters/add_new_language`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/language/edit_language`} component={lazy(() => import(`./masters/add_new_language`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/course_category/add_new`} component={lazy(() => import(`./masters/course_category/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/course_category/edit`} component={lazy(() => import(`./masters/course_category/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/venue/add_new`} component={lazy(() => import(`./masters/venue/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/venue/edit`} component={lazy(() => import(`./masters/venue/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/add_new`} component={lazy(() => import(`./masters/courses/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/courses/edit`} component={lazy(() => import(`./masters/courses/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects`} component={lazy(() => import(`./masters/courses/subjects`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/add_new`} component={lazy(() => import(`./masters/courses/subjects/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/edit`} component={lazy(() => import(`./masters/courses/subjects/add_new`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons`} component={lazy(() => import(`./masters/courses/subjects/lessons`))} />
         <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons/add_new`} component={lazy(() => import(`./masters/courses/subjects/lessons/add_new`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/masters/courses/subjects/lessons/edit`} component={lazy(() => import(`./masters/courses/subjects/lessons/add_new`))} />
         {/* <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list`} component={lazy(() => import(`./Facility`))} />
         <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list/add_new`} component={lazy(() => import(`./Facility/AddNew.js`))} />
         <Route exact path={`${APP_PREFIX_PATH}/facilities/facility_list/:facility_types`} component={lazy(() => import(`./Facility/FacilityType.js`))} />
