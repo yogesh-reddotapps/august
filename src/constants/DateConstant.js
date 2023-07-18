@@ -1,3 +1,4 @@
+import moment from "moment";
 export const DATE_FORMAT_YYYYMMdd = "YYYYMMdd";
 export const DATE_FORMAT_YYYY_MM_dd = "YYYY-MM-dd";
 export const DATE_FORMAT_YYYY_MM_dd_Combined = "YYYYMMddHHmm";
@@ -18,6 +19,8 @@ export const DATE_FORMAT_HH_mm = "HH:mm";
 export const DATE_FORMAT_YYYY_MM_DDTHH_mm_ssZ = "YYYY-MM-DD'T'HH:mm:ssZ"; 
 
 
+
+
 export const formatDate = (date, showTime = false) => {
     if (date == null || undefined) {
       return "--";
@@ -32,3 +35,7 @@ export const formatDate = (date, showTime = false) => {
     }
     return d.toLocaleDateString([], { dateStyle: "medium" });
   };
+
+  export const formatTime = (time)=>{
+    moment(time, 'HH:mm:ss').format('h A');
+  }

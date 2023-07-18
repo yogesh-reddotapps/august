@@ -20,6 +20,8 @@ import { useLocation, Link, useHistory } from "react-router-dom";
 import Search from "antd/lib/transfer/search";
 import axios from "../../../axios";
 import { formatDate } from "constants/DateConstant";
+import ExportButton from "../Export/ExportButton";
+import { headersForMasterCourse, headersForMasterCourseCategory, headersForMasterLanguage, headersForMasterVenue } from "../Export/Headers";
 
 const { Option } = Select;
 const languageArr = [
@@ -86,6 +88,37 @@ const Masters = () => {
   );
 
   const addParam = queryParams.get("add");
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  const [newAllCourseData,setNewAllCourseData] = useState([]);
+  const [newAllMasterVenue,setNewAllMasterVenue] = useState([]);
+
+useEffect(()=>{
+  let nAllUsersData = allLang
+  nAllUsersData.map((item)=>{
+    item.updated_at=formatDate(item.updated_at,true);
+    
+  })
+  setNewAllUsersData(nAllUsersData)
+},[allLang])
+
+useEffect(()=>{
+  let nAllUsersData = allCate
+  nAllUsersData.map((item)=>{
+    item.updated_at=formatDate(item.updated_at,true);
+    
+  })
+  setNewAllCourseData(nAllUsersData)
+},[allCate])
+useEffect(()=>{
+  let nAllUsersData = allVenues
+  nAllUsersData.map((item)=>{
+    item.postal_code=item.postal_code+item.street_number+item.block_number+item.unit_number+item.country;
+    
+  })
+  setNewAllMasterVenue(nAllUsersData)
+},[allVenues])
+
 
   const dummyData = [
     {
@@ -451,12 +484,13 @@ const Masters = () => {
                 placeholder="Search"
                 onSearch={(value) => console.log(value)}
               />
-              <Button
+              {/* <Button
                 icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+              <ExportButton data={newAllUsersData} passing={headersForMasterLanguage}/> 
             </div>
             <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
               <Link to={"masters/language/add_new_language"}> + Add New</Link>
@@ -477,12 +511,13 @@ const Masters = () => {
                 placeholder="Search"
                 onSearch={(value) => console.log(value)}
               />
-              <Button
+              {/* <Button
                 icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+              <ExportButton data={newAllCourseData} passing={headersForMasterCourseCategory}/> 
             </div>
             <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
               <Link to={"masters/course_category/add_new"}> + Add New</Link>
@@ -503,12 +538,13 @@ const Masters = () => {
                 placeholder="Search"
                 onSearch={(value) => console.log(value)}
               />
-              <Button
+              {/* <Button
                 icon={<Icon component={ExportIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+              <ExportButton data={newAllMasterVenue} passing={headersForMasterVenue}/> 
             </div>
             <Button className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4">
               <Link to="masters/venue/add_new">+ Add New</Link>
@@ -530,12 +566,13 @@ const Masters = () => {
                   placeholder="Search"
                   onSearch={(value) => console.log(value)}
                 />
-                <Button
+                {/* <Button
                   icon={<Icon component={ExportIcon} />}
                   className="d-flex align-items-center ml-2"
                 >
                   Export
-                </Button>
+                </Button> */}
+                <ExportButton data={allCourses} passing={headersForMasterCourse}/> 
               </div>
               <Select
                 className="ml-2"

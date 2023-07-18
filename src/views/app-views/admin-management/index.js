@@ -23,10 +23,13 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import ExportButton from "../Export/ExportButton";
+import { headersForAdmin } from "../Export/Headers";
+import { formatDate } from "constants/DateConstant";
 
 export default function MembershipRequest() {
   const [membershipRequestData, setmembershipRequestData] =
-    useState(membershipRequest);
+    useState([]);
   const [visible, setVisible] = useState(false);
   const [refereshTog, setRefereshTog] = useState(false)
   const showDrawer = () => {
@@ -39,6 +42,15 @@ export default function MembershipRequest() {
 
   const [modal2Open,setModal2Open]=useState(false);
   const [idToDelete,setIdTodelete]=useState();
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  useEffect(()=>{
+    let nAllUsersData = membershipRequestData
+    nAllUsersData.map((item)=>{
+      item.lastLoginTime=formatDate(item.lastLoginTime,true);
+    })
+    setNewAllUsersData(nAllUsersData)
+  },[membershipRequestData])
 
   // const showModal = () => {
   //   setIsModalOpen(true);
@@ -193,12 +205,13 @@ export default function MembershipRequest() {
               Filters
             </Button>
           </Filter>
-          <Button
+          {/* <Button
             icon={<Icon component={ExportIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={newAllUsersData} passing={headersForAdmin}/>
         </div>
         <Link
           to="admin_management/add_new"

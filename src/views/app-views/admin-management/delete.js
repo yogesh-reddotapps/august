@@ -82,3 +82,23 @@ axios
 .catch((error) => {
   console.log(error);
 });
+
+
+
+const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = eventsData
+  nAllUsersData.map((item)=>{
+    item.startTime=formatDate(item.startTime,true);
+    item.endTime=formatDate(item.endTime,true);
+    item.eventDate = formatDate(item.eventDate);
+    item.eventStatusChangeDate = formatDate(item.eventStatusChangeDate);
+    item.createdAt = formatDate(item.createdAt);
+    item.updatedAt = formatDate(item.updatedAt);
+  })
+  setNewAllUsersData(nAllUsersData)
+},[eventsData])
+
+
+// @ts-ignore
+{/* <ExportButton data={newAllUsersData} passing={headersForAdmin}/> */}

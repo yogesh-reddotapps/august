@@ -12,6 +12,9 @@ import Icon, { DeleteOutlined } from "@ant-design/icons";
 import CustomIcon from "components/util-components/CustomIcon";
 import axios from "../../../axios";
 import { Option } from "antd/lib/mentions";
+import { formatDate } from "constants/DateConstant";
+import ExportButton from "../Export/ExportButton";
+import { headersForTeachers } from "../Export/Headers";
 
 const teacherArray = [
   {
@@ -132,7 +135,7 @@ function TeacherManagement() {
   const [refereshTog, setRefereshTog] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
-  const [data, setData] = useState(dummyArray);
+  const [data, setData] = useState([]);
   const [courses, setCourses] = useState([])
   const [batchesOpt, setBatchesOpt] = useState([])
   const [classOpt, setClassOpt] = useState([])
@@ -168,6 +171,16 @@ function TeacherManagement() {
     
     
   };
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = data
+  nAllUsersData.map((item)=>{
+    item.lastLoginTime=formatDate(item.lastLoginTime,true);
+  })
+  setNewAllUsersData(nAllUsersData)
+},[data])
+
 
   const assesmentColumn = [
     {
@@ -363,12 +376,13 @@ function TeacherManagement() {
               Filters
             </Button>
           </Filter>
-          <Button
+          {/* <Button
             icon={<Icon component={ExportIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={newAllUsersData} passing={headersForTeachers}/>
         </div>
         <div style={{ gap: "10px" }} className="d-flex">
           <Button
