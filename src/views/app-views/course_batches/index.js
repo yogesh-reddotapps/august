@@ -12,11 +12,25 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import moment from "moment";
+import { headerForCourseBatches } from "../Export/Headers";
+import { formatDate } from "constants/DateConstant";
+import ExportButton from "../Export/ExportButton";
 
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = facilityBooking
+  nAllUsersData.map((item)=>{
+    item.start_date=formatDate(item.start_date);
+    item.end_date=formatDate(item.end_date);
+  })
+  setNewAllUsersData(nAllUsersData)
+},[facilityBooking])
+
 
   const facilityBookingColumns = [
     {
@@ -156,6 +170,7 @@ function FacilityBooking() {
       console.log(err);
     })
   }, []);
+  
 
   return (
     <div>
@@ -170,12 +185,13 @@ function FacilityBooking() {
               Filters
             </Button>
           </Filter>
-          <Button
+          {/* <Button
             icon={<Icon component={ExportIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={newAllUsersData} passing={headerForCourseBatches}/> 
         </div>
         <Button className="bg-info">
           <Link

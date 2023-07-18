@@ -17,6 +17,8 @@ import axios from "axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
+import ExportButton from "../Export/ExportButton";
+import { headerForCurriculum } from "../Export/Headers";
 
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
@@ -191,12 +193,13 @@ function FacilityBooking() {
               Filters
             </Button>
           </Filter>
-          <Button
+          {/* <Button
             icon={<Icon component={ExportIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={curriculamList} passing={headerForCurriculum}/>
         </div>
         {/* <Link
           to="staffManagement/add_new"

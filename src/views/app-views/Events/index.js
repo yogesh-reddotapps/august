@@ -22,6 +22,8 @@ import axios from "../../../axios";
 import Icon from "@ant-design/icons";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
+import { headersForStudent } from "../Export/Headers";
+import ExportButton from "../Export/ExportButton";
 
 export default function Events() {
   const [membershipRequestData, setmembershipRequestData] = useState(
@@ -34,6 +36,16 @@ export default function Events() {
   const [refereshTog, setRefereshTog] = useState(false)
 const [modal2Open,setModal2Open]=useState(false);
   const [idToDelete,setIdTodelete]=useState();
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = membershipRequestData
+  nAllUsersData.map((item)=>{
+   
+  })
+  setNewAllUsersData(nAllUsersData)
+},[membershipRequestData])
+
 
   let styles = {
     files: {
@@ -302,12 +314,13 @@ const [modal2Open,setModal2Open]=useState(false);
               Filters
             </Button>
           </Filter>
-          <Button
+          <ExportButton data={newAllUsersData} passing={headersForStudent}/> 
+          {/* <Button
             icon={<Icon component={CsvIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
           <Button
             icon={<Icon component={ExcelIcon} />}
             className="d-flex align-items-center ml-2"

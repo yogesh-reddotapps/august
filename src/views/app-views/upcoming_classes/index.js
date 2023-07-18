@@ -10,14 +10,29 @@ import CustomIcon from 'components/util-components/CustomIcon'
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
+import ExportButton from "../Export/ExportButton";
+import { headerForUpcomingClasses } from "../Export/Headers";
 import axios from "axios";
 import moment from "moment";
+import { formatDate, formatTime } from "constants/DateConstant";
+
 
 function TeacherManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [alertSuccess, setAlertSuccess] = useState(false);
   const [classList, setClassList] = useState([])
   const [form] = Form.useForm();
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = classList
+  nAllUsersData.map((item)=>{
+    item.class_date=formatDate(item.class_date);
+    item.start_time=moment(item.start_time, 'HH:mm:ss').format('h A');;
+    item.end_time = moment(item.end_time, 'HH:mm:ss').format('h A');;
+    
+  })
+  setNewAllUsersData(nAllUsersData)
+},[classList])
   const dummyArray = [
     {
       id: 1,
@@ -217,12 +232,13 @@ function TeacherManagement() {
               Filters
             </Button>
           </Filter>
-          <Button
+          {/* <Button
             icon={<Icon component={ExportIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={newAllUsersData} passing={headerForUpcomingClasses}/> 
         </div>
         <Button
           className="bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
