@@ -53,9 +53,11 @@ const assignmentArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [assignmentQuize, setAssignmentQuize] = useState([])
   const searchParams = new URLSearchParams(document.location.search);
   const type = searchParams.get("type");
   const id = searchParams.get("id");
+  const student_id = searchParams.get("student_id");
   const lessonId = searchParams.get("lessonId");
   const [lessonDetail,setLessonDetail]=useState([]);
   const handleOk = () => {
@@ -64,12 +66,13 @@ function FacilityBooking() {
     }, 10000);
   };
 
-  useEffect(() => {
-
-      getLessonDetails();
-    
-  }, []);
-
+const getAssignmentNQuize = async (course_id,lesson_id) => {
+  const res1 = await axios.post(`${API_BASE_URL}/get-assigments`,{
+    "lesson_id": lesson_id,
+    "course_id": course_id
+})
+setAssignmentQuize(res1.data.data);
+}
   const getLessonDetails = ()=>{
     axios({
       method: 'post',
@@ -84,6 +87,7 @@ function FacilityBooking() {
       },
   }).then((response)=>{
     setLessonDetail(response.data.data[0]);
+    getAssignmentNQuize(response.data.data[0].course_id,response.data.data[0].id)
       // console.log(response);
     }).catch((err)=>{
       console.log(err);
@@ -97,23 +101,26 @@ function FacilityBooking() {
   const SubjectColumn = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "id",
     },
     {
       title: "Assignment",
-      dataIndex: "Assignment",
+      dataIndex: "assignment_name",
     },
     {
       title: "Assignment Type",
-      dataIndex: "Assignment_Type",
+      dataIndex: "assignment_type",
     },
     {
       title: "Assignment Questions",
-      dataIndex: "Assignment_Questions",
+      dataIndex: "assignment_questions",
     },
     {
       title: "Submitted On",
-      dataIndex: "Submitted_By",
+      dataIndex: "submitted_on",
+      render:(text)=>{
+        return <>{text===null? 'Blank':text}</>
+      }
     },
     // {
     //   title: "Pending Submissions",
@@ -121,10 +128,10 @@ function FacilityBooking() {
     // },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
-          <div className={text === "Completed" ? "text-success" : "text-danger"}>
+          <div className={text === "completed" ? "text-success" : "text-danger"}>
             {text}
           </div>
         );
@@ -139,7 +146,7 @@ function FacilityBooking() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
+                  {/* <Menu.Item>
                     <span>
                       {" "}
                       <DeleteOutlined className="mr-2 " />
@@ -151,11 +158,11 @@ function FacilityBooking() {
                       <CustomIcon className="mr-2" svg={Edit} />
                       Edit
                     </span>
-                  </Menu.Item>
+                  </Menu.Item> */}
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="lesson_details/view_submission"
+                      to={`lesson_details/view_submission?student_id=${student_id}&ID=${record.id}`}
                     >
                       <FileUnknownOutlined className="mr-2" />
                       View Submissions
@@ -226,12 +233,17 @@ function FacilityBooking() {
             </div>
            
           </div>
-          <Helper clients={assignmentArray} attribiue={SubjectColumn} />
+          <Helper clients={assignmentQuize} attribiue={SubjectColumn} />
         </div>
       ),
     },
   ];
 
+  useEffect(() => {
+
+    getLessonDetails();
+  
+}, []);
   return (
     <div className="tabbarWhite">
       <div className="p-3 bg-white">

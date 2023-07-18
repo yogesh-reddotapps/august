@@ -60,7 +60,8 @@ export default function AddNew() {
         "phone_number":values.phone_number,
         "dob":moment(values.dob).format("DD-MM-YYYY"),
         "profile_pic": "https://cristofori.s3.ap-southeast-1.amazonaws.com/profile_picture/uRRHh_kjwGrn3DUX3D_3S.png",
-        "user_id": id
+        "user_id": id,
+        "gender":values.gender
     })
     if (updateRes.data.success) {
       history.push('/app/staffManagement/admin_management');
@@ -137,7 +138,8 @@ export default function AddNew() {
       name:data.name,
       phone_number:data.phone_number===null?"":data.phone_number,
       email:data.email,
-      dob:moment(data.dob,"DD-MM-YYYY")
+      dob:moment(data.dob,"DD-MM-YYYY"),
+      gender:data.gender
     })
     console.log(res1.data[0]);
   }

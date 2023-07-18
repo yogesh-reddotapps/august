@@ -767,7 +767,7 @@ function FacilityBooking() {
 
   const getCourseAccess=async()=>{
     let res1 = await axios.get(
-      `${API_BASE_URL}/teacher-courses-access-data/${id}`,
+      `${API_BASE_URL}/teacher-courses-access-data/${teacherId}`,
     );
     // console.log(res1);
     let data = res1.data.data;

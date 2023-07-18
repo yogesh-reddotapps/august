@@ -83,7 +83,7 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to={`curriculam_details?id=${record.id}`}>
+                    <Link to={`course_batches/edit_batch?id=${record.id}`}>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Details

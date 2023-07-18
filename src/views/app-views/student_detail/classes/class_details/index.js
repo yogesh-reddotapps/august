@@ -85,6 +85,7 @@ function FacilityBooking() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
+  const student_id = queryParams.get("student_id");
 
   const handleOk = () => {
     setTimeout(() => {
@@ -204,7 +205,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to={`class_details/lessons?id=${record.subject_id}`}
+                      to={`class_details/lessons?id=${record.subject_id}&student_id=${student_id}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Lesson

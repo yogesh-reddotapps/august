@@ -32,6 +32,7 @@ export const AppViews = () => {
         {/* <Route exact path={`${APP_PREFIX_PATH}/events/event_list/update/:id`} component={lazy(() => import(`./Events/AddNew.js`))} /> */}
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches`} component={lazy(() => import(`./course_batches`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches/add_new_batch`} component={lazy(() => import(`./course_batches/add_new_batch`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches/edit_batch`} component={lazy(() => import(`./course_batches/add_new_batch`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list`} component={lazy(() => import(`./curriculum_list`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/course_batches/enroll-new-student`} component={lazy(() => import(`./course_batches/EnrollStudent`))} />
         <Route exact path={`${APP_PREFIX_PATH}/course_curriculum/curriculum_list/curriculam_details/batch/classes`} component={lazy(() => import(`./curriculum_list/batch/classes`))} />

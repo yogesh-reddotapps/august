@@ -13,13 +13,19 @@ import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import Helper from "views/app-views/Helper";
 const { Search } = Input;
 
 const MyForm = () => {
   const [form] = Form.useForm();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const Id = queryParams.get("id");
   const [successModal, setSuccessModal] = useState(false);
   const [coursenameid, setCoursenameid] = useState([]);
+  const [enrollTabTog, setEnrollTabTog] = useState(true)
+  const [idOfNewBatch, setIdOfNewBatch] = useState(null)
   const attcolumn = [
     {
       title: "Id",
@@ -128,7 +134,10 @@ const MyForm = () => {
       status: 1,
       batch_id: values.batchId,
     });
-    console.log(data);
+    setIdOfNewBatch(data.data.data[0]);
+    if (data.status===201) {
+      setEnrollTabTog(false)
+    }
     setSuccessModal(true);
     setTimeout(() => {
       setSuccessModal(false);
@@ -149,6 +158,11 @@ const MyForm = () => {
 
   useEffect(() => {
     getCoursesNameAndId();
+    if (Id) {
+      console.log(Id);
+      
+      setEnrollTabTog(false)
+    }
   }, []);
 
   return (
@@ -213,6 +227,7 @@ const MyForm = () => {
           </Form>
         </Tabs.TabPane>
         <Tabs.TabPane
+        disabled={enrollTabTog}
           tab={
             <div className="d-flex align-items-center">
               <TeacherAssignedIcon />{" "}

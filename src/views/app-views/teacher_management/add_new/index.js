@@ -118,6 +118,7 @@ export default function AddNew() {
   const history = useHistory()
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [udata, setUdata] = useState(null)
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [activeTab, setActiveTab] = useState("1");
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
@@ -225,6 +226,7 @@ export default function AddNew() {
         role: 1,
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
+        gender:values.gender,
         highest_qualification: values.highest_qualification,
         university: values.university,
         field_of_study: values.field_of_study,
@@ -382,13 +384,25 @@ export default function AddNew() {
       phone_number:data.phone_number===null?"":data.phone_number,
       email:data.email,
       dob:data.dob===null?"":moment(data.dob,"DD-MM-YYYY"),
+      gender:data.gender,
       highest_qualification:data.highest_qualification,
       university:data.university,
       field_of_study:data.field_of_study,
       education_start_date:data.education_start_date===null?"":moment(data.education_start_date),
       education_end_date:data.education_end_date===null?"":moment(data.education_end_date)
     })
-    console.log(res1.data[0]);
+    setUdata(res1.data[0]);
+  }
+  const onBanTeacher = async () => {
+    if (udata!==null&&udata.status==='banned') {
+      const res2 = await axios.post('/api/admin-un-ban-teacher',{teacher_id:udata!==null&&udata.id})
+      console.log(res2);
+      window.location.reload()
+      return
+    }
+    const res1 = await axios.post('/api/admin-ban-teacher',{teacher_id:udata!==null&&udata.id,remark:'tese'})
+    console.log(res1);
+    window.location.reload()
   }
  useEffect(() => {
   if (id) {
@@ -410,7 +424,7 @@ export default function AddNew() {
           className="px-4 font-weight-semibold text-info"
           onClick={() => setIsDeactiveModalOpen(true)}
         >
-          Deactivate Account
+          {udata!==null&&udata.status==='banned'? 'Activate' :'Deactivate'} Account
         </Button>
       </div>
       <Form
@@ -480,13 +494,13 @@ export default function AddNew() {
                       <Input
                       addonBefore={
                         <Select
-                        defaultValue={'In'}
+                        defaultValue={'+65'}
                           style={{
                             width: 80,
                           }}
                           >
-                          <Option value="In">In</Option>
-                          <Option value="SG">SG</Option>
+                          <Option value="+91">+91</Option>
+                          <Option value="+65">+65</Option>
                         </Select>
                       }
                         style={{ width: "100%" }}
@@ -772,7 +786,7 @@ export default function AddNew() {
       >
         <div className="d-flex my-3 flex-column w-75">
           <h4 className="mb-4">Sure you want to deactivate Teacher?</h4>
-          <h5>Teacher #TC-1234 will be deleted from system</h5>
+          <h5>Teacher {udata!==null && udata.name} will be {udata!==null&&udata.status==='banned'? 'Activate' :'Deactivate'} from system</h5>
         </div>
         <div
           style={{ gap: "10px" }}
@@ -787,6 +801,7 @@ export default function AddNew() {
           <Button
             className="px-4 font-weight-semibold text-white bg-info"
             onClick={() => {
+              onBanTeacher()
               setIsDeactiveModalOpen(false);
               setSuccesmodaltext({
                 title: "Teacher Deactivated Successfully!",

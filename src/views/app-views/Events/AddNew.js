@@ -137,6 +137,7 @@ export default function AddNew() {
           phone_number: values.phone_number,
           dob: moment(values.dob).format("DD-MM-YYYY"),
           user_id: id,
+          gender:values.gender,
         }
       );
       if (updateRes.data.success) {
@@ -224,6 +225,7 @@ export default function AddNew() {
       name: data.name,
       phone_number: data.phone_number === null ? "" : data.phone_number,
       email: data.email,
+      gender:data.gender,
       dob: data.dob === null ? "" : moment(data.dob),
     });
     console.log(res1.data[0]);

@@ -18,6 +18,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import Helper from "views/app-views/Helper";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const students = [
     {
@@ -58,10 +59,15 @@ const students = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [attendList, setAttendList] = useState([])
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const batchId = queryParams.get("batchId");
+  const classId = queryParams.get("classId")
   const classColumn = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "id",
     },
     {
         dataIndex: "avatar",
@@ -71,29 +77,29 @@ function FacilityBooking() {
     },
     {
       title: "Student Name",
-      dataIndex: "Student_Name",
+      dataIndex: "student_name",
     },
     {
       title: "DOB",
-      dataIndex: "DOB",
+      dataIndex: "dob",
     },
     {
       title: "Contact No",
-      dataIndex: "Contact_No",
+      dataIndex: "phone_number",
     },
     {
       title: "Email ID",
-      dataIndex: "Email_ID",
+      dataIndex: "email",
     },
     {
       title: "Attendance",
-      dataIndex: "Attendance",
+      dataIndex: "present",
       render: (text) => {
         return (
           <div
-            className={`${
-              text === "Present" ? "text-success" : "text-danger"
-            } font-weight-semibold`}
+            // className={`${
+            //   text === 1 ? "text-success" : "text-danger"
+            // } font-weight-semibold`}
           >
             {text}
           </div>
@@ -144,7 +150,16 @@ function FacilityBooking() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
+  const getAttendance = async (batchId,classId) => {
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/get-attendance`,{batch_id:batchId,class_id:classId})
+    setAttendList(res1.data.data);
+  }
+  useEffect(() => {
+    if (batchId && classId) {
+   getAttendance(batchId,classId)
+  }
+}, [])
+  
   return (
     <div className="tabbarWhite">
       <div className="p-3 bg-white">
@@ -245,7 +260,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={students} attribiue={classColumn} />
+          <Helper clients={attendList} attribiue={classColumn} />
         </div>
       <Modal
         width={600}

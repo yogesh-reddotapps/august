@@ -159,6 +159,11 @@ function FacilityBooking() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const onStatusChange = async (check,record) => {
+    console.log(check,record);
+    const res1 = await axios.put(`http://18.140.159.50:3333/api/notifications/active-inactive/${record.id}`,{status:check})
+    console.log(res1);
+  }
   const notificationArray = [
     {
       notificationName: "Notification 1",
@@ -214,12 +219,12 @@ function FacilityBooking() {
     },
     {
       title: "Active/Inactive",
-      dataIndex: "status",
-      render: (text) => {
+      // dataIndex: "status",
+      render: (record) => {
         return (
           <Switch
-            defaultChecked={text===1?true:false}
-            onChange={(checked) => console.log(`switch to ${checked}`)}
+            defaultChecked={record.status===1?true:false}
+            onChange={(checked) => onStatusChange(checked,record)}
           />
         );
       },

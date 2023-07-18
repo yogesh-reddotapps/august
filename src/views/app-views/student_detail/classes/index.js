@@ -130,7 +130,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to={`classes/class_details?id=${record.id}`}
+                      to={`classes/class_details?id=${record.id}&student_id=${student_id}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Class Details

@@ -18,6 +18,7 @@ import Icon, {EyeOutlined} from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 const classArray = [
   {
     Class_ID: "001",
@@ -55,7 +56,10 @@ const classArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [classList, setClassList] = useState([])
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const batchId = queryParams.get("batchId");
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -68,35 +72,37 @@ function FacilityBooking() {
   const classColumn = [
     {
       title: "Class ID",
-      dataIndex: "Class_ID",
+      dataIndex: "class_name",
     },
     {
       title: "Date",
-      dataIndex: "Date",
+      dataIndex: "class_date",
     },
     {
       title: "Start Time",
-      dataIndex: "Start_Time",
+      dataIndex: "start_time",
     },
     {
       title: "End Time",
-      dataIndex: "End_Time",
+      dataIndex: "end_time",
     },
     {
       title: "Teacher Assigned",
-      dataIndex: "Teacher_Assigned",
+      dataIndex: "teacher_name",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
             className={`${
-              text === "Completed" ? "text-success" : "text-warning"
+              text === 2 ? "text-success" : "text-warning"
             } font-weight-semibold`}
           >
-            {text}
+            {text===1 && "ongoing"}
+            {text===2 && "Complete"}
+            {text===3 && "Upcoming"}
           </div>
         );
       },
@@ -122,7 +128,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="classes/attendance"
+                      to={`classes/attendance?classId=${record.id}&batchId=${batchId}`}
                     >
                       {/* <EyeOutlined className="mr-2" /> */}
                       View Attendance
@@ -168,12 +174,23 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={classArray} attribiue={classColumn} />
+          <Helper clients={classList} attribiue={classColumn} />
         </div>
       ),
     },
   ];
-
+  const getClassesByBatchId = async (id) => {
+    const res1 = await axios.post('http://18.140.159.50:3333/api/get-classes-By-batch-id',{batch_id : id})
+    console.log(res1.data.data);
+    setClassList(res1.data.data)
+  }
+  useEffect(() => {
+    console.log(batchId);
+  if (batchId) {
+    getClassesByBatchId(batchId)
+  }
+  }, [])
+  
   return (
     <div className="tabbarWhite">
       <div className="p-3 bg-white">

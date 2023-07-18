@@ -75,7 +75,7 @@ const EnrollStudent = () => {
           </div>
           <div className="mt-4">
             <h5>Select Students</h5>
-            <Form.Item name="course">
+            <Form.Item name="students">
               <Select
                 className="w-50"
                 mode="multiple"

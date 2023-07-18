@@ -515,7 +515,7 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="curriculum_list/curriculam_details/batch/classes">
+                    <Link to={`curriculum_list/curriculam_details/batch/classes?batchId=${record.id}`}>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Classes
