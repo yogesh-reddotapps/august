@@ -25,6 +25,8 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
 import { API_BASE_URL } from "constants/ApiConstant";
+import { headerForClassRating, headersForSubject } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 const student = [
     {
         "User_ID": 1,
@@ -86,7 +88,20 @@ function FacilityBooking() {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const student_id = queryParams.get("student_id");
-
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  useEffect(()=>{
+    let nAllUsersData =subjectList
+    nAllUsersData && nAllUsersData.map((item)=>{
+     item.lessonCounts = item.lessons.reduce((total, lesson) => {
+      if (lesson.estimated_time) {
+        return total + parseInt(lesson.estimated_time);
+      }
+      return total;
+    }, 0)
+    // console.log(item.lessonCounts)
+    })
+    setNewAllUsersData(nAllUsersData)
+  },[subjectList])
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -244,12 +259,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForSubject}/> 
           </div>
           <Helper clients={subjectList} attribiue={SubjectColumn} />
         </div>
@@ -278,12 +294,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={student} passing={headerForClassRating}/>
           </div>
           <Helper clients={student} attribiue={classratingColumn} />
         </div>

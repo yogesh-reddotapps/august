@@ -20,6 +20,9 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { headersForClasses } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { formatDate } from "constants/DateConstant";
 const classArray = [
   {
     Class_ID: "001",
@@ -64,6 +67,18 @@ function FacilityBooking() {
   const studentName = queryParams.get("student");
   const courseName = queryParams.get("course");
   const student_id = queryParams.get("student_id");
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = classArr
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.class_date=formatDate(item.class_date);
+    item.start_time=moment(item.start_time,"HH:mm:ss").format("hh:mm A");
+    item.end_time = moment(item.end_time,"HH:mm:ss").format("hh:mm A");
+    item.status = item.status===0?"InActive":"Active"
+  })
+  setNewAllUsersData(nAllUsersData)
+},[classArr])
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -169,12 +184,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+             <ExportButton data={newAllUsersData} passing={headersForClasses}/>
           </div>
           <Helper clients={classArr} attribiue={classColumn} />
         </div>

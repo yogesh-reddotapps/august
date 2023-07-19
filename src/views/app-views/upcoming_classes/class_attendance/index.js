@@ -8,9 +8,22 @@ import { FilterIcon, CsvIcon } from "assets/svg/icon";
 import Helper from "../../Helper";
 import axios from "axios";
 import { API_BASE_URL } from "constants/ApiConstant";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { headersForUpcomingAttendance } from "views/app-views/Export/Headers";
 import moment from "moment";
 const ClassAttend = () => {
   const [attData,setAttData]=useState([]);
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = attData
+  nAllUsersData.map((item)=>{
+    item.dob=moment().diff(moment(item.dob, 'DD-MM-YYYY'), 'years');
+    item.present=item.present?"Present":"Absent";
+
+  })
+  setNewAllUsersData(nAllUsersData)
+},[attData])
+
   const attcolumn = [
     {
       title: "Id",
@@ -209,12 +222,13 @@ const ClassAttend = () => {
             Filters
           </Button>
         </Filter>
-        <Button
+        {/* <Button
           icon={<Icon component={CsvIcon} />}
           className="d-flex align-items-center ml-2"
         >
           Export
-        </Button>
+        </Button> */}
+        <ExportButton data={newAllUsersData} passing={headersForUpcomingAttendance}/>
       </div>
       <Helper clients={attData} attribiue={attcolumn} />
     </div>

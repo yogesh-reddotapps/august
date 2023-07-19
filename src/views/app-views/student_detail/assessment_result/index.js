@@ -5,6 +5,7 @@ import { CheckCircleFilled } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
 import { API_BASE_URL } from "constants/ApiConstant";
 import axios from "axios";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 let styles = {
   files: {
     listStyle: "none",
@@ -69,6 +70,10 @@ function Submission() {
     //   value: "Option B",
     // },
   ]);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const assesmentId = queryParams.get("assessmentId")
   const onChange = (ind, e) => {
     const updatedQuestions = [...question];
     updatedQuestions[ind] = {
@@ -84,7 +89,7 @@ function Submission() {
 const getSubmission = ()=>{
   axios
 .get(
-  `${API_BASE_URL}/view-submission/15/16`,//assesmentId/studentId
+  `${API_BASE_URL}/view-submission/${assesmentId}/${id}`,//assesmentId/studentId
   {
     headers: {
       "Content-Type": "application/json",

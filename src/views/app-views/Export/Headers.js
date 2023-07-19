@@ -92,27 +92,124 @@ export const headersForMasterCourse=[
 ]
 
 
-export const headersForVerificationRequest=[
-    {label:"Name",key:"fullName"},
-    {label:"Phone Number",key:"phoneNumber"},
-    {label:"Register Date",key:"regDate"},
-    {label:"Account Status",key:"accountStatus"},
-    {label:"Verification Request",key:"verificationRequest"},
-    {label:"Verification Request Date",key:"verificationRequestDate"},
+export const headersForCourseAccess=[
+    {label:"Sr No.",key:"course_id"},
+    {label:"Courses",key:"course_name"},
+    {label:"Access",key:"access"},
+    {label:"Course Status",key:"course_status"},
+  
 ]
 
-export const headersForEvents=[
-    {label:"Event Name",key:"eventName"},
-    {label:"eventCaption",key:"eventCaption"},
-    {label:"Start Time",key:"startTime"},
-    {label:"End Time",key:"endTime"},
-    {label:"Event Date",key:"eventDate"},
-    {label:"Building Name",key:"buildingName"},  
-    {label:"Address",key:"address"},  
-    {label:"About Event",key:"aboutEvent"},  
-    {label:"Status",key:"eventStatus"},  
-    {label:"Status Changed Date",key:"eventStatusChangeDate"},  
-    {label:"Created on",key:"createdAt"},  
-    {label:"Last Updated",key:"updatedAt"},  
+export const headersForClassInvite=[
+    {label:"Batch Id",key:"batch_id"},
+    {label:"Class Id",key:"class_id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Class Date",key:"class_date"},
+    {label:"Start Time",key:"start_time"},
+    {label:"End Time",key:"end_time"},  
+    {label:"Date of Invite",key:"invite_date"},  
+    {label:"Date of Accept/Reject",key:"date_of_action"},  
+    {label:"Status",key:"status"},  
+]
 
+export const headersForLeaveApplication = [
+    {label:"Batch Id",key:"batch_id"},
+    {label:"Class Id",key:"class_id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Class Date",key:"class_date"},
+    {label:"Start Time",key:"start_time"},
+    {label:"End Time",key:"end_time"},  
+    {label:"Date of Application",key:"date_of_application"},  
+    {label:"Reason",key:"date_of_action"},  
+    {label:"Status",key:"status"}, 
+]
+
+export const headersForAdminRating = [
+    {label:"User Id",key:"id"},
+    {label:"Admin Name",key:"name"},
+    {label:"Ratings Given",key:"rating"},
+    {label:"Remarks",key:"description"},
+    {label:"Status",key:"status"},
+     
+]
+
+export const headersForUpcomingAttendance = [
+    {label:"Id",key:"id"},
+    {label:"Student Name",key:"student_name"},
+    {label:"Age",key:"dob"},
+    {label:"Gender",key:"gender"},
+    {label:"Contact Number",key:"phone_number"},
+    {label:"Email Id",key:"email"},
+    {label:"Attendance",key:"present"}
+     
+]
+
+export const headersForStudentEnroll = [
+    {label:"Id",key:"enrollment_id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Category",key:"course_category"},
+    {label:"Language",key:"language"},
+    {label:"Date of Enroll",key:"enrollment_date"},
+    {label:"Status",key:"status"},     
+]
+
+export const headersForBatchList = [
+    {label:"Id",key:"id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Assessment",key:"asssessment_type"},
+    {label:"Enrolled On",key:"enrollment_date"},
+    // {label:"ID Uploaded",key:"total_classes"},
+    {label:"Status",key:"status"}, 
+]
+
+export const headersForAssesmentList = [
+    {label:"Course Id",key:"id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Batch Id",key:"batch_id"},
+    {label:"Start Date",key:"start_date"},
+    {label:"Total Classes",key:"total_classes"},
+    {label:"Status",key:"status"}, 
+]
+
+export const headersForCertificateList = [
+    {label:"Id",key:"id"},
+    {label:"Course Name",key:"course_name"},
+    {label:"Certificate Title",key:"certification_title"},
+    // {label:"Assessment",key:"asssessment_type"},
+    {label:"Awarded On",key:"issue_date"},
+    {label:"Certificate",key:"thumbnail"}, 
+]
+
+export const headersForClasses = [
+    {label:"Id",key:"id"},
+    {label:"Date",key:"class_date"},
+    {label:"Start Time",key:"start_time"},
+    {label:"End Time",key:"end_time"},
+    {label:"Teacher Assigned",key:"teacher_name"},
+    {label:"Status",key:"status"}
+]
+
+export const headersForSubject = [
+    {label:"Id",key:"id"},
+    {label:"Subject Name",key:"subject_name"},
+    {label:"Lessons",key:"lesson_count"},
+    // {label:"Lesson Type",key:"end_time"},
+    {label:"Estimate Time(Mins)",key:"lessonCounts"},
+    // {label:"Status",key:"status"}
+]
+
+export const headerForClassRating = [
+    {label:"User Id",key:"id"},
+    {label:"Class Id",key:"class_id"},
+    {label:"Student",key:"student_name"},
+    {label:"Remarks Given",key:"rating"},
+    {label:"Remarks",key:"description"}
+]
+
+
+export const headersForLessonColumn = [
+    {label:"Id",key:"id"},
+    {label:"Lesson",key:"lesson_name"},
+    {label:"Lesson Type",key:"lesson_type_"},
+    {label:"Estimated Time (Mins)",key:"estimated_time"},
 ]
