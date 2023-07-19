@@ -18,13 +18,13 @@ const MyForm = () => {
       if (id) {
         let data = {
           id:id,
-          venue_name: values.venueName,
-          venue_capacity: values.venueCapacity,
-          postal_code: values.postalCode,
-          block_number: values.blockNo,
-          street_number: values.streetNo,
-          unit_number: values.unitNo,
-          country: values.country,
+          venue_name: values.venue_name,
+        venue_capacity: values.venue_capacity,
+        postal_code: values.postal_code,
+        block_number: values.block_number,
+        street_number: values.street_number,
+        unit_number: values.unit_number,
+        country: values.country,
           level_no: "01",
         };
         const response = await axios.post("/api/admin-update-venues", data, {
@@ -37,17 +37,18 @@ const MyForm = () => {
           setSuccessModal(true);
           setTimeout(() => {
             setSuccessModal(false);
+            history.goBack();
           }, 1200);
         }
         return
       }
       let data = {
-        venue_name: values.venueName,
-        venue_capacity: values.venueCapacity,
-        postal_code: values.postalCode,
-        block_number: values.blockNo,
-        street_number: values.streetNo,
-        unit_number: values.unitNo,
+        venue_name: values.venue_name,
+        venue_capacity: values.venue_capacity,
+        postal_code: values.postal_code,
+        block_number: values.block_number,
+        street_number: values.street_number,
+        unit_number: values.unit_number,
         country: values.country,
         level_no: "01",
       };

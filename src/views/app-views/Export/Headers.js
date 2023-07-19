@@ -77,7 +77,7 @@ export const headersForMasterCourseCategory=[
 export const headersForMasterVenue=[
     {label:"Id",key:"id"},
     {label:"Venue Name",key:"venue_name"},
-    {label:"Address",key:"postal_code"},
+    {label:"Address",key:"key"},
     {label:"Venue Capacity",key:"venue_capacity"},
     {label:"Update on",key:"updated_at"},
 ]

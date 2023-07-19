@@ -55,17 +55,34 @@ const AddCategoryForm = () => {
     </div>
   );
   const onFinish = async (values) => {
-    console.log(values);
+    // console.log(values);
+    if(location.pathname==="/app/masters/course_category/edit"){
+    let data = {
+      id:values.id,
+      course_category:values.course_category,
+      description:values.description,
+      picture:''
+    };
+    saveData(data,"/api/admin-update-category");
+  }
+  else{
+    let data = {
+      course_category:values.course_category,
+      description:values.description,
+      picture:''
+    };
+    saveData(data,"/api/admin-add-category");
+  }
+    
+  };
+
+  const saveData = async(data,url)=>{
     try {
-      console.log("Success:", values);
-      let data = {
-        course_category:values.courseCategory,
-        description:values.description,
-        picture:''
-      };
+      // console.log("Success:", values);
+      
       console.log("test", data);
       const response = await axios.post(
-        "/api/admin-add-category",
+       url,
         data,
         {
           headers: {
@@ -84,7 +101,7 @@ const AddCategoryForm = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }
   const getCourseData=async()=>{
     try{
       axios({

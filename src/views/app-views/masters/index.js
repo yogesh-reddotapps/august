@@ -112,10 +112,12 @@ useEffect(()=>{
 },[allCate])
 useEffect(()=>{
   let nAllUsersData = allVenues
-  nAllUsersData.map((item)=>{
-    item.postal_code=item.postal_code+item.street_number+item.block_number+item.unit_number+item.country;
+  nAllUsersData.map((item)=>({
+        ...item,
+    key:item.postal_code+item.street_number+item.block_number+item.unit_number+item.country
+    // item.postal_code=item.postal_code+item.street_number+item.block_number+item.unit_number+item.country;
     
-  })
+  }))
   setNewAllMasterVenue(nAllUsersData)
 },[allVenues])
 

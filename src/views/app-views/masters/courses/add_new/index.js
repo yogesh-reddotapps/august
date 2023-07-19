@@ -103,6 +103,7 @@ const MyForm = () => {
     } else{
       setUploadfileErr(false)
     }
+    if(!id){
     let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-course',{
       "course_category": e.course_category,
       "course_name": e.course_name,
@@ -121,7 +122,29 @@ const MyForm = () => {
     setTimeout(() => {
       setSuccessModal(false);
     }, 1200);
-  };
+  }
+  else{
+    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-update-course',{
+      "course_category": e.course_category,
+      "course_name": e.course_name,
+      "medium": langSplit[1],
+      "languages": langSplit[0],
+      "course_duration": e.course_duration,
+      "course_price": e.course_price,
+      "description": e.description,
+      "course_picture": "",
+      "content":JSON.stringify(dataArray),
+      "sdf":e.SDF,
+      "certificate":certiTog?1:0,
+      "id":id,
+    })
+    console.log(res1);
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+    }, 1200);
+  }
+}
   const delUplFile = (i) => {
     let AfterDeleteFile = selectedFiles.filter((elem, index) => {
       return index !== i;
@@ -172,7 +195,7 @@ const MyForm = () => {
 
 
   useEffect(() => {
-    if(location.pathname==="app/masters/courses/edit"){
+    if(location.pathname==="/app/masters/courses/edit"){
       getCourses();
     }
     getCourseCate()

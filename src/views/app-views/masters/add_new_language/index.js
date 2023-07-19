@@ -14,15 +14,33 @@ const ScheduleNewClass = () => {
   const id = queryParams.get('id')
   const [languageData,setLanguageData]=useState();
   const onFinish = async (values) => {
+   
+   if(location.pathname==="/app/masters/language/edit_language"){
+    let data = {
+      id:values.id,
+      language_name: values.language_name,
+      language_code: values.language_code,
+      description:values.description,
+    };
+    saveData(data,"/api/admin-update-languages");
+   }
+   else{
+    let data = {
+      language_name: values.language_name,
+      language_code: values.language_code,
+      description:values.description,
+    };
+    saveData(data,"/api/admin-add-language");
+   }
+  };
+
+  const saveData= async(data,url)=>{
     try {
-      console.log("Success:", values);
-      let data = {
-        language_name: values.language_name,
-        language_code: values.language_code,
-      };
+      
+     
       console.log("test", data);
       const response = await axios.post(
-        "/api/admin-add-language",
+        url,
         data,
         {
           headers: {
@@ -42,7 +60,7 @@ const ScheduleNewClass = () => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   const getLanguageData=async()=>{
     try{
