@@ -14,7 +14,8 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
-import Helper from "views/app-views/Helper";
+import Helper from "views/app-views/Helper"
+import {DeleteOutlined} from '@ant-design/icons'
 const { Search } = Input;
 
 const MyForm = () => {
@@ -26,48 +27,47 @@ const MyForm = () => {
   const [coursenameid, setCoursenameid] = useState([]);
   const [enrollTabTog, setEnrollTabTog] = useState(true)
   const [idOfNewBatch, setIdOfNewBatch] = useState(null)
+  const [studentsList, setStudentsList] = useState([])
+  const [actKey, setActKey] = useState('item-1')
   const attcolumn = [
     {
       title: "Id",
-      dataIndex: "Id",
+      dataIndex: "enrollment_id",
     },
     {
       title: "Student Name",
-      dataIndex: "student_name",
+      dataIndex: "name",
     },
     {
       title: "DOB",
-      dataIndex: "lessons",
-      render:(lessons)=>{
-        return<>26 Aug 1996</>
+      dataIndex: "dob",
+      render:(dob)=>{
+        return<>{moment(dob).format("DD-MMM-YYYY")}</>
       }
     },
     {
       title: "Mobile Number",
-      dataIndex: "lessons",
-      render:(lessons)=>{
-        return<>+65 1359 7283</>
-      }
+      dataIndex: "phone_number"
     },
     {
       title: "Email ID",
-      dataIndex: "lessons",
-      render:(lessons)=>{
-        return<>jane@gmail.com</>
+      dataIndex: "email",
+      render:(email)=>{
+        return<>{email}</>
       }
     },
     {
       title: "Date of Enroll",
-      dataIndex: "lessons",
-      render:(lessons)=>{
-        return<>16 May 2023</>
+      dataIndex: "enrollment_date",
+      render:(enrollment_date)=>{
+        return<>{moment(enrollment_date).format("DD-MMM-YYYY")}</>
       }
     },
     {
       title: "Status",
-      dataIndex: "lessons",
-      render:(lessons)=>{
-        return<>Active</>
+      dataIndex: "status",
+      render:(status)=>{
+        return<>{status}</>
       }
     },
     {
@@ -76,50 +76,19 @@ const MyForm = () => {
       render: (record) => {
         return (
           <>
-            del
+            <span onClick={()=>delEnrollStudent(record.student_id)} style={{cursor:'pointer'}}><DeleteOutlined /></span>
           </>
         );
       },
     },
   ];
-  const attData = [
-    {
-      Id: 1,
-      student_name: "John Doe",
-      age: 18,
-      gender: "Male",
-      contact_no: "1234567890",
-      email: "johndoe@example.com",
-      attendance: "Present",
-    },
-    {
-      Id: 2,
-      student_name: "Jane Smith",
-      age: 19,
-      gender: "Female",
-      contact_no: "9876543210",
-      email: "janesmith@example.com",
-      attendance: "Absent",
-    },
-    {
-      Id: 3,
-      student_name: "Tom Johnson",
-      age: 17,
-      gender: "Male",
-      contact_no: "7890123456",
-      email: "tomjohnson@example.com",
-      attendance: "Present",
-    },
-    {
-      Id: 4,
-      student_name: "Alice Brown",
-      age: 18,
-      gender: "Female",
-      contact_no: "3456789012",
-      email: "alicebrown@example.com",
-      attendance: "Absent",
-    },
-  ];
+  const delEnrollStudent = async (studentId) => {
+    console.log(studentId);
+    const res1 = await axios.delete(`http://18.140.159.50:3333/api/batches/${Id}/${studentId}/del-students`)
+    if(res1.status===200){
+      getStudentEnroll(Id)
+    }
+  }
   const onFinish = async (values) => {
     let course = values.course.split(",");
     let start_date = moment(values.startDate).format("YYYY-MM-DD");
@@ -137,6 +106,7 @@ const MyForm = () => {
     setIdOfNewBatch(data.data.data[0]);
     if (data.status===201) {
       setEnrollTabTog(false)
+      setActKey('item-2')
     }
     setSuccessModal(true);
     setTimeout(() => {
@@ -155,19 +125,42 @@ const MyForm = () => {
       })
     );
   };
-
+  const getSingleBatchById = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}`)
+    const batch = res1.data[0]
+    form.setFieldsValue({
+      batchId:batch.batch_id,
+      course:batch.course_id,
+      batchCapacity:batch.capacity,
+      startDate:moment(batch.start_date),
+      endDate:moment(batch.end_date)
+    })
+  }
+  const handleCourseChange = (val) =>{
+    coursenameid.map((el,i)=>{
+      if (el.value===val) {
+        console.log(el.value,val);
+      }
+    })
+  }
+  const getStudentEnroll = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}/enrolled-students`)
+    setStudentsList(res1.data.data.students);
+  }
   useEffect(() => {
     getCoursesNameAndId();
     if (Id) {
       console.log(Id);
-      
+      setIdOfNewBatch(Id)
+      getSingleBatchById(Id)
+      getStudentEnroll(Id)
       setEnrollTabTog(false)
     }
   }, []);
 
   return (
     <>
-      <Tabs className="whiteBack">
+      <Tabs className="whiteBack" onChange={(key)=>setActKey(key)} activeKey={actKey}>
         <Tabs.TabPane
           tab={
             <div className="d-flex align-items-center">
@@ -178,7 +171,7 @@ const MyForm = () => {
         >
           <Form form={form} onFinish={onFinish}>
             <div className="border rounded p-3 mb-4 bg-white">
-              <h5 className="text-info mb-4">Add New Batch</h5>
+              <h5 className="text-info mb-4">{Id?"Edit":"Add New"} Batch</h5>
               <div className="mt-4">
                 <h5>Batch Id</h5>
                 <Form.Item name="batchId">
@@ -192,6 +185,7 @@ const MyForm = () => {
                     placeholder="Select"
                     className="w-50"
                     options={coursenameid}
+                    onChange={handleCourseChange}
                   />
                 </Form.Item>
               </div>
@@ -248,7 +242,7 @@ const MyForm = () => {
             </div>
             <div>
               <Button className="bg-info text-white">
-                <Link to={"enroll-new-student"}>
+                <Link to={`enroll-new-student?batchId=${idOfNewBatch}`}>
                   {" "}
                   + Enroll New Student
                 </Link>
@@ -256,7 +250,7 @@ const MyForm = () => {
             </div>
           </div>
           <div className="mt-3">
-          <Helper clients={attData} attribiue={attcolumn} />
+          <Helper clients={studentsList} attribiue={attcolumn} />
           </div>
         </Tabs.TabPane>
       </Tabs>

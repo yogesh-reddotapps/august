@@ -311,45 +311,45 @@ function FacilityBooking() {
         );
       },
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link to="/app/events">
-                      {" "}
-                      <EyeOutlined className="mr-2 " />
-                      View Details
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <span>
-                      {" "}
-                      <DeleteOutlined className="mr-2 " />
-                      Delete
-                    </span>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link
-                      to={`event_list/update/${record.id}`}
-                      className="d-flex align-items-center"
-                    >
-                      <CustomIcon className="mr-2" svg={Edit} />
-                      Edit
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link to="/app/events">
+    //                   {" "}
+    //                   <EyeOutlined className="mr-2 " />
+    //                   View Details
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <span>
+    //                   {" "}
+    //                   <DeleteOutlined className="mr-2 " />
+    //                   Delete
+    //                 </span>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <Link
+    //                   to={`event_list/update/${record.id}`}
+    //                   className="d-flex align-items-center"
+    //                 >
+    //                   <CustomIcon className="mr-2" svg={Edit} />
+    //                   Edit
+    //                 </Link>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   const showModal = () => {
@@ -580,36 +580,36 @@ function FacilityBooking() {
         );
       },
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link to="facility_booking">
-                      {" "}
-                      <EyeOutlined className="mr-2 " />
-                      View Details
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <span onClick={() => onDeleteData(record)}>
-                      {" "}
-                      <DeleteOutlined className="mr-2 " />
-                      Delete
-                    </span>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link to="facility_booking">
+    //                   {" "}
+    //                   <EyeOutlined className="mr-2 " />
+    //                   View Details
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <span onClick={() => onDeleteData(record)}>
+    //                   {" "}
+    //                   <DeleteOutlined className="mr-2 " />
+    //                   Delete
+    //                 </span>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
   const courseMatColumns = [
     {

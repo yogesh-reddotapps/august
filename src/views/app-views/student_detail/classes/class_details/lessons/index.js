@@ -96,6 +96,9 @@ function FacilityBooking() {
     {
       title: "Estimated Time (Mins)",
       dataIndex: "estimated_time",
+      render:(time)=>{
+        return <>{time}Min</>
+      }
     },
     {
       title: "Action",

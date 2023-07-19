@@ -23,6 +23,7 @@ import Icon, {EyeOutlined} from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const subjectArray = [
     {
@@ -53,7 +54,11 @@ const subjectArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [subjectList, setSubjectList] = useState([])
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const batchId = queryParams.get("batchId");
+  const classId = queryParams.get("classId");
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -67,15 +72,15 @@ function FacilityBooking() {
   const SubjectColumn = [
     {
       title: "Sr No",
-      dataIndex: "Sr_No",
+      dataIndex: "sr",
     },
     {
       title: "Subject Name",
-      dataIndex: "Subject_Name",
+      dataIndex: "subject_name",
     },
     {
       title: "Lessons",
-      dataIndex: "Lessons",
+      dataIndex: "lesson_count",
     },
     {
       title: "Lesson Type",
@@ -90,7 +95,17 @@ function FacilityBooking() {
     },
     {
       title: "Estimated Time (Mins)",
-      dataIndex: "Estimated_Time",
+      dataIndex: "lessons",
+      render:(lessons)=>{
+        return<>{
+          lessons.reduce((total, lesson) => {
+            if (lesson.estimated_time) {
+              return total + parseInt(lesson.estimated_time);
+            }
+            return total;
+          }, 0)
+        }</>
+      }
     },
     {
       title: "Action",
@@ -104,7 +119,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="view_subjects/lessons"
+                      to={`view_subjects/lessons?batchId=${batchId}&subjectId=${record.subject_id}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Lesson
@@ -150,11 +165,22 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={subjectArray} attribiue={SubjectColumn} />
+          <Helper clients={subjectList} attribiue={SubjectColumn} />
         </div>
       ),
     },
   ];
+  const getSubject = async (classId)=>{
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-subject-by-class/${classId}`)
+    setSubjectList(res1.data.data.map((elem,i)=>{
+      return {...elem,sr:i+1}
+    }))
+  }
+  useEffect(() => {
+    if (classId) {
+      getSubject(classId)
+     }
+  }, [])
   
 
   return (

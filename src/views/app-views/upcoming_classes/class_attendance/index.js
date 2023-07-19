@@ -8,6 +8,7 @@ import { FilterIcon, CsvIcon } from "assets/svg/icon";
 import Helper from "../../Helper";
 import axios from "axios";
 import { API_BASE_URL } from "constants/ApiConstant";
+import moment from "moment";
 const ClassAttend = () => {
   const [attData,setAttData]=useState([]);
   const attcolumn = [
@@ -27,7 +28,10 @@ const ClassAttend = () => {
     },
     {
       title: "Age",
-      dataIndex: "age",
+      dataIndex: "dob",
+      render:(text)=>{
+        return <>{moment().diff(moment(text, 'DD-MM-YYYY'), 'years')}</>
+      }
     },
 
     {
@@ -43,7 +47,7 @@ const ClassAttend = () => {
     },
     {
       title: "Contact No",
-      dataIndex: "contact_no",
+      dataIndex: "phone_number",
     },
     {
       title: "Email Id",
@@ -52,15 +56,15 @@ const ClassAttend = () => {
 
     {
       title: "Attendance",
-      dataIndex: "attendance",
+      dataIndex: "present",
       render: (text) => {
         return (
           <div
             className={`${
-              text === "Absent" ? "text-danger" : "text-success"
+              text === 0 ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            {text}
+            {text===1?"present":'absent'}
           </div>
         );
       },

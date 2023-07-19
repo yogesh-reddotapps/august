@@ -25,6 +25,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { Option } from "antd/lib/mentions";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 const subjectArray = [
     {
         "Sr_No": 1,
@@ -55,7 +56,12 @@ const subjectArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [lessonList, setLessonList] = useState([])
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const history = useHistory()
+  const batchId = queryParams.get("batchId");
+  const subjectId = queryParams.get("subjectId")
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -69,22 +75,33 @@ function FacilityBooking() {
   const SubjectColumn = [
     {
       title: "Sr No",
-      dataIndex: "Sr_No",
+      dataIndex: "sr",
     },
     {
       title: "Lesson",
-      dataIndex: "Lesson",
+      dataIndex: "lesson_name",
     },
     {
       title: "Lesson Type",
-      dataIndex: "Lesson_Type",
+      dataIndex: "lesson_type",
       render: (text) => {
-        return <FileTypeUsingProp type={text}/>;
+        return (
+          <>
+          {text==0 && <FileTypeUsingProp type='text' />}
+          {text==1 && <FileTypeUsingProp type='video' />}
+          {text==2 && <FileTypeUsingProp type='audio' />}
+          {text==3 && <FileTypeUsingProp type='question' />}
+            
+          </>
+        );
       },
     },
     {
       title: "Estimated Time (Mins)",
-      dataIndex: "Estimated_Time",
+      dataIndex: "estimated_time",
+      render:(time)=>{
+        return <>{time}Min</>
+      }
     },
     {
       title: "Action",
@@ -98,7 +115,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="lessons/lesson_details?id=1&type=text"
+                      to={`lessons/lesson_details?id=1&type=text&lessonId=${record.id}&batchId=${batchId}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Lesson Details
@@ -149,11 +166,26 @@ function FacilityBooking() {
               <Option value="Question">Question</Option>
              </Select>
           </div>
-          <Helper clients={subjectArray} attribiue={SubjectColumn} />
+          <Helper clients={lessonList} attribiue={SubjectColumn} />
         </div>
       ),
     }
   ];
+  const getLessons = async (subjectId) => {
+    const res1 = await axios.get(
+      `http://18.140.159.50:3333/api/view-lessons-by-subject/${subjectId}`
+    );
+    setLessonList(res1.data.map((elem,i)=>{
+      return {...elem,sr:i+1}
+    }));
+  };
+  useEffect(() => {
+    if (subjectId) {
+      getLessons(subjectId);
+    } else {
+      history.push('/')
+    }
+  }, [])
   
 
   return (

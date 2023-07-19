@@ -74,7 +74,7 @@ function FacilityBooking() {
 
     {
       title: "Students Enroll",
-      dataIndex: "enroll",
+      dataIndex: "student_enrollel",
     },
     {
       title: "Status",
@@ -83,10 +83,10 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "active" ? "text-danger" : "text-success"
+              text !== 1 ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            {text}
+            {text !== 1 ? "inactive" : "active"}
           </div>
         );
       },

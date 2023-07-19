@@ -7,6 +7,7 @@ import {
   Modal,
   DatePicker,
   Upload,
+  message,
 } from "antd";
 import {
   AddressDetail,
@@ -172,9 +173,11 @@ export default function AddNew() {
           text: "Student ID #TC-1234 jane cooper added.",
         });
         setSuccessModal(true);
+        history.push("/app/Student_management");
       }
     } catch (error) {
-      console.log(error);
+      message.error(error.response.data.email);
+      console.log(error.response.data.email);
     }
   };
 

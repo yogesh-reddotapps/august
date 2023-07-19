@@ -55,8 +55,10 @@ function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const searchParams = new URLSearchParams(document.location.search);
   const [lessonData, setLessonData] = useState(null)
+  const [assignments, setAssignments] = useState([])
   const type = searchParams.get("type");
-  const id = searchParams.get("id");
+  const lessonId = searchParams.get("lessonId");
+  const batchId = searchParams.get("batchId");
 
   const handleOk = () => {
     setTimeout(() => {
@@ -71,34 +73,34 @@ function FacilityBooking() {
   const SubjectColumn = [
     {
       title: "ID",
-      dataIndex: "ID",
+      dataIndex: "id",
     },
     {
       title: "Assignment",
-      dataIndex: "Assignment",
+      dataIndex: "assignment_name",
     },
     {
       title: "Assignment Type",
-      dataIndex: "Assignment_Type",
+      dataIndex: "assignment_type",
     },
     {
       title: "Assignment Questions",
-      dataIndex: "Assignment_Questions",
+      dataIndex: "assignment_questions",
     },
     {
       title: "Submitted By",
-      dataIndex: "Submitted_By",
+      dataIndex: "submitted_by",
     },
     {
       title: "Pending Submissions",
-      dataIndex: "Pending_Submissions",
+      dataIndex: "pending_submissions",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
-          <div className={text === "active" ? "text-success" : "text-danger"}>
+          <div className={text === "active" ? "text-success" : "text-warning"}>
             {text}
           </div>
         );
@@ -129,7 +131,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="lesson_details/assignment_submission"
+                      to={`lesson_details/assignment_submission?assignmentId=${record.id}&batchId=${batchId}`}
                     >
                       <FileUnknownOutlined className="mr-2" />
                       View Submissions
@@ -200,18 +202,22 @@ function FacilityBooking() {
             </div>
            <Button className="bg-info"><Link to={'lesson_details/add_new_assignment'} className="text-white">Create New Assignment</Link></Button>
           </div>
-          <Helper clients={assignmentArray} attribiue={SubjectColumn} />
+          <Helper clients={assignments} attribiue={SubjectColumn} />
         </div>
       ),
     },
   ];
   const getLessons = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/lessons/lesson-details/23`);
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/lessons/lesson-details/${lessonId}`);
     setLessonData(res1.data);
   }
-
+  const getAssignments = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/admin/get-assignments-by-lesson/${lessonId}`)
+    setAssignments(res1.data);
+  }
   useEffect(() => {
     getLessons()
+    getAssignments()
   }, [])
   
   return (

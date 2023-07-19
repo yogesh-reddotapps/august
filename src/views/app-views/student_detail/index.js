@@ -28,6 +28,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
+import {DownloadOutlined} from '@ant-design/icons'
 import moment from "moment";
 const CertiArray = [
   {
@@ -371,7 +372,10 @@ function FacilityBooking() {
       render: (record) => {
         return (
           <>
-            <EllipsisDropdown
+          <Button>
+          Download <DownloadOutlined />
+          </Button>
+            {/* <EllipsisDropdown
               menu={
                 <Menu>
                   <Menu.Item>
@@ -395,7 +399,7 @@ function FacilityBooking() {
                   </Menu.Item>
                 </Menu>
               }
-            />
+            /> */}
           </>
         );
       },
@@ -450,40 +454,40 @@ function FacilityBooking() {
         );
       },
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <AcceptTick />
-                      Accept
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <CancelCross />
-                      Reject
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <AcceptTick />
+    //                   Accept
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <CancelCross />
+    //                   Reject
+    //                 </Link>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
 
   const  handleAssessmentStatus = async (id,status)=>{

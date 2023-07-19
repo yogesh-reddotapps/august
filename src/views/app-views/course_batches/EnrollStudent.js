@@ -2,18 +2,32 @@ import { Button, DatePicker, Form, Select } from "antd";
 import { Option } from "antd/lib/mentions";
 import { TeacherAssignedIcon } from "assets/svg/icon";
 import axios from "axios";
+import moment from "moment";
 import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 
 const EnrollStudent = () => {
   const [form] = Form.useForm();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const batchId = queryParams.get("batchId");
   const history = useHistory()
   const [coursenameid, setCoursenameid] = useState([]);
   const [studata, setstuData] = useState([])
   const onFinish = async (e) => {
     console.log(e);
+    // return
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/batches/enroll-students`,{
+      "batch_id":batchId,
+      "student_ids":e.students,
+      "enrollment_date":moment(e.enrollmentDate).format('YYYY-MM-DD')
+    })
+    console.log(res1);
+    if (res1.status===201) {
+      history.goBack()
+    }
   };
   const getCoursesNameAndId = async () => {
     let res = await axios.get("http://18.140.159.50:3333/api/courses-list");
@@ -44,7 +58,22 @@ const EnrollStudent = () => {
         console.log(error);
       });
   };
+  const getStudentEnroll = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}/enrolled-students`)
+    const enrolled = res1.data.data.students.map((elem)=>{
+      return elem.student_id
+    })
+    console.log(enrolled);
+    form.setFieldsValue({
+      students:enrolled
+    })
+  }
   useEffect(() => {
+    if (batchId) {
+      getStudentEnroll(batchId)
+    } else {
+      history.goBack()
+    }
     getCoursesNameAndId();
     getStudent();
   }, []);
@@ -57,7 +86,7 @@ const EnrollStudent = () => {
       </div>
       <div className="border mt-3 rounded bg-white p-3">
         <Form form={form} onFinish={onFinish}>
-          <div className="mt-4">
+          {/* <div className="mt-4">
             <h5>Course</h5>
             <Form.Item name="course">
               <Select
@@ -66,10 +95,10 @@ const EnrollStudent = () => {
                 options={coursenameid}
               />
             </Form.Item>
-          </div>
+          </div> */}
           <div className="mt-4">
             <h5>Enrollment Date</h5>
-            <Form.Item name="enrollmentDate">
+            <Form.Item name="enrollmentDate" initialValue={moment()}>
               <DatePicker className="w-50" />
             </Form.Item>
           </div>
@@ -82,15 +111,15 @@ const EnrollStudent = () => {
                 placeholder="Students"
                 onChange={(value) => console.log(`selected ${value}`)}
               >
-                {studata.map((teacher, i) => (
-                  <Option key={i} value={teacher.user_id}>
+                {studata.map((stu, i) => (
+                  <Option key={i} value={stu.id}>
                     <div>
                       <img
                         className="circleTeacherImage mr-2"
                         src="/img/avatars/thumb-1.jpg"
                         alt="img"
                       />
-                      {teacher.name}
+                      {stu.name}
                     </div>
                   </Option>
                 ))}

@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
+import axios from "axios";
 let styles = {
     files: {
       listStyle: "none",
@@ -52,7 +53,12 @@ const selectedFiles =[
     }
 ]
 function Submission() {
-  const [assignmentType, setAssignmentType] = useState("MCQ");
+  const [assignmentType, setAssignmentType] = useState("mcq");
+  const [allData, setAllData] = useState(null);
+  const [mcqData, setMcqData] = useState([])
+  const searchParams = new URLSearchParams(document.location.search);
+  const assignmentId = searchParams.get("assignmentId");
+  const studentId = searchParams.get("studentId");
   const [question, setQuestion] = useState([
     {
       question:
@@ -75,7 +81,25 @@ function Submission() {
     };
     setQuestion(updatedQuestions);
   };
-
+  const getSubmission = async (studentId,assignmentId) => {
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/view-assignment-submission`,{
+      assignment_id:assignmentId,
+      student_id:studentId
+    })
+    console.log(res1.data.data[0])
+    if (res1.data.data[0].submission_type==='mcq') {
+      setMcqData(JSON.parse(res1.data.data[0].description))
+      console.log(JSON.parse(res1.data.data[0].description));
+    }
+    setAssignmentType(res1.data.data[0].submission_type)
+    setAllData(res1.data.data[0]);
+  }
+  useEffect(() => {
+    if(studentId&&assignmentId){
+      getSubmission(studentId,assignmentId)
+    }
+  }, [])
+  
   return (
     <div>
       <div className="border rounded p-3 mb-4 bg-white">
@@ -188,8 +212,8 @@ function Submission() {
           </div>
         </div>
       </div>
-      {assignmentType === "MCQ" &&
-        question.map((elem, ind) => {
+      {assignmentType === "mcq" &&
+        mcqData.map((elem, ind) => {
           return (
             <div className="border rounded mb-4 bg-white">
               <div
@@ -204,20 +228,20 @@ function Submission() {
                 <h5 style={{ margin: 0 }}>Mark : 1</h5>
               </div>
               <div className="p-3">
-                <h5>{elem.question}</h5>
+                <h5>{elem.title}</h5>
               </div>
               <div className="px-4 pb-3">
                 <Radio.Group
                   style={{ width: "600px" }}
                   onChange={(e) => onChange(ind, e)}
-                  value={elem.value}
+                  value={elem.choosen_option}
                 >
                   <Space className="w-100" direction="vertical">
                     {elem.options.map((eleme, i) => {
                       return (
                         <div
                           className={
-                            elem.value === eleme ? "correctOpt" : "normalOpt"
+                            eleme === elem.correct_option ? "correctOpt" : "normalOpt"
                           }
                         >
                           <Radio disabled className="p-2" value={eleme}>
@@ -227,7 +251,7 @@ function Submission() {
                             {i === 3 && <span className="customCircle">D</span>}
                             <h5>
                               {eleme}
-                              {elem.value === eleme && (
+                              {eleme === elem.correct_option && (
                                 <span className="tick">
                                   <CheckCircleFilled
                                     style={{ color: "#048B4A" }}
@@ -265,12 +289,12 @@ function Submission() {
           </div>
         </div>
       )}
-      {assignmentType === "Reading" && (
+      {assignmentType === "txt" && (
         <div>
           <div className="bg-white border rounded p-3">
             <h5 className="text-info">Submission Details</h5>
             <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus. Dictumst risus, sem egestas odio cras adipiscing vulputate. Nisi, risus in suscipit non. Non commodo volutpat, pharetra, vel.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus. Dictumst risus, sem egestas odio cras adipiscing vulputate. Nisi, risus in suscipit non. Non commodo volutpat, pharetra, vel.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus. Dictumst risus, sem egestas odio cras adipiscing vulputate. Nisi, risus in suscipit non. Non commodo volutpat, pharetra, vel.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus. Dictumst risus, sem egestas odio cras adipiscing vulputate. Nisi, risus in suscipit non. Non commodo volutpat, pharetra, vel.Lorem ipsum dolor sit amet, consectetur adipiscing elit. Condimentum diam orci pretium a pharetra, feugiat cursus.
+            {allData!==null && allData.description}
             </div>
           </div>
         </div>

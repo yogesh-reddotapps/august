@@ -277,6 +277,7 @@ export default function AddNew() {
           text: "Teacher ID #TC-1234 jane cooper added.",
         })
         setSuccessModal(true)
+        history.push('/app/staffManagement/teacher_management')
       }
     } catch (error) {
       if (error.response.data.email) {
@@ -537,8 +538,7 @@ export default function AddNew() {
                     </Form.Item>
                   </div>
                 </div>
-                {
-                  id && 
+                
                 <div style={{ gap: "60px" }} className="d-flex ">
                   {/* <div style={{ gap: "60px" }} className="d-flex "> */}
                 <div style={{ width: "45%" }}>
@@ -567,8 +567,11 @@ export default function AddNew() {
                     >
                         <Input.Password placeholder="Create Password" />
                     </Form.Item>
+                    {
+                  id && 
                     <Button danger>Reset Password</Button>
-                  </div>
+                }
+                </div>
                   {/* <div style={{ width: "45%" }}> */}
                     {/* <Form.Item
                       name="c_password"
@@ -581,7 +584,6 @@ export default function AddNew() {
                     </Form.Item> */}
                   {/* </div> */}
                 </div>
-                }
               </div>
             </TabPane>
           <TabPane

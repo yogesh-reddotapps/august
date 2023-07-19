@@ -87,6 +87,7 @@ function FacilityBooking() {
   const [teacherData, setTeacherData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminRatingsList, setAdminRatingsList] = useState([]);
+  const [classRat, setClassRat] = useState([])
   const [courseAccess,setCourseAccess]=useState();
   const [adminRating, setAdminRating] = useState({
     teacher_id: 0,
@@ -363,63 +364,63 @@ function FacilityBooking() {
         );
       },
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <AcceptTick />
-                      Accept
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <CancelCross />
-                      Reject
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <AcceptTick />
+    //                   Accept
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <CancelCross />
+    //                   Reject
+    //                 </Link>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
   const classratingColumn = [
     {
       title: "User ID",
-      dataIndex: "User_ID",
+      dataIndex: "student_id",
     },
     {
       title: "Class ID",
-      dataIndex: "Class_ID",
+      dataIndex: "class_name",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src="/img/avatar3.png" alt="img" />;
+        return <img style={{width:'60px'}} src={avatar} alt="img" />;
       },
     },
     {
       title: "Student",
-      dataIndex: "Student",
+      dataIndex: "student_name",
     },
     {
       title: "Ratings Given",
-      dataIndex: "Ratings_Given",
+      dataIndex: "rating",
       render: (val) => {
         return (
           <>
@@ -430,11 +431,11 @@ function FacilityBooking() {
     },
     {
       title: "Remarks",
-      dataIndex: "Remarks",
+      dataIndex: "description",
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
         return (
           <div
@@ -447,40 +448,40 @@ function FacilityBooking() {
         );
       },
     },
-    {
-      title: "Action",
-      // dataIndex: 'action',
-      render: (record) => {
-        return (
-          <>
-            <EllipsisDropdown
-              menu={
-                <Menu>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <AcceptTick />
-                      Accept
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item>
-                    <Link
-                      className="d-flex align-items-center"
-                      to="curriculam_details/view_lesson_preview"
-                    >
-                      <CancelCross />
-                      Reject
-                    </Link>
-                  </Menu.Item>
-                </Menu>
-              }
-            />
-          </>
-        );
-      },
-    },
+    // {
+    //   title: "Action",
+    //   // dataIndex: 'action',
+    //   render: (record) => {
+    //     return (
+    //       <>
+    //         <EllipsisDropdown
+    //           menu={
+    //             <Menu>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <AcceptTick />
+    //                   Accept
+    //                 </Link>
+    //               </Menu.Item>
+    //               <Menu.Item>
+    //                 <Link
+    //                   className="d-flex align-items-center"
+    //                   to="curriculam_details/view_lesson_preview"
+    //                 >
+    //                   <CancelCross />
+    //                   Reject
+    //                 </Link>
+    //               </Menu.Item>
+    //             </Menu>
+    //           }
+    //         />
+    //       </>
+    //     );
+    //   },
+    // },
   ];
   const showModal = () => {
     setIsModalOpen(true);
@@ -711,7 +712,7 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={students} attribiue={classratingColumn} />
+          <Helper clients={classRat} attribiue={classratingColumn} />
         </div>
       ),
     },
@@ -786,11 +787,17 @@ function FacilityBooking() {
     const res1 = await axios.get(`http://18.140.159.50:3333/api/get-class-invites/${teacherId}`)
     setmembershipRequestData(res1.data.data);
   }
+  const getClassRating = async () => {
+    // api/get-class-rating-by-teacher/2
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-class-rating-by-teacher/${teacherId}`)
+    setClassRat(res1.data);
+  }
   useEffect(() => {
     getTeacherDetail();
     getLeaveApp();
     getCourseAccess();
     getClassInvites();
+    getClassRating()
   }, []);
 
   return (
@@ -858,7 +865,7 @@ function FacilityBooking() {
         </div>
       </div>
       <Tabs
-        tabBarExtraContent={tabKey >= 4 ? operations : ""}
+        tabBarExtraContent={tabKey === "4" ? operations : ""}
         onChange={(e) => setTabKey(e)}
       >
         {items.map((item) => (

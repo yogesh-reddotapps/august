@@ -25,6 +25,7 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { Option } from "antd/lib/mentions";
+import moment from "moment";
 const submissions = [
     {
       User_ID: 1,
@@ -45,7 +46,10 @@ const submissions = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const searchParams = new URLSearchParams(document.location.search);
+  const assignmentId = searchParams.get("assignmentId");
+  const [submissionList, setSubmissionList] = useState([])
+  const batchId = searchParams.get("batchId");
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -59,27 +63,30 @@ function FacilityBooking() {
   const SubjectColumn = [
     {
       title: "User ID",
-      dataIndex: "User_ID",
+      dataIndex: "user_id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render:(image)=>{
-        return <img src="/img/avatar.png" alt="..."/>
+        return <img style={{width:'60px'}} src={image} alt="..."/>
       }
     },
     {
       title: "Student Name",
-      dataIndex: "Student_Name",
+      dataIndex: "student_name",
     },
     {
       title: "Submission on",
-      dataIndex: "Submission_on",
+      dataIndex: "submitted_at",
+      render:(date)=>{
+        return <>{moment(date).format("DD-MM-YYYY")}</>
+      }
     },
     {
       title: "Status",
-      dataIndex: "Status",
+      dataIndex: "status",
       render: (text) => {
-        return <div className={text==='Completed'?'text-success':'text-warning'}>{text}</div>
+        return <div className={text==='completed'?'text-success':'text-warning'}>{text}</div>
       },
     },
     {
@@ -94,7 +101,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="assignment_submission/view_submission?id=1&type=text"
+                      to={`assignment_submission/view_submission?id=1&type=text&studentId=${record.student_id}&assignmentId=${record.assignment_id}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View
@@ -131,11 +138,20 @@ function FacilityBooking() {
               Export
             </Button>
           </div>
-          <Helper clients={submissions} attribiue={SubjectColumn} />
+          <Helper clients={submissionList} attribiue={SubjectColumn} />
         </div>
       ),
     }
   ];
+  const getSubmissions = async(id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-assignment-submission-by-id/${id}`)
+    setSubmissionList(res1.data.data);
+  }
+  useEffect(() => {
+    if(assignmentId){
+      getSubmissions(assignmentId)
+    }
+  }, [])
   
 
   return (

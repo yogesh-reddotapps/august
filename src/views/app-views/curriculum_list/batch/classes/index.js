@@ -119,7 +119,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="classes/view_subjects"
+                      to={`classes/view_subjects?batchId=${batchId}&classId=${record.id}`}
                     >
                       {/* <EyeOutlined className="mr-2" /> */}
                       View Subjects

@@ -10,7 +10,7 @@ import { useState } from "react";
 import axios from "axios";
 import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
-import Icon from "@ant-design/icons";
+import Icon,{EditOutlined} from "@ant-design/icons";
 import moment from "moment";
 import { headerForCourseBatches } from "../Export/Headers";
 import { formatDate } from "constants/DateConstant";
@@ -99,8 +99,8 @@ useEffect(()=>{
                   <Menu.Item>
                     <Link to={`course_batches/edit_batch?id=${record.id}`}>
                       {" "}
-                      <EyeOutlined className="mr-2 " />
-                      View Details
+                      <EditOutlined  className="mr-2 " />
+                      Edit
                     </Link>
                   </Menu.Item>
                   {/* <Menu.Item>
