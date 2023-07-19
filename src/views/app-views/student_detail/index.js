@@ -29,6 +29,9 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { headersForAssesmentList, headersForBatchList, headersForCertificateList, headersForStudentEnroll } from "../Export/Headers";
+import ExportButton from "../Export/ExportButton";
+import { formatDate } from "constants/DateConstant";
 const CertiArray = [
   {
     ID: "001",
@@ -169,6 +172,44 @@ function FacilityBooking() {
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const student_id = queryParams.get("student_id");
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  const [newAllBatchesData,setNewAllBatchesData] = useState([]);
+  const [newAllAssesmentData,setNewAllAssesmentData] = useState([]);
+  const [newAllCertificationsData,setNewAllCertificationsData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData = courseEnroll
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.enrollment_date=formatDate(item.enrollment_date);
+    item.status=item.status ? "Active":"InActive"
+  })
+  setNewAllUsersData(nAllUsersData)
+},[courseEnroll])
+
+useEffect(()=>{
+  let nAllUsersData = batchList
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.Start_Date=formatDate(item.start_date);
+    item.status = item.status?"Active":"InActive"
+  })
+  setNewAllBatchesData(nAllUsersData)
+},[batchList])
+
+
+useEffect(()=>{
+  let nAllUsersData = aassessmentList
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.enrollment_date=formatDate(item.enrollment_date);
+  })
+  setNewAllAssesmentData(nAllUsersData)
+},[aassessmentList])
+
+useEffect(()=>{
+  let nAllUsersData = certificateList
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.issue_date=formatDate(item.issue_date);
+  })
+  setNewAllCertificationsData(nAllUsersData)
+},[certificateList])
 
   const BatchesColumn = [
     {
@@ -302,7 +343,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to={`student_detail/assessments/view_result?id=${record.id}`}
+                      to={`student_detail/assessments/view_result?id=${student_id}&assessmentId=${record.id}`}
                     >
                       <ViewResult />
                       <span className="ml-2">View Result</span>
@@ -515,12 +556,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForStudentEnroll}/>
           </div>
           <Helper clients={courseEnroll} attribiue={facilityBookingColumns} />
         </div>
@@ -549,12 +591,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllBatchesData} passing={headersForBatchList}/>
           </div>
           <Helper clients={batchList} attribiue={BatchesColumn} />
         </div>
@@ -583,12 +626,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllAssesmentData} passing={headersForAssesmentList}/>
           </div>
           <Helper clients={aassessmentList} attribiue={leaveAppColumns} />
         </div>
@@ -617,12 +661,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllCertificationsData} passing={headersForCertificateList}/>
           </div>
           <Helper clients={certificateList} attribiue={certificateColumn} />
         </div>

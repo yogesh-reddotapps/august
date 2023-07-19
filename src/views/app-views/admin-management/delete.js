@@ -87,9 +87,9 @@ axios
 
 const [newAllUsersData,setNewAllUsersData] = useState([]);
 useEffect(()=>{
-  let nAllUsersData = eventsData
-  nAllUsersData.map((item)=>{
-    item.startTime=formatDate(item.startTime,true);
+  let nAllUsersData =lessonList
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
     item.endTime=formatDate(item.endTime,true);
     item.eventDate = formatDate(item.eventDate);
     item.eventStatusChangeDate = formatDate(item.eventStatusChangeDate);
@@ -97,7 +97,7 @@ useEffect(()=>{
     item.updatedAt = formatDate(item.updatedAt);
   })
   setNewAllUsersData(nAllUsersData)
-},[eventsData])
+},[lessongList])
 
 
 // @ts-ignore

@@ -25,6 +25,8 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { headersForLessonColumn } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 const subjectArray = [
   {
     Sr_No: 1,
@@ -64,6 +66,31 @@ function FacilityBooking() {
       setIsModalOpen(false);
     }, 10000);
   };
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =lessonList
+  nAllUsersData && nAllUsersData.map((item)=>{
+    var it = item.lesson_type
+
+      if(it===0){
+        item.lesson_type_= "Text"
+      }
+      else if(it===1){
+        item.lesson_type_= "Video"
+      }
+      else if(it===2){
+        item.lesson_type_= "Audio"
+      }
+      else{
+        item.lesson_type_= "Question"
+      }
+
+  
+    
+  })
+  setNewAllUsersData(nAllUsersData)
+},[lessonList])
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -148,12 +175,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForLessonColumn}/>
           </div>
           <Helper clients={lessonList} attribiue={SubjectColumn} />
         </div>

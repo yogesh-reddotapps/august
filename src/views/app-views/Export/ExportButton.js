@@ -16,10 +16,10 @@ import {
 const ExportButton = ({data,passing}) => {
   return (
     <Button 
-    disabled={data.length===0 ?true:false}
+    disabled={data&&data.length===0 ?true:false}
     icon={<Icon component={ExportIcon} />}
     className="d-flex align-items-center ml-2">
-      {data.length!==0 && <CSVLink data={data} headers={passing} filename={"august-international.csv"} >
+      {data&&data.length!==0 && <CSVLink data={data} headers={passing} filename={"august-international.csv"} >
 
             Export
           

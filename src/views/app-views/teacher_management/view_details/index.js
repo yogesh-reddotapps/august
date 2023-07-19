@@ -28,6 +28,9 @@ import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { API_BASE_URL } from "constants/ApiConstant";
+import { headersForAdminRating, headersForClassInvite, headersForCourseAccess, headersForLeaveApplication } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { formatDate } from "constants/DateConstant";
 const admins = [
   {
     User_ID: 1,
@@ -99,8 +102,35 @@ function FacilityBooking() {
     membershipFacilityBooking
   );
   const [membershipRequestData, setmembershipRequestData] = useState(
-    membershipEventBooking
+    // membershipEventBooking
   );
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  const [newAllLeaveApplication,setNewAllLeaveApplication]=useState([]);
+useEffect(()=>{
+  let nAllUsersData = membershipRequestData
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.class_date=formatDate(item.class_date);
+    item.start_time=moment(item.start_time,"HH:mm:ss").format("h A");
+    item.end_time = moment(item.end_time,"HH:mm:ss").format("h A");
+    item.invite_date = formatDate(item.invite_date);
+    item.date_of_action = formatDate(item.date_of_action);
+    item.status = item.status?"Active":"InActive";
+  })
+  setNewAllUsersData(nAllUsersData)
+},[membershipRequestData])
+
+useEffect(()=>{
+  let nAllUsersData = leaveApp
+  leaveApp&&nAllUsersData && nAllUsersData.map((item)=>{
+    item.class_date=formatDate(item.class_date);
+    item.start_time=moment(item.start_time,"HH:mm:ss").format("h A");
+    item.end_time = moment(item.end_time,"HH:mm:ss").format("h A");
+    item.date_of_application= formatDate(item.date_of_application);
+    item.status = item.status?"Active":"InActive";
+  })
+  setNewAllLeaveApplication(nAllUsersData)
+},[leaveApp])
+
   const acceptApp = async (record) => {
     console.log(record);
     const res1 = await axios.post(
@@ -589,12 +619,13 @@ function FacilityBooking() {
               onSearch={(value) => console.log(value)}
               style={{ width: "220px" }}
             />
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={courseAccess} passing={headersForCourseAccess}/> 
           </div>
           <Helper
             clients={courseAccess}
@@ -618,12 +649,13 @@ function FacilityBooking() {
               onSearch={(value) => console.log(value)}
               style={{ width: "220px" }}
             />
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForClassInvite}/> 
           </div>
           <Helper
             clients={membershipRequestData}
@@ -647,12 +679,13 @@ function FacilityBooking() {
               onSearch={(value) => console.log(value)}
               style={{ width: "220px" }}
             />
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllLeaveApplication} passing={headersForLeaveApplication}/>
           </div>
           {leaveApp.length !== 0 && (
             <Helper
@@ -678,12 +711,13 @@ function FacilityBooking() {
               onSearch={(value) => console.log(value)}
               style={{ width: "220px" }}
             />
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={adminRatingsList} passing={headersForAdminRating}/>
           </div>
           <Helper clients={adminRatingsList} attribiue={adminratingColumn} />
         </div>
