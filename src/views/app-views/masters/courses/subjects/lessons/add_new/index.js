@@ -14,6 +14,7 @@ import {
 } from "assets/svg/icon";
 import axios from "axios";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
 // https://edu-portal.inkapps.io/api/teacher-course-lesson_item-new
 let styles = {
   uploadFile: {
@@ -112,7 +113,7 @@ const AddNewLesson = () => {
       );
       videoElements.push(videoElement); // Push the video element to the array
     }
-
+    
     setVideos(videoElements); // Update the state with the array of video elements
   };
   const handleArUpload = (e) => {
@@ -155,6 +156,22 @@ const AddNewLesson = () => {
     setQueOptions(updatedOptions);
   };
 
+  const uploadApi = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+  
+      const response = await axios.post(`${API_BASE_URL}/upload`, formData);
+      console.log('Upload successful!', response.data);
+      return response.data.url;
+      // Handle successful response here
+    } catch (error) {
+      console.error('Upload failed!', error);
+      // Handle error here
+    }
+  };
+  
+
   const SaveLesson = async () => {
     const formData = new FormData();
     let lesContentData;
@@ -162,10 +179,13 @@ const AddNewLesson = () => {
       lesContentData = notiText;
     }
     if (lessonType == 1) {
-      lesContentData = senFileVideo;
+      lesContentData =await uploadApi(senFileVideo[0])
+      console.log(lesContentData);
+      // lesContentData = senFileVideo[0];
     }
     if (lessonType == 2) {
-      lesContentData = senFileAudio;
+      lesContentData = await uploadApi(senFileAudio[0]);
+      // lesContentData = senFileAudio[0];
     }
     if (lessonType == 3) {
       const queData = {
@@ -183,6 +203,7 @@ const AddNewLesson = () => {
     formData.append("course_id", course_id);
     formData.append("board_id", 2);
     formData.append("lesson_name", lessonName);
+    // console.log(senFileVideo);
     // const dataObject = {
     //   lesson_content: SendFile,
     //   lesson_type: lessonType,
@@ -228,6 +249,7 @@ const AddNewLesson = () => {
   setLessonName(data.lesson_name)
   setEstimateTime(data.estimated_time)
   setLessonType(data.lesson_type.toString())
+  if(data.lesson_type===2){
   const audioElement = (
     <audio
       className="customAudio"
@@ -239,6 +261,18 @@ const AddNewLesson = () => {
   );
 
   setAudioElements(audioElement)
+  }
+  
+  if(data.lesson_type===1){
+   const  videoElements =  <video
+          // key={i}
+          src={data.lesson_content} // Set the video source to the local file URL
+          controls // Enable video controls for play, pause, etc.
+          style={{ maxWidth: "100%", margin: "0 10px 10px 0" }} // Apply inline styles for video element
+        />
+    
+    setVideos(videoElements); // Update
+  }
   }
   useEffect(() => {
     getLesson(lesson_id,subject_id);

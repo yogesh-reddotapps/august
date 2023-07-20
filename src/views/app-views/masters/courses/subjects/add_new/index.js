@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Select, Input, InputNumber, Button, Modal } from "antd";
 import { DeleteTwoTone } from "@ant-design/icons";
 import { Link, useHistory,useLocation } from "react-router-dom";
@@ -6,6 +6,7 @@ import { List } from "antd";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { DraggableIcon, DraggableItemDelIcon } from "assets/svg/icon";
 import axios from 'axios'
+import { API_BASE_URL } from "constants/ApiConstant";
 const AddNewLesson = () => {
   const history = useHistory();
   const location=useLocation();
@@ -13,9 +14,13 @@ const AddNewLesson = () => {
   const [listItems, setListItems] = useState(items);
   const [subjectName, setSubjectName] = useState("");
   const [successModal, setSuccessModal] = useState(false);
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id")
+  const course_id = queryParams.get("course_id")
+  console.log(location)
   const onfinish =async () => {
     console.log(subjectName);
-
+    if(!id){
     const response = await axios.post(
       "http://18.140.159.50:3333/api/admin-new-subject",
       {
@@ -36,6 +41,31 @@ const AddNewLesson = () => {
         history.goBack();
       }, 1200);
     }
+
+  }
+  else{
+    const response = await axios.post(
+      "http://18.140.159.50:3333/api/admin-edit-subjects",
+      {
+        subject_id:id,
+        subject_name: subjectName,
+        board_id: "0",
+        course_id: course_id,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if(response.status===200){
+      setSuccessModal(true);
+      setTimeout(() => {
+        setSuccessModal(false);
+        history.goBack();
+      }, 1200);
+    }
+  }
       // console.log(response)
     
   };
@@ -74,6 +104,25 @@ const AddNewLesson = () => {
   //   setListItems(updatedListItems);
   //   console.log(updatedListItems);
   // };
+
+  useEffect(()=>{
+    // console.log(id);
+    if(id){
+      console.log(location.pathname)
+      try{
+        axios({
+          method:"get",
+          url:`${API_BASE_URL}/admin-subjects/${id}`,
+
+        }).then((res)=>{
+          setSubjectName(res.data.subject_id[0].subject_name);
+        })
+      }catch(err){
+        console.log(err)
+      }
+    }
+    
+  },[])
   return (
     <>
       <div className="border rounded p-3 mb-4 bg-white">

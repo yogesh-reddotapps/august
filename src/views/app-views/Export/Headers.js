@@ -213,3 +213,17 @@ export const headersForLessonColumn = [
     {label:"Lesson Type",key:"lesson_type_"},
     {label:"Estimated Time (Mins)",key:"estimated_time"},
 ]
+
+export const headersForSubjectColumn = [
+    {label:"Id",key:"id"},
+    {label:"Subject Name",key:"subject_name"},
+    {label:"Lessons",key:"lesson_count"}
+]
+
+
+export const headerForlessonModule=[
+    {label:"Sr no",key:"id"},
+    {label:"Lesson Name",key:"lesson_name"},
+    {label:"Lesson type",key:"type"},
+    {label:"Estimated Time",key:"estimated_time"}
+]
