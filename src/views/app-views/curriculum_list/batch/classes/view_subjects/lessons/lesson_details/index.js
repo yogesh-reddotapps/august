@@ -20,6 +20,8 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import CustomIcon from "components/util-components/CustomIcon";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { headersForlessonDetailAssignment } from "views/app-views/Export/Headers";
 const assignmentArray = [
   {
     ID: 1,
@@ -193,12 +195,13 @@ function FacilityBooking() {
                   Filters
                 </Button>
               </Filter>
-              <Button
+              {/* <Button
                 icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+               <ExportButton data={assignments} passing={headersForlessonDetailAssignment}/>
             </div>
            <Button className="bg-info"><Link to={'lesson_details/add_new_assignment'} className="text-white">Create New Assignment</Link></Button>
           </div>

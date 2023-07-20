@@ -227,3 +227,123 @@ export const headerForlessonModule=[
     {label:"Lesson type",key:"type"},
     {label:"Estimated Time",key:"estimated_time"}
 ]
+
+export const headersForlessonDetailAssignment = [
+    {label:"Id",key:"id"},
+    {label:"Assignment",key:"assignment_name"},
+    {label:"Assignment Type",key:"assignment_type"},
+    {label:"Assignment Questions",key:"assignment_questions"},
+    {label:"Submitted By",key:"submitted_by"},
+    {label:"Pending Questions",key:"pending_submissions"},
+    {label:"Status",key:"status"}
+]
+
+export const headersForAttendList = [
+    {label:"Id",key:"id"},
+    {label:"Student Name",key:"student_name"},
+    {label:"Date Of Birth",key:"dob"},
+    {label:"Contact No",key:"phone_number"},
+    {label:"Email Id",key:"email"},
+    {label:"Attendance",key:"present"},
+]
+
+export const headersForClassBatch=[
+    {label:"Class Name",key:"class_name"},
+    {label:"Date",key:"class_date"},
+    {label:"Start Time",key:"start_time"},
+    {label:"End Time",key:"end_time"},
+    {label:"Teacher Assigned",key:"teacher_name"},
+    {label:"Status",key:"status"}
+]
+
+export const headersForLesson=[
+    {label:"Sr No",key:"sr"},
+    {label:"Lesson",key:"lesson_name"},
+    {label:"Lesson Type",key:"type"},
+    {label:"Estimated Time (Mins)",key:"estimated_time"}
+]
+
+export const headersForSubjectList = [
+    {label:"Sr No",key:"sr"},
+    {label:"Subject Name",key:"subject_name"},
+    {label:"Lessons",key:"lesson_count"},
+    {label:"Estimate Time (Mins)",key:"estimateTime"},
+]
+
+
+
+export const headersForTeacherAssigned=[
+    {label:"User Id",key:"id"},
+    {label:"Teacher Name",key:"teacher_name"},
+    {label:"Teacher Email",key:"teacher_email"},
+    {label:"Batch Name",key:"batch_name"},
+    {label:"Class Name",key:"class_name"},
+    {label:"Assigned on",key:"created_at"}, 
+    {label:"Status",key:"teacher_status"}
+]
+
+export const headersForCourseStudent=[
+    {label:"User Id",key:"user_id"},
+    {label:"Student Name",key:"student_name"},
+    {label:"Date of Birth",key:"student_dob"},
+    {label:"Gender",key:"gender"},
+    {label:"Mobile Number",key:"student_phone_number"},
+    {label:"Email ID",key:"student_email"}, 
+    {label:"Date of enroll",key:"enrollment_date"},
+    {label:"Student Status",key:"student_status"}
+]
+
+export const headersForBatches=[
+    {label:"Sr No",key:"id"},
+    {label:"Batch Id",key:"batch_id"},
+    {label:"Start Date",key:"start_date"},
+    {label:"End Date",key:"end_date"},
+    {label:"Classes Done",key:"complete_class"},
+    {label:"Classes Remaining",key:"remaining_class"}, 
+    {label:"Capacity",key:"capacity"},
+    {label:"Enroll Students",key:"student_enroll"},
+    {label:"Status",key:"status"}
+]
+
+export const headersForAssesment=[
+    {label:"Id",key:"id"},
+    {label:"Assesment Title",key:"assessment_title"},
+    {label:"Assessment Questions",key:"questionLength"},
+    {label:"Start Date",key:"start_date"},
+    {label:"Due Date",key:"due_date"},
+    {label:"Attended By",key:"attend_by"},
+    {label:"Status",key:"status"}, 
+]
+
+export const headersForCourseMaterial=[
+    {
+        label: "ID",
+        key: "course_id",
+      },
+      {
+        label: "Course Material Name",
+        key: "course_material_name",
+      },
+      {
+        label:"File Type",
+        key:"file_type"
+      },
+      {
+        label:"URL",
+        key:"URL"
+      },
+      {
+        label:"Created By",
+        key:"created_by"
+      },
+      {
+        label:"Created On",
+        key:"created_at"
+      },
+      {
+        label:"Status",
+        key:"status"
+      }
+
+
+]

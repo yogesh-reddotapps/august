@@ -85,20 +85,54 @@ axios
 
 
 
-const [newAllUsersData,setNewAllUsersData] = useState([]);
+const [newAllStudentData,setNewAllStudentData] = useState([]);
 useEffect(()=>{
-  let nAllUsersData =lessonList
+  let nAllUsersData =[...studentEnroll]
   nAllUsersData && nAllUsersData.map((item)=>{
    
-    item.endTime=formatDate(item.endTime,true);
-    item.eventDate = formatDate(item.eventDate);
-    item.eventStatusChangeDate = formatDate(item.eventStatusChangeDate);
-    item.createdAt = formatDate(item.createdAt);
-    item.updatedAt = formatDate(item.updatedAt);
+    item.student_dob=formatDate(item.student_dob);
+    item.enrollment_date = formatDate(item.enrollment_date)
   })
-  setNewAllUsersData(nAllUsersData)
-},[lessongList])
+  setNewAllStudentData(nAllUsersData)
+},[studentEnroll])
 
+const [newAllAssessmentData,setNewAllAssessmentData] = useState([]);
+const [newAllCourseData,setNewAllCourseData] = useState([]);
+const [newAllBatchData,setNewAllBatchData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =[...batchDetails]
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.start_date=formatDate(item.start_date);
+    item.end_date = formatDate(item.end_date);
+    item.status=item.status?"Active":"InActive"
+  })
+  setNewAllBatchData(nAllUsersData)
+},[batchDetails])
+
+
+
+useEffect(()=>{
+  let nAllUsersData =[...assesment]
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.questionLength=JSON.parse(item.description).length,
+    item.due_date = formatDate(item.due_date);
+    item.start_date = formatDate(item.start_date);
+  })
+  setNewAllAssessmentData(nAllUsersData)
+},[assesment])
+
+
+
+useEffect(()=>{
+  let nAllUsersData =[...courseMaterial]
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.created_at = formatDate(item.created_at);
+    item.status = item.status?"Active":"In Active"
+  })
+  setNewAllCourseData(nAllUsersData)
+},[courseMaterial])
 
 // @ts-ignore
 {/* <ExportButton data={newAllUsersData} passing={headersForAdmin}/> */}

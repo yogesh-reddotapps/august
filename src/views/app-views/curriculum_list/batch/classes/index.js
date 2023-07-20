@@ -19,6 +19,10 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { formatDate } from "constants/DateConstant";
+import moment from "moment";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { headersForClassBatch } from "views/app-views/Export/Headers";
 const classArray = [
   {
     Class_ID: "001",
@@ -60,6 +64,32 @@ function FacilityBooking() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const batchId = queryParams.get("batchId");
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  const check=(text)=>{
+    var a = ""
+    if(text===1){
+      a ="Ongoing"
+    }
+    else if(text===2){
+      a= "Complete"
+    }
+    else if(text===3){
+      a= "Upcoming"
+    }
+    return a;
+  }
+useEffect(()=>{
+  let nAllUsersData =classList
+  
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.class_date= formatDate(item.class_date);
+    item.start_time=moment(item.start_time,"HH:mm:ss").format("hh:mm A");
+    item.end_time = moment(item.end_time,"HH:mm:ss").format("hh:mm A");
+    item.status = check(item.status);   
+  })
+  
+  setNewAllUsersData(nAllUsersData)
+},[classList])
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -71,7 +101,7 @@ function FacilityBooking() {
   };
   const classColumn = [
     {
-      title: "Class ID",
+      title: "Class Name",
       dataIndex: "class_name",
     },
     {
@@ -100,9 +130,7 @@ function FacilityBooking() {
               text === 2 ? "text-success" : "text-warning"
             } font-weight-semibold`}
           >
-            {text===1 && "ongoing"}
-            {text===2 && "Complete"}
-            {text===3 && "Upcoming"}
+           {text}
           </div>
         );
       },
@@ -167,12 +195,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForClassBatch}/> 
           </div>
           <Helper clients={classList} attribiue={classColumn} />
         </div>
