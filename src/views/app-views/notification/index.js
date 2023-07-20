@@ -25,6 +25,7 @@ function FacilityBooking() {
   const [membershipRequestData, setmembershipRequestData] = useState(
     membershipEventBooking
   );
+  const [key, setKey] = useState("1")
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sysNoti, setSysNoti] = useState([])
 
@@ -33,37 +34,33 @@ function FacilityBooking() {
       title: "ID",
       dataIndex: "id",
     },
+    // {
+    //   dataIndex: "avatar",
+    //   render: (avatar) => {
+    //     return <img src={`${avatar}`} />;
+    //   },
+    // },
     {
-      dataIndex: "avatar",
-      render: (avatar) => {
-        return <img src={`${avatar}`} />;
-      },
-    },
-    {
-      title: "Course Name",
-      dataIndex: "applicant_name",
+      title: "Notification Title",
+      dataIndex: "title",
       render: (avatar) => {
         return <>Workplace Safety an Health in Construction Sites</>
       },
     },
     {
-      title: "Class Date",
+      title: "Sent To ( User )",
       dataIndex: "event_time",
     },
     {
-      title: "Time",
+      title: "Created On",
       dataIndex: "time",
       render: (avatar) => {
         return <>10:00 AM - 12:00 PM</>
       },
     },
     {
-      title: "Date of Invite",
+      title: "Date of Broadcast",
       dataIndex: "event_time"
-    },
-    {
-        title: "Date of Accept/Reject",
-        dataIndex: "event_time"
     },
     {
       title: "Status",
@@ -72,11 +69,44 @@ function FacilityBooking() {
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text === 1 ? "text-success" : "text-danger"
             } font-weight-semibold`}
           >
-            {text}
+            {text === 1 ? "Active" : "Inactive"}
           </div>
+        );
+      },
+    },
+    {
+      title: "Action",
+      render: (record) => {
+        return (
+          <>
+          <EllipsisDropdown
+              menu={
+                <Menu>
+                  <Menu.Item>
+                    <Link to={`notification/broadcast-notification/view-status`}>
+                      {" "}
+                      <EyeOutlined className="mr-2 " /> View Status
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to={`/app/notification/edit?id=${record.id}`}>
+                      {" "}
+                      <CustomIcon className='mr-2' svg={Edit} /> Edit
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <Link to={`/app/notification/edit?id=${record.id}`}>
+                      {" "}
+                      <DeleteOutlined className="mr-2 " /> Delete
+                    </Link>
+                  </Menu.Item>
+                </Menu>
+              }
+            />
+          </>
         );
       },
     }
@@ -263,6 +293,17 @@ function FacilityBooking() {
       </Button>
     </div>
   );
+  const operationsTwo = (
+    <div className="mb-2 d-flex align-items-center">
+      <Button
+        // onClick={showModal}
+        className="ml-3 bg-info d-flex align-items-center rounded text-white font-weight-semibold px-4"
+      >
+        <Link to={'/app/notification/add_broadcast_notification'}>
+        + Add New</Link>
+      </Button>
+    </div>
+  );
   const items = [
     {
       label: (<div className="d-flex align-items-center"> <SystemNotification />  System Notifications</div>),
@@ -277,15 +318,14 @@ function FacilityBooking() {
       ),
     },
     {
-      label: (<div className="d-flex align-items-center"> <CustNotification />  Custom Notifications</div>),
+      label: (<div className="d-flex align-items-center"> <CustNotification />  Broadcast Notifications</div>),
       key: 2,
       children: (
         <div className="border rounded p-3 mb-4 bg-white">
-          {/* <Helper
+          <Helper
             clients={membershipRequestData}
             attribiue={membershipRequestColumns}
-          /> */}
-          test
+          />
         </div>
       ),
     }
@@ -333,7 +373,7 @@ function FacilityBooking() {
   return (
     <div>
       <div>
-        <Tabs tabBarExtraContent={operations}>
+        <Tabs activeKey={key} onChange={setKey} tabBarExtraContent={key==="1"?operations:operationsTwo}>
           {items.map((item) => (
             <Tabs.TabPane tab={item.label} key={item.key}>
               {item.children}

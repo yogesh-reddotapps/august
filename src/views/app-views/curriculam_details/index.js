@@ -33,6 +33,7 @@ import { FileUnknownOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { API_BASE_URL } from "constants/ApiConstant";
 import { formatDate } from "constants/DateConstant";
+import { Option } from "antd/lib/mentions";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -126,89 +127,7 @@ let alertstyle = {
   transition: "all 0.5s ease 0s",
   zIndex: 2,
 };
-const lessonData = [
-  {
-    Sr_No: 1,
-    Batch_ID: "BATCH001",
-    Start_Date: "2023-01-01",
-    End_Date: "2023-05-31",
-    Classes_Done: 10,
-    Classes_Remaining: 30,
-    Capacity: 40,
-    Enroll_Students: 20,
-    Status: "Active",
-  },
-  {
-    Sr_No: 2,
-    Batch_ID: "BATCH002",
-    Start_Date: "2023-02-15",
-    End_Date: "2023-06-30",
-    Classes_Done: 5,
-    Classes_Remaining: 35,
-    Capacity: 50,
-    Enroll_Students: 25,
-    Status: "Active",
-  },
-  // Add more objects as needed
-];
-const assessments = [
-  {
-    ID: 1,
-    Assessment_Title: "Mathematics Quiz",
-    Assessment_Questions: "10",
-    Start_Date: "2023-05-20",
-    Due_Date: "2023-05-25",
-    Attended_By: "John Doe",
-    Status: "Active",
-  },
-  {
-    ID: 2,
-    Assessment_Title: "English Essay",
-    Assessment_Questions: "1",
-    Start_Date: "2023-05-22",
-    Due_Date: "2023-05-27",
-    Attended_By: "Jane Smith",
-    Status: "In Progress",
-  },
-  {
-    ID: 3,
-    Assessment_Title: "Science Experiment",
-    Assessment_Questions: "5",
-    Start_Date: "2023-05-24",
-    Due_Date: "2023-05-29",
-    Attended_By: "Alex Johnson",
-    Status: "Not Started",
-  },
-];
-const courseMaterials = [
-  {
-    ID: 1,
-    Course_Material_Name: "Introduction to Mathematics",
-    File_Type: "pdf",
-    URL: "https://example.com/material1.pdf",
-    Created_By: "John Doe",
-    Created_On: "2023-05-10",
-    Status: "Active",
-  },
-  {
-    ID: 2,
-    Course_Material_Name: "English Grammar Guide",
-    File_Type: "video",
-    URL: "https://example.com/material2.docx",
-    Created_By: "Jane Smith",
-    Created_On: "2023-05-12",
-    Status: "Inactive",
-  },
-  {
-    ID: 3,
-    Course_Material_Name: "Chemistry Lecture Slides",
-    File_Type: "pdf",
-    URL: "https://example.com/material3.ppt",
-    Created_By: "Alex Johnson",
-    Created_On: "2023-05-15",
-    Status: "Active",
-  },
-];
+
 
 function FacilityBooking() {
   const history = useHistory();
@@ -225,7 +144,12 @@ function FacilityBooking() {
   const [studentEnroll,setStudentEnroll]=useState([]);
   const [batchDetails,setBatchDetails]=useState([]);
   const [assesment,setAssesment]=useState([]);
-
+  const [teachersList, setTeachersList] = useState([])
+  const [classes, setClasses] = useState([])
+  const [assigneNewTeachVal, setAssigneNewTeachVal] = useState({
+    teacher:null,
+    class:null
+  })
   const [alertText, setAlertText] = useState(
     "Course category added Successfully!"
   );
@@ -357,7 +281,14 @@ function FacilityBooking() {
     // handleOk()
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
+    console.log(assigneNewTeachVal);
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/assign-teacher`,{
+      "course_id": location.state.id,
+      "class_id": assigneNewTeachVal.class,
+      "teacher_id": assigneNewTeachVal.teacher
+  })
+  console.log(res1);
     setTimeout(() => {
       setIsModalOpen(false);
     }, 1000);
@@ -535,9 +466,9 @@ function FacilityBooking() {
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`/img/Avatar 1.png`} />;
+        return <img style={{width:"55px",height:'55px',borderRadius:'50%'}} src={avatar} />;
       },
     },
     {
@@ -551,14 +482,14 @@ function FacilityBooking() {
     },
     {
       title: "Batch ID",
-      dataIndex: "batch_id",
+      dataIndex: "batch_name",
       // render: () => {
       //   return <>#B002</>;
       // },
     },
     {
       title: "Class ID",
-      dataIndex: "course_id",
+      dataIndex: "class_name",
      
     },
     {
@@ -970,7 +901,28 @@ function FacilityBooking() {
     const res1 = await axios.get(`${API_BASE_URL}/get-batches-bycourse/${location.state.id}`);
     setBatchDetails(res1.data.data);
   }
+
+  const getClasses = async ()=> {
+    let res1 = await axios.get(`http://18.140.159.50:3333/api/get-classes-by-course/${location.state.id}`)
+    setClasses(res1.data.data);
+    // console.log(res1.data.data);
+  }
   
+  const getTeacher = () => {
+    axios
+      .post(`${API_BASE_URL}/admin-teacher`, {},{
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((res) => {
+        setTeachersList(res.data);
+        // console.log("teacge",res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     // showAlert();
@@ -979,6 +931,8 @@ function FacilityBooking() {
     getTeacherEnroll();
     getBatchesDetail();
     getAssesment();
+    getTeacher()
+    getClasses()
   }, []);
   return (
     <div className="tabbarWhite">
@@ -1074,6 +1028,31 @@ function FacilityBooking() {
             Workplace Safety and Health in Construction Sites
           </span>
           <br />
+          <h5 className="font-weight-bold mt-4">Select Class</h5>
+          <Select
+            style={{
+              width: 300,
+              marginBottom: "5px",
+            }}
+            placeholder="Select"
+            
+            onChange={(value) =>  setAssigneNewTeachVal((preval) => ({...preval,class:value}))}
+            // options={teacherArray}
+          >
+            {classes.map((clas, i) => (
+                  <Option key={clas.id} value={clas.id}>
+                    <div>
+                      <img
+                        className="circleTeacherImage mr-2"
+                        src="/img/avatars/thumb-1.jpg"
+                        alt="img"
+                      />
+                      {clas.class_name}
+                    </div>
+                  </Option>
+                ))}
+            </Select>
+          <br />
           <h5 className="font-weight-bold mt-4">Select Teacher</h5>
           <Select
             style={{
@@ -1081,9 +1060,22 @@ function FacilityBooking() {
               marginBottom: "5px",
             }}
             placeholder="Select"
-            onChange={(value) => console.log(`selected ${value}`)}
-            options={teacherArray}
-          />
+            onChange={(value) => setAssigneNewTeachVal((preval) => ({...preval,teacher:value}))}
+            // options={teacherArray}
+          >
+            {teachersList.map((teacher, i) => (
+                  <Option key={i} value={teacher.id}>
+                    <div>
+                      <img
+                        className="circleTeacherImage mr-2"
+                        src="/img/avatars/thumb-1.jpg"
+                        alt="img"
+                      />
+                      {teacher.name}
+                    </div>
+                  </Option>
+                ))}
+            </Select>
           <br />
           <div className="d-flex justify-content-end">
             <Button className="w-25 text-black">Cancel</Button>
@@ -1098,3 +1090,86 @@ function FacilityBooking() {
 }
 
 export default FacilityBooking;
+// const lessonData = [
+//   {
+//     Sr_No: 1,
+//     Batch_ID: "BATCH001",
+//     Start_Date: "2023-01-01",
+//     End_Date: "2023-05-31",
+//     Classes_Done: 10,
+//     Classes_Remaining: 30,
+//     Capacity: 40,
+//     Enroll_Students: 20,
+//     Status: "Active",
+//   },
+//   {
+//     Sr_No: 2,
+//     Batch_ID: "BATCH002",
+//     Start_Date: "2023-02-15",
+//     End_Date: "2023-06-30",
+//     Classes_Done: 5,
+//     Classes_Remaining: 35,
+//     Capacity: 50,
+//     Enroll_Students: 25,
+//     Status: "Active",
+//   },
+//   // Add more objects as needed
+// ];
+// const assessments = [
+//   {
+//     ID: 1,
+//     Assessment_Title: "Mathematics Quiz",
+//     Assessment_Questions: "10",
+//     Start_Date: "2023-05-20",
+//     Due_Date: "2023-05-25",
+//     Attended_By: "John Doe",
+//     Status: "Active",
+//   },
+//   {
+//     ID: 2,
+//     Assessment_Title: "English Essay",
+//     Assessment_Questions: "1",
+//     Start_Date: "2023-05-22",
+//     Due_Date: "2023-05-27",
+//     Attended_By: "Jane Smith",
+//     Status: "In Progress",
+//   },
+//   {
+//     ID: 3,
+//     Assessment_Title: "Science Experiment",
+//     Assessment_Questions: "5",
+//     Start_Date: "2023-05-24",
+//     Due_Date: "2023-05-29",
+//     Attended_By: "Alex Johnson",
+//     Status: "Not Started",
+//   },
+// ];
+// const courseMaterials = [
+//   {
+//     ID: 1,
+//     Course_Material_Name: "Introduction to Mathematics",
+//     File_Type: "pdf",
+//     URL: "https://example.com/material1.pdf",
+//     Created_By: "John Doe",
+//     Created_On: "2023-05-10",
+//     Status: "Active",
+//   },
+//   {
+//     ID: 2,
+//     Course_Material_Name: "English Grammar Guide",
+//     File_Type: "video",
+//     URL: "https://example.com/material2.docx",
+//     Created_By: "Jane Smith",
+//     Created_On: "2023-05-12",
+//     Status: "Inactive",
+//   },
+//   {
+//     ID: 3,
+//     Course_Material_Name: "Chemistry Lecture Slides",
+//     File_Type: "pdf",
+//     URL: "https://example.com/material3.ppt",
+//     Created_By: "Alex Johnson",
+//     Created_On: "2023-05-15",
+//     Status: "Active",
+//   },
+// ];

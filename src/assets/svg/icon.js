@@ -733,7 +733,12 @@ export const DraggableItemDelIcon = () => (
 export const AudioUploadImage = () => (
   <img src="/img/audioImage.png" alt="image" />
 );
-
+export const ScheduleBroadcastNoti = () => (
+  <img style={{width:'20px',height:'20px'}} src="/img/schedNoti.png" alt="image" />
+)
+export const UsersNoti = () => (
+  <img style={{width:'20px',height:'20px'}} src="/img/usersNoti.png" alt="image" />
+)
 export const ViewSubject = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width={20} height={15} fill="none">
     <path

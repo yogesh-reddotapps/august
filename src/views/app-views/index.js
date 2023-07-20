@@ -68,6 +68,8 @@ export const AppViews = () => {
         <Route exact path={`${APP_PREFIX_PATH}/notification`} component={lazy(() => import(`./notification`))} />
         <Route exact path={`${APP_PREFIX_PATH}/notification/edit`} component={lazy(() => import(`./notification/edit`))} />
         <Route exact path={`${APP_PREFIX_PATH}/notification/add_notification`} component={lazy(() => import(`./notification/edit`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/notification/add_broadcast_notification`} component={lazy(() => import(`./notification/add_broadcast`))} />
+        <Route exact path={`${APP_PREFIX_PATH}/notification/broadcast-notification/view-status`} component={lazy(() => import(`./notification/view-status`))} />
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/student_detail`} component={lazy(() => import(`./student_detail`))} />
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/student_detail/classes`} component={lazy(() => import(`./student_detail/classes`))} />
         <Route exact path={`${APP_PREFIX_PATH}/Student_management/student_detail/classes/class_details`} component={lazy(() => import(`./student_detail/classes/class_details`))} />

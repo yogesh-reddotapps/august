@@ -183,3 +183,7 @@ th.ant-table-cell{
 .whiteBack .ant-tabs-nav{
   background-color: white;
 }
+
+.customTransfer .ant-transfer-list {
+  width: 50%;
+}
