@@ -10,6 +10,8 @@ import Helper from "../../../Helper";
 import { useLocation,useHistory  } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { headersForSubjectColumn } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
@@ -53,10 +55,17 @@ const ClassAttend = () => {
                     <span><DeleteOutlined className="mr-2" /> Delete</span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link
-                      to={`subjects/edit?${record.id}`}
-                      className="d-flex align-items-center"
-                    >
+                  {/* <Link to={{
+            pathname:`subjects/edit?id=${record.id}`,
+            state:{
+              id:id,
+            }
+            
+          }}
+          className="d-flex align-items-center"
+          > */}
+          <Link to ={`subjects/edit?id=${record.id}&course_id=${id}`}>
+                  
                      <CustomIcon className='mr-2' svg={Edit} /> Edit
                     </Link>
                   </Menu.Item>
@@ -232,12 +241,13 @@ const ClassAttend = () => {
             Filters
           </Button>
         </Filter> */}
-          <Button
+          {/* <Button
             icon={<Icon component={CsvIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={subjectList} passing={headersForSubjectColumn}/>
         </div>
         <Button className="bg-info text-white">
           <Link to={{

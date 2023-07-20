@@ -11,6 +11,8 @@ import Helper from "../../../../Helper";
 import { useLocation, useHistory } from "react-router-dom";
 import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { headerForlessonModule } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
@@ -86,6 +88,18 @@ const ClassAttend = () => {
     setModal2Open(true);
     setIdTodelete(id);
   }
+
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =lessonList
+  nAllUsersData = nAllUsersData && nAllUsersData.map((item)=>({
+   ...item,
+   type:item.lesson_type===0?"Text":item.lesson_type===1?"Video":item.lesson_type===2?"Audio":item.lesson_type===3?"MCQ":"AR/VR"
+
+  }))
+  // item.lesson_type===0?"Text":item.lesson_type===1?"Audio":item.lesson_type===2?"Video":item.lesson_type===3?"MCQ":"AR/VR"
+  setNewAllUsersData(nAllUsersData)
+},[lessonList])
   const attData = [
     {
       Sr_No: 1,
@@ -242,12 +256,13 @@ const ClassAttend = () => {
             Filters
           </Button>
         </Filter> */}
-          <Button
+          {/* <Button
             icon={<Icon component={CsvIcon} />}
             className="d-flex align-items-center ml-2"
           >
             Export
-          </Button>
+          </Button> */}
+          <ExportButton data={newAllUsersData} passing={headerForlessonModule}/>
           <h5
             className="d-flex align-items-center justify-content-between ml-2 mt-2 mr-2 chapterSelect"
           >
