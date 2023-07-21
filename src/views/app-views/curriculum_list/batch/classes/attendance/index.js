@@ -19,6 +19,9 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import Helper from "views/app-views/Helper";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import ExportButton from "views/app-views/Export/ExportButton";
+import { formatDate } from "constants/DateConstant";
+import { headersForAttendList } from "views/app-views/Export/Headers";
 
 const students = [
     {
@@ -64,6 +67,16 @@ function FacilityBooking() {
   const queryParams = new URLSearchParams(location.search);
   const batchId = queryParams.get("batchId");
   const classId = queryParams.get("classId")
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =attendList
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.dob=formatDate(item.endTime,true);
+
+  })
+  setNewAllUsersData(nAllUsersData)
+},[attendList])
   const classColumn = [
     {
       title: "ID",
@@ -253,12 +266,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+             <ExportButton data={newAllUsersData} passing={headersForAttendList}/>
           </div>
           <Helper clients={attendList} attribiue={classColumn} />
         </div>

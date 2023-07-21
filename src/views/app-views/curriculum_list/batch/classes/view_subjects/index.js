@@ -24,6 +24,8 @@ import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { headersForSubjectList } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 
 const subjectArray = [
     {
@@ -60,6 +62,28 @@ function FacilityBooking() {
   const batchId = queryParams.get("batchId");
   const classId = queryParams.get("classId");
   const courseId = queryParams.get("courseId");
+  
+const [newAllUsersData,setNewAllUsersData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =subjectList
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.estimateTime= estimate(item.lessons);
+   
+  })
+  setNewAllUsersData(nAllUsersData)
+},[subjectList])
+
+const estimate =(lessons)=>{
+  var a = lessons.reduce((total, lesson) => {
+    if (lesson.estimated_time) {
+      return total + parseInt(lesson.estimated_time);
+    }
+    return total;
+  }, 0)
+  return a;
+}
+
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -159,12 +183,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllUsersData} passing={headersForSubjectList}/> 
           </div>
           <Helper clients={subjectList} attribiue={SubjectColumn} />
         </div>

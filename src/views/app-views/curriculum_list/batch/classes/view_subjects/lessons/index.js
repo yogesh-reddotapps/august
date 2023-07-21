@@ -26,6 +26,8 @@ import TextArea from "antd/lib/input/TextArea";
 import Search from "antd/lib/transfer/search";
 import { Option } from "antd/lib/mentions";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { headersForLesson } from "views/app-views/Export/Headers";
+import ExportButton from "views/app-views/Export/ExportButton";
 const subjectArray = [
     {
         "Sr_No": 1,
@@ -64,6 +66,17 @@ function FacilityBooking() {
   const subjectId = queryParams.get("subjectId")
   const courseId = queryParams.get("courseId")
   const classId = queryParams.get("classId")
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  useEffect(()=>{
+    let nAllUsersData =lessonList
+    nAllUsersData = nAllUsersData && nAllUsersData.map((item)=>({
+     ...item,
+     type:item.lesson_type===0?"Text":item.lesson_type===1?"Video":item.lesson_type===2?"Audio":item.lesson_type===3?"MCQ":""
+  
+    }))
+    // item.lesson_type===0?"Text":item.lesson_type===1?"Audio":item.lesson_type===2?"Video":item.lesson_type===3?"MCQ":"AR/VR"
+    setNewAllUsersData(nAllUsersData)
+  },[lessonList])
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -155,12 +168,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+             <ExportButton data={newAllUsersData} passing={headersForLesson}/>
              <Select style={{width:'130px'}} className="ml-2" placeholder='Lesson Type'>
               <Option value="Text">Text</Option>
               <Option value="Video">Video</Option>

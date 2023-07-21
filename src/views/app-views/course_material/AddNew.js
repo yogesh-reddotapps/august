@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Input } from "antd";
 import { UploadFileIcon } from "assets/svg/icon";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import uploadImage from "middleware/uploadImage";
 
 const AddNew = () => {
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [courseTitle, setCourseTitle] = useState('')
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get("id");
+  const history = useHistory();
   let styles = {
     files: {
       listStyle: "none",
@@ -47,41 +53,44 @@ const AddNew = () => {
   };
   function handleFileSelect(event) {
     const fileList = event.target.files;
-    const newSelectedFiles = [];
+    // const newSelectedFiles = [];
 
-    for (let i = 0; i < fileList.length; i++) {
-      newSelectedFiles.push(fileList[i]);
-    }
+    // for (let i = 0; i < fileList.length; i++) {
+    //   newSelectedFiles.push(fileList[i]);
+    // }
     //   console.log(selectedFiles)
 
-    setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
+    // setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
+    setSelectedFiles(fileList);
   }
-  const delUplFile = (i) => {
-    let AfterDeleteFile = selectedFiles.filter((elem, index) => {
-      return index !== i;
-    });
-    setSelectedFiles(AfterDeleteFile);
+  const delUplFile = () => {
+    // let AfterDeleteFile = selectedFiles.filter((elem, index) => {
+    //   return index !== i;
+    // });
+    setSelectedFiles(null);
   };
   const addCourseMaterial = async () => {
+    const url = await uploadImage(selectedFiles[0]);
     console.log(courseTitle,selectedFiles);
     const data = {
-      course_id:24,
+      course_id:id,
       course_material_name:courseTitle,
-      file_type:'mp4',
-      file:selectedFiles,
-      URL:"https://www.africau.edu/images/default/sample.pdf",
+      file_type:selectedFiles[0].name.split('.')[1],
+      // file:selectedFiles,
+      URL:url,
       created_by:"Admin",
       status:1
     }
-    // const res1 = await axios.post('http://18.140.159.50:3333/api/course-curriculum/course-materials',data)
+    const res1 = await axios.post('http://18.140.159.50:3333/api/course-curriculum/course-materials',data)
     // console.log(res1);
+    history.goBack();
   }
   return (
     <>
       <div className="border rounded p-3 mt-4 bg-white">
         <div className="w-50 mb-4 mt-3">
           <h5>Title</h5>
-          <Input value={courseTitle} onChange={(e)=>setCourseTitle(e.target.value)} placeholder="Type here" />
+          <Input min={4} value={courseTitle} onChange={(e)=>setCourseTitle(e.target.value)} placeholder="Type here" />
         </div>
         <div className="d-flex flex-column justify-content-center align-items-center position-relative uploaddoc">
           <svg
@@ -124,29 +133,30 @@ const AddNew = () => {
             style={styles.uploadFile}
             className="uploadFile"
             type="file"
-            multiple
+            // multiple
             onChange={handleFileSelect}
+            accept=".pdf,.mp3,.mp4"
           />
         </div>
         <div className="mt-4">
-          {selectedFiles.length > 0 && (
+          {selectedFiles  && (
             <ul className="p-0" style={{ width: "40%" }}>
-              {selectedFiles.map((file, i) => (
-                <li key={file.name} className="my-3" style={styles.files}>
+              {/* {selectedFiles.map((file, i) => ( */}
+                <li key={selectedFiles[0].name} className="my-3" style={styles.files}>
                   {" "}
                   <div className="d-flex align-items-start">
                     <UploadFileIcon />{" "}
-                    <span className="ml-2">{file.name} <p className="m-0">Uploaded 1min ago</p></span>{" "}
+                    <span className="ml-2">{selectedFiles[0].name} <p className="m-0">Uploaded 1min ago</p></span>{" "}
                   </div>
                   <span
                     style={{ cursor: "pointer" }}
-                    onClick={() => delUplFile(i)}
+                    onClick={() => delUplFile()}
                   >
                     {" "}
                     <CloseCircleOutlined />{" "}
                   </span>
                 </li>
-              ))}
+              {/* ))} */}
             </ul>
           )}
         </div>
@@ -155,7 +165,7 @@ const AddNew = () => {
         <Button
           className="px-4 font-weight-semibold"
           htmlType="button"
-          onClick={() => console.log("test")}
+          onClick={() => history.goBack()}
         >
           Back
         </Button>

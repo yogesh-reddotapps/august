@@ -26,6 +26,7 @@ import { Option } from "antd/lib/mentions";
 import moment from "moment";
 import axios from "../../../axios";
 import { useHistory } from "react-router-dom";
+import uploadImage from "middleware/uploadImage";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -49,10 +50,36 @@ export default function AddNew() {
     title: "Status Change",
     text: "Student status changed to terminated.",
   });
-  const [fileList, setFileList] = useState([]);
+  // const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
+  const [fileList,setFileList]=useState([]);
+const [imageUrl,setImageUrl]=useState();
+
+
+
+const handleChange = (info) => {
+  const file = info.fileList[0]?.originFileObj;
+  let formData = new FormData();
+  if (file) {
+    formData.append("file", file);
+    setFileList(file);
+  }
+  if (info?.fileList[0]) {
+    getBase64(info.fileList[0].originFileObj, (url) => {
+      setImageUrl(url);
+    });
+  }
+};
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
+
+
   const successOk = () => {
     setSuccessModal(false);
   };
@@ -128,6 +155,7 @@ export default function AddNew() {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
+    const image = await uploadImage(fileList);
     if (id) {
       let updateRes = await axios.post(
         "http://18.140.159.50:3333/api/edit-student",
@@ -139,6 +167,7 @@ export default function AddNew() {
           dob: moment(values.dob).format("DD-MM-YYYY"),
           user_id: id,
           gender:values.gender,
+          profile_pic:image
         }
       );
       if (updateRes.data.success) {
@@ -159,6 +188,7 @@ export default function AddNew() {
         role: 2,
         phone_number: `${phoneCode}${values.phone_number}`,
         dob: moment(values.dob).format("DD-MM-YYYY"),
+        profile_pic:image
       };
       console.log("test", data);
       const response = await axios.post("/api/student-register", data, {
@@ -181,10 +211,7 @@ export default function AddNew() {
     }
   };
 
-  const handleChange = (e) => {
-    setFileList(e.fileList);
-    console.log(e);
-  };
+
 
   const handleCancel = () => setPreviewOpen(false);
   const handlePreview = async (file) => {
@@ -231,6 +258,9 @@ export default function AddNew() {
       gender:data.gender,
       dob: data.dob === null ? "" : moment(data.dob),
     });
+    setImageUrl([
+      data.profile_pic
+    ])
     console.log(res1.data[0]);
   };
   useEffect(() => {
@@ -289,13 +319,31 @@ export default function AddNew() {
             <div className="border rounded p-3 bg-white">
               {" "}
               <Form.Item name="images">
-                <Upload
-                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  onChange={handleChange}
-                >
-                  {uploadButton}
-                </Upload>
+              
+<Upload
+              name="avatar"
+              accept="image/*"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              beforeUpload={() => false}
+              maxCount={1}
+              onChange={handleChange}
+            >
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
+
               </Form.Item>
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>

@@ -11,6 +11,7 @@ import moment from "moment";
 import { useEffect } from "react";
 import { useLocation} from "react-router-dom/cjs/react-router-dom";
 import { useHistory } from 'react-router-dom';
+import uploadImage from "middleware/uploadImage";
 export default function AddNew() {
   const { TabPane } = Tabs;
   const history = useHistory();
@@ -20,6 +21,8 @@ export default function AddNew() {
   const [successModal, setSuccessModal] = useState(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
+  const [fileList,setFileList]=useState([]);
+  const [imageUrl,setImageUrl]=useState();
   const id = queryParams.get('id')
   const [succesmodaltext, setSuccesmodaltext] = useState({
     title: "Staff Status Change Successfully!",
@@ -53,6 +56,7 @@ export default function AddNew() {
 
   const [form] = Form.useForm();
   const onFinish = async (values) => {
+    const image = await uploadImage(fileList);
     if (id) {
       let updateRes = await axios.post('http://18.140.159.50:3333/api/update-admins',{
         "name": values.name,
@@ -61,7 +65,9 @@ export default function AddNew() {
         "dob":moment(values.dob).format("DD-MM-YYYY"),
         "profile_pic": "https://cristofori.s3.ap-southeast-1.amazonaws.com/profile_picture/uRRHh_kjwGrn3DUX3D_3S.png",
         "user_id": id,
-        "gender":values.gender
+        "gender":values.gender,
+        "profile_pic":image,
+
     })
     if (updateRes.data.success) {
       history.push('/app/staffManagement/admin_management');
@@ -79,7 +85,8 @@ export default function AddNew() {
         phone_number: values.phone_number,
         dob: moment(values.dob).format("DD-MM-YYYY"),
         email: values.email,
-        gender:values.gender
+        gender:values.gender,
+        profile_pic:image,
       };
       console.log("test", data);
       const response = await axios.post(
@@ -114,7 +121,25 @@ export default function AddNew() {
   // const onFinishFailed = (errorInfo) => {
   //   console.log("Failed:", errorInfo);
   // };
-  const handleChange = () => {};
+  const handleChange = (info) => {
+    const file = info.fileList[0]?.originFileObj;
+    let formData = new FormData();
+    if (file) {
+      formData.append("file", file);
+      setFileList(file);
+    }
+    if (info?.fileList[0]) {
+      getBase64(info.fileList[0].originFileObj, (url) => {
+        setImageUrl(url);
+      });
+    }
+  };
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", () => callback(reader.result));
+    reader.readAsDataURL(img);
+  };
 
   const uploadButton = (
     <div style={{ width: "200px" }}>
@@ -142,6 +167,9 @@ export default function AddNew() {
       gender:data.gender
     })
     console.log(res1.data[0]);
+    setImageUrl([
+      data.profile_pic
+    ])
   }
  useEffect(() => {
   if (id) {
@@ -187,13 +215,29 @@ export default function AddNew() {
             <div className="border rounded p-3 bg-white">
               {" "}
               <Form.Item name="profile_pic">
-                <Upload
-                  // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  onChange={handleChange}
-                >
-                  {uploadButton}
-                </Upload>
+              <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              showUploadList={false}
+              beforeUpload={() => false}
+              maxCount={1}
+              onChange={handleChange}
+              accept='image/*'
+            >
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
               </Form.Item>
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>

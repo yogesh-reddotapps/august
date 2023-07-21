@@ -34,88 +34,10 @@ import moment from "moment";
 import { API_BASE_URL } from "constants/ApiConstant";
 import { formatDate } from "constants/DateConstant";
 import { Option } from "antd/lib/mentions";
-const teacherArray = [
-  {
-    value: "Teacher 1",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-1.jpg"
-          alt="img"
-        />
-        Teacher 1
-      </div>
-    ),
-  },
-  {
-    value: "Teacher 2",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-2.jpg"
-          alt="img"
-        />
-        Teacher 2
-      </div>
-    ),
-  },
-  {
-    value: "Teacher 3",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-3.jpg"
-          alt="img"
-        />
-        Teacher 3
-      </div>
-    ),
-  },
-  {
-    value: "Teacher 4",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-4.jpg"
-          alt="img"
-        />
-        Teacher 4
-      </div>
-    ),
-  },
-  // Add more objects with similar format here
-  // ...
-  {
-    value: "Teacher 5",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-5.jpg"
-          alt="img"
-        />
-        Teacher 5
-      </div>
-    ),
-  },
-  {
-    value: "Teacher 6",
-    label: (
-      <div>
-        <img
-          className="circleTeacherImage mr-2"
-          src="/img/avatars/thumb-6.jpg"
-          alt="img"
-        />
-        Teacher 6
-      </div>
-    ),
-  },
-];
+import ExportButton from "../Export/ExportButton";
+import { headersForAssesment, headersForBatches, headersForCourseMaterial, headersForCourseStudent, headersForTeacherAssigned } from "../Export/Headers";
+
+
 let alertstyle = {
   position: "absolute",
   top: "0px",
@@ -154,26 +76,82 @@ function FacilityBooking() {
     "Course category added Successfully!"
   );
   const addParam = queryParams.get("add");
-  const dummyData = [
-    {
-      userId: 1,
-      teacherName: "John Doe",
-      gender: "Male",
-      nationality: "American",
-      mobileNumber: "1234567890",
-      emailId: "johndoe@example.com",
-      assignedOn: "2023-04-18",
-    },
-    {
-      userId: 2,
-      teacherName: "Jane Smith",
-      gender: "Female",
-      nationality: "British",
-      mobileNumber: "9876543210",
-      emailId: "janesmith@example.com",
-      assignedOn: "2023-04-19",
-    },
-  ];
+  const [newAllUsersData,setNewAllUsersData] = useState([]);
+  const [newAllAssessmentData,setNewAllAssessmentData] = useState([]);
+const [newAllCourseData,setNewAllCourseData] = useState([]);
+const [newAllBatchData,setNewAllBatchData] = useState([]);
+const [newAllStudentData,setNewAllStudentData] = useState([]);
+useEffect(()=>{
+  let nAllUsersData =[...studentEnroll]
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.student_dob=formatDate(item.student_dob);
+    item.enrollment_date = formatDate(item.enrollment_date)
+  })
+  setNewAllStudentData(nAllUsersData)
+},[studentEnroll])
+
+useEffect(()=>{
+  let nAllUsersData =[...batchDetails]
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    item.start_date=formatDate(item.start_date);
+    item.end_date = formatDate(item.end_date);
+    item.status=item.status?"Active":"InActive"
+  })
+  setNewAllBatchData(nAllUsersData)
+},[batchDetails])
+
+
+
+useEffect(()=>{
+  let nAllUsersData =[...assesment]
+  nAllUsersData && nAllUsersData.map((item)=>{
+   
+    try {
+      item.questionLength = JSON.parse(item.description).length;
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+    }
+    
+    try {
+      item.due_date = formatDate(item.due_date);
+    } catch (error) {
+      console.error("Error formatting due_date:", error);
+    }
+    
+    try {
+      item.start_date = formatDate(item.start_date);
+    } catch (error) {
+      console.error("Error formatting start_date:", error);
+    }
+  })
+  setNewAllAssessmentData(nAllUsersData)
+},[assesment])
+
+
+
+useEffect(()=>{
+  let nAllUsersData =[...courseMaterial]
+  nAllUsersData && nAllUsersData.map((item)=>{
+    item.created_at = formatDate(item.created_at);
+    item.status = item.status?"Active":"In Active"
+  })
+  setNewAllCourseData(nAllUsersData)
+},[courseMaterial])
+
+  useEffect(()=>{
+    let nAllUsersData =[...teacherEnroll]
+    nAllUsersData && nAllUsersData.map((item)=>{
+     
+      item.created_at=formatDate(item.created_at);
+      item.teacher_status = item.teacher_status==="verified"?"Active":"In Active"
+  
+    })
+    setNewAllUsersData(nAllUsersData)
+  },[teacherEnroll])
+
+
   const membershipRequestColumns = [
     {
       title: "User ID",
@@ -490,14 +468,14 @@ function FacilityBooking() {
       dataIndex: "teacher_email",
     },
     {
-      title: "Batch ID",
+      title: "Batch Name",
       dataIndex: "batch_name",
       // render: () => {
       //   return <>#B002</>;
       // },
     },
     {
-      title: "Class ID",
+      title: "Class Name",
       dataIndex: "class_name",
      
     },
@@ -507,15 +485,15 @@ function FacilityBooking() {
     },
     {
       title: "Status",
-      dataIndex: "status",
+      dataIndex: "teacher_status",
       render: (text) => {
         return (
           <div
             className={`${
-              text !== 1 ? "text-danger" : "text-success"
+              text !== "verified" ? "text-danger" : "text-success"
             } font-weight-semibold`}
           >
-            {text}
+             {text !== "verified"?"In Active":"Active"}
           </div>
         );
       },
@@ -656,12 +634,13 @@ function FacilityBooking() {
                   Filters
                 </Button>
               </Filter>
-              <Button
+              {/* <Button
                 icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+               <ExportButton data={newAllUsersData} passing={headersForTeacherAssigned}/>
             </div>
             <Button
               onClick={showModal}
@@ -694,12 +673,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllStudentData} passing={headersForCourseStudent}/> 
           </div>
           <Helper
             clients={studentEnroll}
@@ -727,12 +707,13 @@ function FacilityBooking() {
                 Filters
               </Button>
             </Filter>
-            <Button
+            {/* <Button
               icon={<Icon component={CsvIcon} />}
               className="d-flex align-items-center ml-2"
             >
               Export
-            </Button>
+            </Button> */}
+            <ExportButton data={newAllBatchData} passing={headersForBatches}/>
             <Select
               className="mx-2"
               style={{ width: "120px" }}
@@ -777,12 +758,13 @@ function FacilityBooking() {
                   Filters
                 </Button>
               </Filter>
-              <Button
+              {/* <Button
                 icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+              <ExportButton data={newAllAssessmentData} passing={headersForAssesment}/>
             </div>
             <Button className="bg-info">
               <Link
@@ -818,16 +800,17 @@ function FacilityBooking() {
                   Filters
                 </Button>
               </Filter>
-              <Button
+              {/* <Button
                 icon={<Icon component={CsvIcon} />}
                 className="d-flex align-items-center ml-2"
               >
                 Export
-              </Button>
+              </Button> */}
+              <ExportButton data={newAllCourseData} passing={headersForCourseMaterial}/>
             </div>
             <Button className="bg-info">
               <Link
-                to={"curriculam_details/course_material/add_new"}
+                to={`curriculam_details/course_material/add_new?id=${location.state.id}`}
                 className="text-white"
               >
                 {" "}
