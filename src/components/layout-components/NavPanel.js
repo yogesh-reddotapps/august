@@ -143,6 +143,7 @@ import { DIR_RTL } from "constants/ThemeConstant";
 import { EditPro, HaveNoti, Noti, SignOut } from "assets/svg/icon";
 import { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
 
 const NavPanel = ({ locale }) => {
   const [visible, setVisible] = useState(false);
@@ -169,9 +170,13 @@ const NavPanel = ({ locale }) => {
   };
 
   const signOut = async () => {
-    console.log('signOut');
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/admin/logout`,{
+      fcmToken:localStorage.getItem('token')
+    })
+    if(res1.status===200){
     localStorage.clear()
-    history.push('/auth/login')
+    history.push('/auth/login')      
+    }
   }
   return (
     <>

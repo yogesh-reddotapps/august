@@ -24,14 +24,17 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import moment from "moment";
 
 function Submission() {
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const assesmentId = queryParams.get("assessmentId");
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
   );
-  const [membershipRequestData, setmembershipRequestData] = useState(
-    membershipEventBooking
-  );
+  const [membershipRequestData, setmembershipRequestData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const membershipRequestColumns = [
@@ -119,57 +122,65 @@ function Submission() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
+  const sendStatus = async (status,student_id)=>{
+    console.log(status,student_id);
+    const res1 = await axios.post(`http://18.140.159.50:3333/api/accepet-or-reject-assessment/${assesmentId}`,{
+      student_id:student_id,
+      status:status
+    })
+    console.log(res1)
+  }
   const facilityBookingColumns = [
     {
       title: "User Id",
-      dataIndex: "id",
+      dataIndex: "student_id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img style={{width:'60px'}} src={`${avatar}`} />;
       },
     },
     {
       title: "Student Name",
-      dataIndex: "name",
-      render: (avatar) => {
-        return <h5>Jane Cooper</h5>;
-      },
+      dataIndex: "student_name",
+      // render: (avatar) => {
+      //   return <h5>Jane Cooper</h5>;
+      // },
     },
     {
       title: "Enrolled On",
-      dataIndex: "name",
-      render: (avatar) => {
-        return <h5>16 Jan 2023</h5>;
+      dataIndex: "enrollment_date",
+      render: (text) => {
+        return <h5>{moment(text).format("DD-MM-YYYY")}</h5>;
       },
     },
     {
       title: "Batch ID",
-      dataIndex: "name",
-      render: (avatar) => {
-        return <h5>#W1-BS</h5>;
-      },
+      dataIndex: "batch_name",
+      // render: (avatar) => {
+      //   return <h5>#W1-BS</h5>;
+      // },
     },
     {
       title: "Face Recognition",
-      dataIndex: "avatar",
+      dataIndex: "photo",
       render: (avatar) => {
         return <img src={`${avatar}`} />;
       },
     },
     {
       title: "Id Uploaded",
-      dataIndex: "nationality",
+      dataIndex: "identity",
       render: (avatar) => {
-        return <img src="/img/idcard.png" />;
+        return <img src={avatar} />;
       },
     },
     {
-      title: "Id Uploaded",
-      dataIndex: "nationality",
-      render: (flag) => {
-        return <div> Pending </div>;
+      title: "Status",
+      dataIndex: "id_verified",
+      render: (status) => {
+        return <div className={`${status==='pending'?'text-warning':'text-success'}`}> {status} </div>;
       },
     },
     {
@@ -181,17 +192,17 @@ function Submission() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
-                    <Link to="facility_booking">
+                  <Menu.Item onClick={()=>sendStatus('accept',record.student_id)}>
+                    <span>
                       {" "}
                       <div className="d-flex align-items-center">
                         <AcceptTick />
                         Accept Verification
                       </div>
-                    </Link>
+                    </span>
                   </Menu.Item>
-                  <Menu.Item>
-                    <span onClick={() => onDeleteData(record)}>
+                  <Menu.Item onClick={()=>sendStatus('reject',record.student_id)}>
+                    <span>
                       {" "}
                       <div className="d-flex align-items-center">
                         <CancelCross />
@@ -318,6 +329,18 @@ function Submission() {
         console.log(err);
       });
   };
+
+  const getSubmissions = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-submission/${id}`)
+    setFacilityBooking(res1.data.data);
+  }
+
+  useEffect(() => {
+      if (assesmentId) {
+      getSubmissions(assesmentId);
+    }
+  }, [])
+  
 
   return (
     <div className="tabbarWhite">

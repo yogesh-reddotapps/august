@@ -1,4 +1,4 @@
-import { Button, Menu, Modal, Select, Divider } from "antd";
+import { Button, Menu, Modal, Select, Divider, message } from "antd";
 import {
   FilterIcon,
   CsvIcon,
@@ -293,7 +293,13 @@ function FacilityBooking() {
       setIsModalOpen(false);
     }, 1000);
   };
-
+  const deleteAssessment = async (id) => {
+    const res1 = await axios.delete(`http://18.140.159.50:3333/api/assessments/${id}`)
+    if(res1.status===200){
+      message.success(res1.data.msg)
+      getAssesment()
+    }
+  }
   const handleCancel = () => {
     setIsModalOpen(false);
   };
@@ -356,7 +362,7 @@ function FacilityBooking() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
+                  <Menu.Item onClick={()=>deleteAssessment(record.id)}>
                     <span>
                       {" "}
                       <DeleteOutlined className="mr-2 " />
@@ -364,15 +370,18 @@ function FacilityBooking() {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <span className="d-flex align-items-center">
+                    <Link
+                     className="d-flex align-items-center"
+                     to={`curriculam_details/assessment/edit?courseId=${location.state.id}&assessmentId=${record.id}`}
+                     >
                       <CustomIcon className="mr-2" svg={Edit} />
                       Edit
-                    </span>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to="curriculam_details/assessment/submission"
+                      to={`curriculam_details/assessment/submission?assessmentId=${record.id}`}
                     >
                       <FileUnknownOutlined className="mr-2" />
                       View Submissions
@@ -446,7 +455,7 @@ function FacilityBooking() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to={`curriculum_list/curriculam_details/batch/classes?batchId=${record.id}`}>
+                    <Link to={`curriculum_list/curriculam_details/batch/classes?batchId=${record.id}&courseId=${location.state.id}`}>
                       {" "}
                       <EyeOutlined className="mr-2 " />
                       View Classes
@@ -777,7 +786,7 @@ function FacilityBooking() {
             </div>
             <Button className="bg-info">
               <Link
-                to={"curriculam_details/assessment/add_new"}
+                to={`curriculam_details/assessment/add_new?courseId=${location.state.id}`}
                 className="text-white"
               >
                 {" "}

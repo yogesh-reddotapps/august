@@ -60,6 +60,7 @@ function FacilityBooking() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const batchId = queryParams.get("batchId");
+  const courseId = queryParams.get("courseId")
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -119,7 +120,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to={`classes/view_subjects?batchId=${batchId}&classId=${record.id}`}
+                      to={`classes/view_subjects?batchId=${batchId}&classId=${record.id}&courseId=${courseId}`}
                     >
                       {/* <EyeOutlined className="mr-2" /> */}
                       View Subjects

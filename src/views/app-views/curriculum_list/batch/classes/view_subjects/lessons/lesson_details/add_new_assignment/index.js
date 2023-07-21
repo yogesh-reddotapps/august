@@ -12,15 +12,47 @@ import {
 } from "antd";
 import { PlusOutlined ,CloseCircleOutlined} from "@ant-design/icons";
 import { AssessQue, BasicDet, UploadFileIcon } from "assets/svg/icon";
+function convertData(data) {
+  const convertedData = [];
 
+  data.forEach((item) => {
+    // Find the correct option using the OptionSwitch fields
+    let correctOption = null;
+    for (const optionKey in item) {
+      if (optionKey.startsWith("OptionSwitch") && item[optionKey]) {
+        correctOption = item[optionKey.replace("Switch", "")];
+        break;
+      }
+    }
+
+    // Create the new formatted item
+    const newItem = {
+      title: item.Question,
+      options: [item.OptionA, item.OptionB, item.OptionC, item.OptionD],
+      correct_option: item.correctOption,
+      answer_explanation: "",
+    };
+
+    // Append the new item to the convertedData array
+    convertedData.push(newItem);
+  });
+
+  return convertedData;
+}
 const AddNew = () => {
   const [form] = Form.useForm();
+  const searchParams = new URLSearchParams(document.location.search);
+  const lessonId = searchParams.get("lessonId");
+  const courseId = searchParams.get("courseId");
+  const batchId = searchParams.get("batchId");
+  const classId = searchParams.get("classId");
+  const subjectId = searchParams.get("subjectId")
   const { TabPane } = Tabs;
   const { TextArea } = Input;
   const [textareaVal, setTextareaVal] = useState("");
   const [adtextareaVal, setAdTextareaVal] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [assType, setAssType] = useState("MCQ_Assignment");
+  const [assType, setAssType] = useState("mcq");
   const [activeTab, setActiveTab] = useState("1");
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [addQue, setAddQue] = useState([
@@ -88,7 +120,41 @@ const AddNew = () => {
   }
 
   const onFinish = (e) => {
-    console.log(e);
+    if (e.assignment_type==='txt') {
+      const data = {
+        batch_id:batchId,
+        class_id:classId,
+        course_id:courseId,
+        subject_id:subjectId,
+        lesson_id:lessonId,
+        status:1,
+        description:adtextareaVal,
+        url:'url',
+        assignment_name:e.name,
+        assignment_type:e.assignment_type,
+        assignment_questions:0,
+        assignment_details:textareaVal
+      }
+      console.log(data)
+      return
+    }
+   
+    const convertedData = convertData(addQue)
+    const data = {
+      batch_id:batchId,
+      class_id:classId,
+      course_id:courseId,
+      subject_id:subjectId,
+      lesson_id:lessonId,
+      status:1,
+      description:convertedData,
+      url:'url',
+      assignment_name:e.name,
+      assignment_type:e.assignment_type,
+      assignment_questions:convertedData.length,
+      assignment_details:textareaVal
+    }
+    console.log(data);
   };
   function handleNextClick() {
     if (activeTab >= 0 && activeTab <= 1) {
@@ -155,8 +221,8 @@ const AddNew = () => {
       updatedQuestions[ind].Question = e;
     } else if (data == "OptionA") {
       updatedQuestions[ind].OptionA = e;
-    } else if (data == "OptionSwitchA") {
-      updatedQuestions[ind].OptionSwitchA = e;
+    } else if (data == "correctOption") {
+      updatedQuestions[ind].correctOption = e;
     } else if (data == "OptionSwitchB") {
       updatedQuestions[ind].OptionSwitchB = e;
     } else if (data == "OptionSwitchC") {
@@ -266,11 +332,11 @@ const AddNew = () => {
                     onChange={handleChange}
                     options={[
                       {
-                        value: "MCQ_Assignment",
+                        value: "mcq",
                         label: "MCQ Assignment",
                       },
                       {
-                        value: "Readding_Assignment",
+                        value: "txt",
                         label: "Readding Assignment",
                       },
                     ]}
@@ -279,11 +345,11 @@ const AddNew = () => {
               </div>
             </div>
 
-            {assType !== "MCQ_Assignment" ? (
+            {assType !== "mcq" ? (
               <>
                 {" "}
                 <div className="border rounded p-3 mt-4 bg-white">
-                  <div className="my-3 w-50">
+                  {/* <div className="my-3 w-50">
                     <Form.Item
                       className="w-75"
                       name={`assignment_title`}
@@ -296,7 +362,7 @@ const AddNew = () => {
                         //   }
                       />
                     </Form.Item>
-                  </div>
+                  </div> */}
                   <div className="my-3 w-50">
                     <Form.Item
                       className="w-75"
@@ -380,7 +446,7 @@ const AddNew = () => {
                 {addQue.map((elem, ind) => {
                   return (
                     <>
-                      <div className="border rounded p-3 mt-4 bg-white">
+                      {/* <div className="border rounded p-3 mt-4 bg-white">
                         <div className="my-3 w-50">
                           <Form.Item
                             className="w-75"
@@ -479,7 +545,98 @@ const AddNew = () => {
                             />
                           </Form.Item>
                         </div>
+                      </div> */}
+                      <div className="border rounded p-3 mt-4 bg-white">
+                    <div className="my-3 w-50">
+                      <Form.Item
+                        className="w-75"
+                        // name={`Question${ind + 1}`}
+                        label={`Question ${ind + 1}`}
+                      >
+                        <Input
+                          placeholder="Type here"
+                          value={elem.Question}
+                          onChange={(e) =>
+                            queData("Question", ind, e.target.value)
+                          }
+                        />
+                      </Form.Item>
+                    </div>
+                    <Radio.Group
+                      className="d-flex flex-column my-3 w-50"
+                      value={elem.correctOption}
+                      onChange={(e) => queData("correctOption", ind, e.target.value)}
+                    >
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionA${ind + 1}`}
+                          label="Option A"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionA}
+                            onChange={(e) =>
+                              queData("OptionA", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionA} />
                       </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionB${ind + 1}`}
+                          label="Option B"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionB}
+                            onChange={(e) =>
+                              queData("OptionB", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionB} />
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionC${ind + 1}`}
+                          label="Option C"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionC}
+                            onChange={(e) =>
+                              queData("OptionC", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionC} />
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionD${ind + 1}`}
+                          label="Option D"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionD}
+                            onChange={(e) =>
+                              queData("OptionD", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionD} />
+                      </div>
+                    </Radio.Group>
+                  </div>
                     </>
                   );
                 })}

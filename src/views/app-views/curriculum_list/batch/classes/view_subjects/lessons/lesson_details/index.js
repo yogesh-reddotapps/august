@@ -59,6 +59,9 @@ function FacilityBooking() {
   const type = searchParams.get("type");
   const lessonId = searchParams.get("lessonId");
   const batchId = searchParams.get("batchId");
+  const courseId = searchParams.get("courseId");
+  const classId = searchParams.get("classId");
+  const subjectId = searchParams.get("subjectId");
 
   const handleOk = () => {
     setTimeout(() => {
@@ -200,7 +203,7 @@ function FacilityBooking() {
                 Export
               </Button>
             </div>
-           <Button className="bg-info"><Link to={'lesson_details/add_new_assignment'} className="text-white">Create New Assignment</Link></Button>
+           <Button className="bg-info"><Link to={`lesson_details/add_new_assignment?batchId=${batchId}&lessonId=${lessonId}&courseId=${courseId}&classId=${classId}&subjectId=${subjectId}`} className="text-white">Create New Assignment</Link></Button>
           </div>
           <Helper clients={assignments} attribiue={SubjectColumn} />
         </div>

@@ -62,6 +62,8 @@ function FacilityBooking() {
   const history = useHistory()
   const batchId = queryParams.get("batchId");
   const subjectId = queryParams.get("subjectId")
+  const courseId = queryParams.get("courseId")
+  const classId = queryParams.get("classId")
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -115,7 +117,7 @@ function FacilityBooking() {
                   <Menu.Item>
                     <Link
                       className="d-flex align-items-center"
-                      to={`lessons/lesson_details?id=1&type=text&lessonId=${record.id}&batchId=${batchId}`}
+                      to={`lessons/lesson_details?id=1&type=text&lessonId=${record.id}&batchId=${batchId}&courseId=${courseId}&classId=${classId}&subjectId=${subjectId}`}
                     >
                       <EyeOutlined className="mr-2" />
                       View Lesson Details

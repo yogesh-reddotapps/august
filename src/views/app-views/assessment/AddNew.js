@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Form,
@@ -9,15 +9,51 @@ import {
   Modal,
   DatePicker,
   Switch,
+  message,
 } from "antd";
-import { FileUnknownOutlined,PlusOutlined } from "@ant-design/icons";
+import { FileUnknownOutlined, PlusOutlined } from "@ant-design/icons";
 import "./assessment.css";
 import { AssessQue, BasicDet } from "assets/svg/icon";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
+import moment from "moment";
 
+function convertData(data) {
+  const convertedData = [];
+
+  data.forEach((item) => {
+    // Find the correct option using the OptionSwitch fields
+    let correctOption = null;
+    for (const optionKey in item) {
+      if (optionKey.startsWith("OptionSwitch") && item[optionKey]) {
+        correctOption = item[optionKey.replace("Switch", "")];
+        break;
+      }
+    }
+
+    // Create the new formatted item
+    const newItem = {
+      title: item.Question,
+      options: [item.OptionA, item.OptionB, item.OptionC, item.OptionD],
+      correct_option: item.correctOption,
+      answer_explanation: "",
+    };
+
+    // Append the new item to the convertedData array
+    convertedData.push(newItem);
+  });
+
+  return convertedData;
+}
 const AddNew = () => {
   const [form] = Form.useForm();
   const { TabPane } = Tabs;
   const { TextArea } = Input;
+  const history = useHistory()
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const courseId = queryParams.get("courseId");
+  const assessmentId = queryParams.get("assessmentId");
   const [textareaVal, setTextareaVal] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("1");
@@ -32,12 +68,66 @@ const AddNew = () => {
       OptionSwitchB: "",
       OptionSwitchC: "",
       OptionSwitchD: "",
+      correctOption:null
     },
   ]);
 
-  const onFinish = (e) => {
-    console.log(e);
+  const onFinish = async (e) => {
+    if (assessmentId) {
+      try {
+        const convertedData = convertData(addQue);
+    
+        const res1 = await axios.put(`http://18.140.159.50:3333/api/assessments/${assessmentId}`, {
+          course_id: courseId,
+          assessment_title: e.name,
+          assessment_details:textareaVal,
+          assessment_question: convertedData.length,
+          description: convertedData
+        });
+    
+        if(res1.status===201){
+          message.success(res1.data.msg)
+          history.goBack()
+        }
+      } catch (error) {
+        console.log(error);
+        error.response.data.errors.map((elem,i)=>{
+          message.error(elem.message)
+        })
+        console.log(error);
+      }
+      return
+    }
+    try {
+      const today = moment().format("YYYY-MM-DD");
+      const dateAfter10Days = moment().add(10, 'days').format('YYYY-MM-DD');
+      const convertedData = convertData(addQue);
+  
+      const res1 = await axios.post(`http://18.140.159.50:3333/api/assessments`, {
+        course_id: courseId,
+        assessment_title: e.name,
+        assessment_details:textareaVal,
+        assessments_type: "mcq",
+        start_date: today,
+        due_date: dateAfter10Days,
+        status: "pending",
+        assessment_question: convertedData.length,
+        description: convertedData
+      });
+  
+      if(res1.status===201){
+        message.success(res1.data.msg)
+        history.goBack()
+      }
+    } catch (error) {
+      console.log(error);
+      error.response.data.errors.map((elem,i)=>{
+        message.error(elem.message)
+      })
+      console.log(error);
+    }
   };
+  
   function handleNextClick() {
     if (activeTab >= 0 && activeTab <= 1) {
       let actnum = Number(activeTab) + 1;
@@ -103,8 +193,8 @@ const AddNew = () => {
       updatedQuestions[ind].Question = e;
     } else if (data == "OptionA") {
       updatedQuestions[ind].OptionA = e;
-    } else if (data == "OptionSwitchA") {
-      updatedQuestions[ind].OptionSwitchA = e;
+    } else if (data == "correctOption") {
+      updatedQuestions[ind].correctOption = e;
     } else if (data == "OptionSwitchB") {
       updatedQuestions[ind].OptionSwitchB = e;
     } else if (data == "OptionSwitchC") {
@@ -143,6 +233,40 @@ const AddNew = () => {
     setAddQue([...addQue, newQue]);
     console.log(addQue);
   };
+  const getAssessment = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/assessments/${id}`)
+    const data = res1.data[0]
+    const des = JSON.parse(data.description)
+    const convertedData = des.map((item) => {
+      const newData = {
+        Question: item.title,
+        OptionA: item.options[0],
+        OptionB: item.options[1],
+        OptionC: item.options[2],
+        OptionD: item.options[3],
+        OptionSwitchA: "",
+        OptionSwitchB: "",
+        OptionSwitchC: "",
+        OptionSwitchD: "",
+        correctOption: item.correct_option
+      };
+      return newData;
+    });
+    console.log(convertedData);
+    setAddQue(convertedData)
+    setTextareaVal(data.assessment_details)
+    form.setFieldsValue({
+      id:data.id,
+      name:data.assessment_title
+    })
+  }
+  useEffect(() => {
+    if (assessmentId) {
+      console.log(assessmentId)
+      getAssessment(assessmentId)
+    }
+  }, [])
+  
   return (
     <div className="tabbarWhite">
       <Form
@@ -153,19 +277,22 @@ const AddNew = () => {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <BasicDet className="mr-2 " />
-          <span className="ml-2">Basic Details</span>
-        </div>
-      )} key="1">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <BasicDet className="mr-2 " />
+                <span className="ml-2">Basic Details</span>
+              </div>
+            }
+            key="1"
+          >
             <div className="border rounded p-3 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item name="id" label="Assessment Id">
-                  <Input disabled={true} />
+                    <Input disabled={true} />
                   </Form.Item>
-                  <Form.Item name="period" label="Assessment Details">
+                  <Form.Item label="Assessment Details">
                     <TextArea
                       rows={4}
                       placeholder="Type Here ..."
@@ -182,16 +309,19 @@ const AddNew = () => {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AssessQue className="mr-2 " />
-          <span className="ml-2">Assessment Questions</span>
-        </div>
-      )} key="2">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <AssessQue className="mr-2 " />
+                <span className="ml-2">Assessment Questions</span>
+              </div>
+            }
+            key="2"
+          >
             {addQue.map((elem, ind) => {
               return (
                 <>
-                  <div className="border rounded p-3 mt-4 bg-white">
+                  {/* <div className="border rounded p-3 mt-4 bg-white">
                     <div className="my-3 w-50">
                       <Form.Item
                         className="w-75"
@@ -290,6 +420,98 @@ const AddNew = () => {
                         />
                       </Form.Item>
                     </div>
+                  </div> */}
+
+                  <div className="border rounded p-3 mt-4 bg-white">
+                    <div className="my-3 w-50">
+                      <Form.Item
+                        className="w-75"
+                        // name={`Question${ind + 1}`}
+                        label={`Question ${ind + 1}`}
+                      >
+                        <Input
+                          placeholder="Type here"
+                          value={elem.Question}
+                          onChange={(e) =>
+                            queData("Question", ind, e.target.value)
+                          }
+                        />
+                      </Form.Item>
+                    </div>
+                    <Radio.Group
+                      className="d-flex flex-column my-3 w-50"
+                      value={elem.correctOption}
+                      onChange={(e) => queData("correctOption", ind, e.target.value)}
+                    >
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionA${ind + 1}`}
+                          label="Option A"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionA}
+                            onChange={(e) =>
+                              queData("OptionA", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionA} />
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionB${ind + 1}`}
+                          label="Option B"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionB}
+                            onChange={(e) =>
+                              queData("OptionB", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionB} />
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionC${ind + 1}`}
+                          label="Option C"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionC}
+                            onChange={(e) =>
+                              queData("OptionC", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionC} />
+                      </div>
+                      <div className="d-flex align-items-center justify-content-between">
+                        <Form.Item
+                          className="w-75"
+                          // name={`OptionD${ind + 1}`}
+                          label="Option D"
+                        >
+                          <Input
+                            className="w-100"
+                            placeholder="Type here"
+                            value={elem.OptionD}
+                            onChange={(e) =>
+                              queData("OptionD", ind, e.target.value)
+                            }
+                          />
+                        </Form.Item>
+                        <Radio value={addQue[ind].OptionD} />
+                      </div>
+                    </Radio.Group>
                   </div>
                 </>
               );
@@ -337,7 +559,7 @@ const AddNew = () => {
               className="px-4 font-weight-semibold text-white bg-info"
               htmlType="submit"
             >
-              Save
+              {assessmentId?"Update":"Save"}
             </Button>
           </div>
         </Form.Item>
