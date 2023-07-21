@@ -188,9 +188,13 @@ useEffect(()=>{
       dataIndex: "user_id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} alt="img" />;
+        return <img 
+        style={{ borderRadius: "50%" }}
+              width={40}
+              height={40}
+        src={`${avatar}`} />;
       },
     },
     {

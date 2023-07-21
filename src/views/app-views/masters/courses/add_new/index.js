@@ -6,6 +6,7 @@ import axios from "axios";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { API_BASE_URL } from "constants/ApiConstant";
+import uploadImage from "middleware/uploadImage";
 let styles = {
   files: {
     listStyle: "none",
@@ -49,7 +50,7 @@ const { TextArea } = Input;
 
 const MyForm = () => {
   const [form] = Form.useForm();
-  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(null);
   const [uploadfileErr, setUploadfileErr] = useState(false)
   const [successModal, setSuccessModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -73,22 +74,35 @@ const MyForm = () => {
     updatedArray.splice(index, 1);
     setDataArray(updatedArray);
   };
-  function handleFileSelect(event) {
-    const fileList = event.target.files;
-    const newSelectedFiles = [];
+  // function handleFileSelect(event) {
+  //   const fileList = event.target.files;
+  //   const newSelectedFiles = [];
 
-    for (let i = 0; i < fileList.length; i++) {
-      newSelectedFiles.push(fileList[i]);
-    }
+  //   for (let i = 0; i < fileList.length; i++) {
+  //     newSelectedFiles.push(fileList[i]);
+  //   }
+  //   //   console.log(selectedFiles)
+
+  //   setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
+  //   if (newSelectedFiles.length===0) {
+  //     setUploadfileErr(true)
+  //     return
+  //   } else{
+  //     setUploadfileErr(false)
+  //   }
+  // }
+
+   function handleFileSelect(event) {
+    const fileList = event.target.files;
+    // const newSelectedFiles = [];
+
+    // for (let i = 0; i < fileList.length; i++) {
+    //   newSelectedFiles.push(fileList[i]);
+    // }
     //   console.log(selectedFiles)
 
-    setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
-    if (newSelectedFiles.length===0) {
-      setUploadfileErr(true)
-      return
-    } else{
-      setUploadfileErr(false)
-    }
+    // setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
+    setSelectedFiles(fileList);
   }
   const handleInputChange = (name, value) => {
     form.setFieldsValue({ [name]: value });
@@ -103,6 +117,7 @@ const MyForm = () => {
     } else{
       setUploadfileErr(false)
     }
+     const url = await uploadImage(selectedFiles[0])
     if(!id){
     let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-course',{
       "course_category": e.course_category,
@@ -115,7 +130,9 @@ const MyForm = () => {
       "course_picture": "",
       "content":JSON.stringify(dataArray),
       "sdf":e.SDF,
-      "certificate":certiTog?1:0
+      "certificate":certiTog?1:0,
+      "type":"img",
+      "url":url,
     })
     console.log(res1);
     setSuccessModal(true);
@@ -137,6 +154,8 @@ const MyForm = () => {
       "sdf":e.SDF,
       "certificate":certiTog?1:0,
       "id":id,
+       "type":"img",
+      "url":url,
     })
     console.log(res1);
     setSuccessModal(true);
@@ -146,10 +165,10 @@ const MyForm = () => {
   }
 }
   const delUplFile = (i) => {
-    let AfterDeleteFile = selectedFiles.filter((elem, index) => {
-      return index !== i;
-    });
-    setSelectedFiles(AfterDeleteFile);
+    // let AfterDeleteFile = selectedFiles.filter((elem, index) => {
+    //   return index !== i;
+    // });
+    setSelectedFiles(null);
   };
   async function getCourseCate() {
     try {
@@ -184,6 +203,12 @@ const MyForm = () => {
         const data = response.data.data[0];
         form.setFieldsValue({
           ...data,
+        })
+        setSelectedFiles({
+          0:{
+            name:"File 1",
+            url:data.url
+          }
         })
         setDataArray(JSON.parse(data.content));
       })
@@ -381,32 +406,39 @@ const MyForm = () => {
             style={styles.uploadFile}
             className="uploadFile"
             type="file"
+            accept="image/*"
             multiple
             onChange={handleFileSelect}
           />
         </div>
         <div className="mt-4">
-          {selectedFiles.length > 0 && (
-            <ul className="p-0" style={{ width: "55%" }}>
-              {selectedFiles.map((file, i) => (
-                <li
-                  key={file.name}
+          {selectedFiles  && (
+            <ul className="p-0" style={{ width: "40%" }}>
+              {/* {selectedFiles.map((file, i) => ( */}
+              <li
+
+onClick={() => {
+  if (selectedFiles[0].url) {
+    window.open(selectedFiles[0].url, '_blank');
+  }
+}}
+                  key={selectedFiles[0].name}
                   className="my-3 w-100 d-flex align-items-center justify-content-between"
                   style={styles.files}
                 >
                   <div className="d-flex align-items-center">
                     <UploadFileIcon />{" "}
-                    <span style={{width:'150px'}} className="ml-2">{file.name} </span>
+                    <span style={{width:'150px'}} className="ml-2">{selectedFiles[0].name} </span>
                   </div>
                   <span
                     style={{ cursor: "pointer" }}
-                    onClick={() => delUplFile(i)}
+                    onClick={() => delUplFile()}
                   >
                     {" "}
                     <CloseCircleOutlined />{" "}
                   </span>
                 </li>
-              ))}
+              {/* ))} */}
             </ul>
           )}
         </div>

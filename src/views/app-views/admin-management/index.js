@@ -118,9 +118,13 @@ export default function MembershipRequest() {
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img 
+        style={{ borderRadius: "50%" }}
+              width={40}
+              height={40}
+        src={`${avatar}`} />;
       },
     },
     {

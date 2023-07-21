@@ -801,7 +801,7 @@ useEffect(()=>{
             </div>
             <Button className="bg-info">
               <Link
-                to={"curriculam_details/course_material/add_new"}
+                to={`curriculam_details/course_material/add_new?id=${location.state.id}`}
                 className="text-white"
               >
                 {" "}

@@ -30,6 +30,7 @@ import { PlusOutlined,CloseCircleOutlined } from "@ant-design/icons";
 import { Option } from "antd/lib/mentions";
 import moment from "moment";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import uploadImage from "middleware/uploadImage";
 const managArray = [
   {
     value: "Manager 1",
@@ -126,6 +127,8 @@ export default function AddNew() {
   const [successModal, setSuccessModal] = useState(false);
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id')
+
+  
   const [succesmodaltext, setSuccesmodaltext] = useState({
     title: "Status Change",
     text: "teacher status changed.",
@@ -140,6 +143,31 @@ export default function AddNew() {
   const successCancel = () => {
     setSuccessModal(false);
   };
+
+  const [fileList,setFileList]=useState([]);
+const [imageUrl,setImageUrl]=useState();
+
+
+
+const handleChange = (info) => {
+  const file = info.fileList[0]?.originFileObj;
+  let formData = new FormData();
+  if (file) {
+    formData.append("file", file);
+    setFileList(file);
+  }
+  if (info?.fileList[0]) {
+    getBase64(info.fileList[0].originFileObj, (url) => {
+      setImageUrl(url);
+    });
+  }
+};
+
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener("load", () => callback(reader.result));
+  reader.readAsDataURL(img);
+};
 
   const changeStudHandleOk = () => {
     setIsChangeStudModalOpen(false);
@@ -218,6 +246,7 @@ export default function AddNew() {
   const [form] = Form.useForm();
 
   const onFinish = async (values) => {
+    const image = await uploadImage(fileList);
     if (id) {
       let updateRes = await axios.post('http://18.140.159.50:3333/api/edit-teacher-details',{
         "user_id": id,
@@ -232,6 +261,7 @@ export default function AddNew() {
         field_of_study: values.field_of_study,
         education_start_date: moment(values.education_start_date).format("YYYY-MM-DD HH:mm:ss"),
         education_end_date: moment(values.education_end_date).format("YYYY-MM-DD HH:mm:ss"),
+        profile_pic:image,
     })
     if (updateRes.data.success) {
       history.push('/app/staffManagement/teacher_management');
@@ -259,6 +289,7 @@ export default function AddNew() {
         education_start_date: moment(values.education_start_date).format("YYYY-MM-DD HH:mm:ss"),
         // education_end_date: "2023-05-11 18:15:12",
         education_end_date: moment(values.education_end_date).format("YYYY-MM-DD HH:mm:ss"),
+        profile_pic:image,
       };
       console.log("test", data);
       const response = await axios.post(
@@ -289,7 +320,7 @@ export default function AddNew() {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-  const handleChange = () => {};
+
 
   const createMembership = (values, url) => {
     const formData = new FormData();
@@ -392,6 +423,9 @@ export default function AddNew() {
       education_start_date:data.education_start_date===null?"":moment(data.education_start_date),
       education_end_date:data.education_end_date===null?"":moment(data.education_end_date)
     })
+    setImageUrl([
+      data.profile_pic
+    ])
     setUdata(res1.data[0]);
   }
   const onBanTeacher = async () => {
@@ -447,13 +481,29 @@ export default function AddNew() {
               <div className="border rounded p-3 bg-white">
                 {" "}
                 <Form.Item name="images">
-                  <Upload
-                    // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                    listType="picture-card"
-                    onChange={handleChange}
-                  >
-                    {uploadButton}
-                  </Upload>
+                <Upload
+              name="avatar"
+              listType="picture-card"
+              className="avatar-uploader"
+              accept="image/*"
+              showUploadList={false}
+              beforeUpload={() => false}
+              maxCount={1}
+              onChange={handleChange}
+            >
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt="avatar"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
+                />
+              ) : (
+                uploadButton
+              )}
+            </Upload>
                 </Form.Item>
                 <div style={{ gap: "60px" }} className="d-flex ">
                   <div style={{ width: "45%" }}>
@@ -768,14 +818,14 @@ export default function AddNew() {
                 Next
               </Button>
             ) : (
-              ""
-            )}
-            <Button
+              <Button
               className="px-4 font-weight-semibold text-white bg-info"
               htmlType="submit"
             >
               Save
             </Button>
+            )}
+            
           </div>
         </Form.Item>
       </Form>
