@@ -120,6 +120,8 @@ const AddNew = () => {
   }
 
   const onFinish = (e) => {
+    console.log(selectedFiles)
+    return
     if (e.assignment_type==='txt') {
       const data = {
         batch_id:batchId,
