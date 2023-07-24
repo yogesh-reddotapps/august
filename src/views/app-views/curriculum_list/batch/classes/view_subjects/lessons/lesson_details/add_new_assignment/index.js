@@ -12,6 +12,7 @@ import {
 } from "antd";
 import { PlusOutlined ,CloseCircleOutlined} from "@ant-design/icons";
 import { AssessQue, BasicDet, UploadFileIcon } from "assets/svg/icon";
+import uploadImage from "middleware/uploadImage";
 function convertData(data) {
   const convertedData = [];
 
@@ -119,8 +120,12 @@ const AddNew = () => {
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
 
-  const onFinish = (e) => {
-    console.log(selectedFiles)
+  const onFinish =async (e) => {
+    var url = []
+    for(let i = 0 ;i<selectedFiles.length;i++){
+    url.push(await uploadImage(selectedFiles[i]))
+    }
+    console.log(url);
     return
     if (e.assignment_type==='txt') {
       const data = {
@@ -131,7 +136,7 @@ const AddNew = () => {
         lesson_id:lessonId,
         status:1,
         description:adtextareaVal,
-        url:'url',
+        url:url,
         assignment_name:e.name,
         assignment_type:e.assignment_type,
         assignment_questions:0,
@@ -150,7 +155,6 @@ const AddNew = () => {
       lesson_id:lessonId,
       status:1,
       description:convertedData,
-      url:'url',
       assignment_name:e.name,
       assignment_type:e.assignment_type,
       assignment_questions:convertedData.length,

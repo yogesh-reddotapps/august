@@ -15,12 +15,11 @@ const ClassAttend = () => {
   const [attData,setAttData]=useState([]);
   const [newAllUsersData,setNewAllUsersData] = useState([]);
 useEffect(()=>{
-  let nAllUsersData = attData
-  nAllUsersData.map((item)=>{
-    item.dob=moment().diff(moment(item.dob, 'DD-MM-YYYY'), 'years');
-    item.present=item.present?"Present":"Absent";
-
-  })
+  let nAllUsersData = attData.map((item) => ({
+    ...item,
+    dob: moment().diff(moment(item.dob, 'DD-MM-YYYY'), 'years'),
+    present: item.present ? 'Present' : 'Absent',
+  }));
   setNewAllUsersData(nAllUsersData)
 },[attData])
 
@@ -123,6 +122,7 @@ useEffect(()=>{
   // ];
 
   useEffect(()=>{
+    getHeaderData();
     getAttendance();
   },[])
 
@@ -143,6 +143,22 @@ useEffect(()=>{
     }).catch((error)=>{
       console.log(error);
     })
+  }
+
+  const getHeaderData = async()=>{
+    try{
+      axios({
+        method:"GET",
+        url:`${API_BASE_URL}/students/course/classes/5`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }).then((response)=>{
+        console.log(response);
+      })
+    }catch(err){
+      console.log(err)
+    }
   }
   return (
     <div>
