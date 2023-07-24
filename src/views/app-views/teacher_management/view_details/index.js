@@ -115,7 +115,7 @@ useEffect(()=>{
     item.end_time = moment(item.end_time,"HH:mm:ss").format("h A");
     item.invite_date = formatDate(item.invite_date);
     item.date_of_action = formatDate(item.date_of_action);
-    item.status = item.status?"Active":"InActive";
+    item.status = item.status;
   })
   setNewAllUsersData(nAllUsersData)
 },[membershipRequestData])
@@ -218,7 +218,7 @@ useEffect(()=>{
       title: "Date of Accept/Reject",
       dataIndex: "date_of_action",
       render:(date)=>{
-        return moment(date).format("DD MMM YYYY, hh:mm:ss A")
+        return <>{moment(date).format("DD MMM YYYY, hh:mm:ss A")}</>
       }
     },
     {
@@ -228,10 +228,16 @@ useEffect(()=>{
         return (
           <div
             className={`${
-              text !== "Active" ? "text-danger" : "text-success"
+              text === 0 && "text-warning"
+            } ${
+              text === 1 && "text-success"
+            } ${
+              text === 2 && "text-danger"
             } font-weight-semibold`}
           >
-            {text}
+            {text===0&&"Sent"}
+            {text===1&&"Accepted"}
+            {text===2&&"Rejected"}
           </div>
         );
       },

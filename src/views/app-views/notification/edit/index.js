@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Button, Input, message } from "antd";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 const Edit = () => {
+  const searchParams = new URLSearchParams(document.location.search);
+  const id = searchParams.get("id");
   const [notiText, setNotiText] = useState("");
   const [notiTit, setNotiTit] = useState('')
   const history = useHistory();
@@ -20,6 +22,16 @@ const Edit = () => {
       action: 1,
       type: "system",
     };
+    if (id) {
+      const res1 = await axios.put(`http://18.140.159.50:3333/api/notifications/${id}`,data);
+    if (res1.status===201) {
+      setNotiText('');
+      setNotiTit('')
+      history.goBack()
+    }
+    console.log(res1);
+    return
+    }
     const res1 = await axios.post("http://18.140.159.50:3333/api/notifications",data);
     if (res1.status===201) {
       setNotiText('');
@@ -28,6 +40,18 @@ const Edit = () => {
     }
     console.log(res1);
   };
+  const getNotification = async () => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/notifications/${id}`)
+    console.log(res1.data[0]);
+    setNotiTit(res1.data[0].notification_title)
+    setNotiText(res1.data[0].description)
+  }
+  useEffect(() => {
+    if (id) {
+    getNotification()
+  }
+  }, [])
+  
   return (
     <>
       <div className="py-3 mb-4 d-flex justify-content-between align-items-center">

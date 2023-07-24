@@ -7,7 +7,16 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+function findUniqueValues(arr1, arr2) {
+  // Convert the arrays to sets to efficiently find unique values
+  const setArr1 = new Set(arr1);
+  const setArr2 = new Set(arr2);
 
+  // Find the unique values that are present in arr1 but not in arr2
+  const uniqueValues = [...setArr1].filter(item => !setArr2.has(item));
+
+  return uniqueValues;
+}
 const EnrollStudent = () => {
   const [form] = Form.useForm();
   const location = useLocation();
@@ -15,13 +24,15 @@ const EnrollStudent = () => {
   const batchId = queryParams.get("batchId");
   const history = useHistory()
   const [coursenameid, setCoursenameid] = useState([]);
+  const [enrolledStu, setEnrolledStu] = useState([])
   const [studata, setstuData] = useState([])
   const onFinish = async (e) => {
-    console.log(e);
-    // return
+    console.log(e.students,enrolledStu);
+    const result = findUniqueValues(e.students, enrolledStu)
+    console.log(result);
     const res1 = await axios.post(`http://18.140.159.50:3333/api/batches/enroll-students`,{
       "batch_id":batchId,
-      "student_ids":e.students,
+      "student_ids":result,
       "enrollment_date":moment(e.enrollmentDate).format('YYYY-MM-DD')
     })
     console.log(res1);
@@ -63,9 +74,9 @@ const EnrollStudent = () => {
     const enrolled = res1.data.data.students.map((elem)=>{
       return elem.student_id
     })
-    console.log(enrolled);
+    setEnrolledStu(enrolled);
     form.setFieldsValue({
-      students:enrolled
+      // students:enrolled
     })
   }
   useEffect(() => {

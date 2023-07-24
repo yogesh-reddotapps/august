@@ -256,7 +256,7 @@ const getBase64 = (img, callback) => {
       phone_number: data.phone_number === null ? "" : data.phone_number,
       email: data.email,
       gender:data.gender,
-      dob: data.dob === null ? "" : moment(data.dob),
+      dob: data.dob === null ? "" : moment(data.dob, "DD-MM-YYYY"),
     });
     setImageUrl([
       data.profile_pic

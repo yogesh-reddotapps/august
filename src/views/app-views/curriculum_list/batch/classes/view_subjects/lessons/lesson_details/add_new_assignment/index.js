@@ -9,10 +9,15 @@ import {
   Modal,
   DatePicker,
   Switch,
+  message,
 } from "antd";
 import { PlusOutlined ,CloseCircleOutlined} from "@ant-design/icons";
 import { AssessQue, BasicDet, UploadFileIcon } from "assets/svg/icon";
 import uploadImage from "middleware/uploadImage";
+import axios from "axios";
+import { API_BASE_URL } from 'constants/ApiConstant';
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { useEffect } from "react";
 function convertData(data) {
   const convertedData = [];
 
@@ -42,7 +47,10 @@ function convertData(data) {
 }
 const AddNew = () => {
   const [form] = Form.useForm();
+  const history = useHistory()
+  const [assignmentData, setAssignmentData] = useState({})
   const searchParams = new URLSearchParams(document.location.search);
+  const assignmentId = searchParams.get("assignmentId");
   const lessonId = searchParams.get("lessonId");
   const courseId = searchParams.get("courseId");
   const batchId = searchParams.get("batchId");
@@ -121,13 +129,13 @@ const AddNew = () => {
   }
 
   const onFinish =async (e) => {
-    var url = []
-    for(let i = 0 ;i<selectedFiles.length;i++){
-    url.push(await uploadImage(selectedFiles[i]))
-    }
-    console.log(url);
-    return
+    // return
     if (e.assignment_type==='txt') {
+      var url = assignmentId ? assignmentData.url :[]
+    for(let i = 0 ;i<selectedFiles.length;i++){
+      const img = await uploadImage(selectedFiles[i]);
+      url.push(img)
+    }
       const data = {
         batch_id:batchId,
         class_id:classId,
@@ -142,7 +150,18 @@ const AddNew = () => {
         assignment_questions:0,
         assignment_details:textareaVal
       }
-      console.log(data)
+      // console.log(data)
+      if (assignmentId) {
+        const res1 = await axios.put(`${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,data)
+        console.log(res1);
+        return
+      }
+      const res1 = await axios.post(`${API_BASE_URL}/subjects/lessons/assignments`,data)
+      if (res1.status===201) {
+        console.log(res1.data.msg);
+      message.success(res1.data.msg)
+      history.goBack()
+    }
       return
     }
    
@@ -160,8 +179,19 @@ const AddNew = () => {
       assignment_questions:convertedData.length,
       assignment_details:textareaVal
     }
-    console.log(data);
-  };
+    if (assignmentId) {
+      console.log(data);
+      // const res1 = await axios.put(`${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,data)
+      // console.log(res1);
+      return
+    }
+    const res1 = await axios.post(`${API_BASE_URL}/subjects/lessons/assignments`,data)
+    if (res1.status===201) {
+      console.log(res1.data.msg);
+    message.success(res1.data.msg)
+    history.goBack()
+  }
+};
   function handleNextClick() {
     if (activeTab >= 0 && activeTab <= 1) {
       let actnum = Number(activeTab) + 1;
@@ -278,6 +308,42 @@ const AddNew = () => {
     })
     setSelectedFiles(AfterDeleteFile);
   }
+  const getAssignment = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/subjects/lessons/assignments/${id}`)
+    setAssignmentData(res1.data);
+    setTextareaVal(res1.data.assignment_details)
+    setAdTextareaVal(res1.data.descriptive_content)
+    if (res1.data.assignment_type==="mcq") {
+      const des = JSON.parse(res1.data.description)
+      const convertedData = des.map((item) => {
+        const newData = {
+          Question: item.title,
+          OptionA: item.options[0],
+          OptionB: item.options[1],
+          OptionC: item.options[2],
+          OptionD: item.options[3],
+          OptionSwitchA: "",
+          OptionSwitchB: "",
+          OptionSwitchC: "",
+          OptionSwitchD: "",
+          correctOption: item.correct_option
+        };
+        return newData;
+      });
+      setAddQue(convertedData)
+    }
+    setAssType(res1.data.assignment_type==="mcq"?"mcq":"txt")
+    form.setFieldsValue({
+      name:res1.data.assignment_name,
+      assignment_type:res1.data.assignment_type==="mcq"?"mcq":"txt"
+    })
+  }
+  useEffect(() => {
+    if (assignmentId) {
+      getAssignment(assignmentId);
+    }
+  }, [])
+  
   return (
     <div className="tabbarWhite">
       <Form
@@ -298,9 +364,9 @@ const AddNew = () => {
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
                   <Form.Item name="id" label="Assignment ID">
-                    <h4>25</h4>
+                    <h4>{assignmentData.id}</h4>
                   </Form.Item>
-                  <Form.Item name="period" label="Assignment Details">
+                  <Form.Item label="Assignment Details">
                     <TextArea
                       rows={4}
                       placeholder="Type Here ..."
@@ -372,7 +438,6 @@ const AddNew = () => {
                   <div className="my-3 w-50">
                     <Form.Item
                       className="w-75"
-                      name={`assessment_details`}
                       label={`Assessment Details`}
                     >
                       <TextArea
@@ -434,6 +499,17 @@ const AddNew = () => {
                     />
                   </div>
                   <div className="mt-4">
+                    {
+                      assignmentData.url && <ul className="p-0" style={{width:'40%'}}>
+                      {/* {selectedFiles.map((file,i) => ( */}
+                        <li className="my-3" style={styles.files}>
+                          <a href={assignmentData.url} target="_blank" rel='noreferrer'>
+                          <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">File 1 </span>  </div>
+                          </a>
+                        </li>
+                      {/* ))} */}
+                    </ul>
+                    }
                     {selectedFiles.length > 0 && (
                       <ul className="p-0" style={{width:'40%'}}>
                       {selectedFiles.map((file,i) => (

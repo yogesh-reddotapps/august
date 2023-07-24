@@ -334,10 +334,16 @@ function Submission() {
     const res1 = await axios.get(`http://18.140.159.50:3333/api/view-submission/${id}`)
     setFacilityBooking(res1.data.data);
   }
+  const getIdVerified = async (id) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/verified-student/${id}`)
+    // setmembershipRequestData(res1.data.data);
+    console.log(res1.data.data);
+  }
 
   useEffect(() => {
       if (assesmentId) {
       getSubmissions(assesmentId);
+      getIdVerified(assesmentId)
     }
   }, [])
   

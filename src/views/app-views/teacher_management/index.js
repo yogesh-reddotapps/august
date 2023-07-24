@@ -483,7 +483,7 @@ useEffect(()=>{
                 onChange={(value) => console.log(`selected ${value}`)}
               >
                 {data.map((teacher, i) => (
-                  <Option key={i} value={teacher.user_id}>
+                  <Option key={i} value={teacher.id}>
                     <div>
                       <img
                         className="circleTeacherImage mr-2"

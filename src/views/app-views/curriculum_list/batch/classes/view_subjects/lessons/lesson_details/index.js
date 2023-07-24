@@ -55,16 +55,27 @@ const assignmentArray = [
 
 function FacilityBooking() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
   const searchParams = new URLSearchParams(document.location.search);
   const [lessonData, setLessonData] = useState(null)
   const [assignments, setAssignments] = useState([])
+  const [deleteAss, setDeleteAss] = useState(null)
   const type = searchParams.get("type");
   const lessonId = searchParams.get("lessonId");
   const batchId = searchParams.get("batchId");
   const courseId = searchParams.get("courseId");
   const classId = searchParams.get("classId");
   const subjectId = searchParams.get("subjectId");
-
+  const delAssignment = async (record) => {
+    const res1 = await axios.delete(`http://18.140.159.50:3333/api/subjects/lessons/assignments/${record.id}`)
+    if(res1.status===200){
+    setIsDeactiveModalOpen(false);
+    getAssignments()
+    }
+  }
+  const DeactiveHandleOk = () => {
+    delAssignment(deleteAss)
+  };
   const handleOk = () => {
     setTimeout(() => {
       setIsModalOpen(false);
@@ -120,7 +131,10 @@ function FacilityBooking() {
             <EllipsisDropdown
               menu={
                 <Menu>
-                  <Menu.Item>
+                  <Menu.Item onClick={()=>{
+                    setIsDeactiveModalOpen(true)
+                    setDeleteAss(record)
+                  }}>
                     <span>
                       {" "}
                       <DeleteOutlined className="mr-2 " />
@@ -128,10 +142,10 @@ function FacilityBooking() {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <span className="d-flex align-items-center">
+                    <Link to={`lesson_details/add_new_assignment?batchId=${batchId}&lessonId=${lessonId}&courseId=${courseId}&classId=${classId}&subjectId=${subjectId}&assignmentId=${record.id}`} className="d-flex align-items-center">
                       <CustomIcon className="mr-2" svg={Edit} />
                       Edit
-                    </span>
+                    </Link>
                   </Menu.Item>
                   <Menu.Item>
                     <Link
@@ -334,6 +348,37 @@ function FacilityBooking() {
       {/* <div>
         <Helper clients={facilityBooking} attribiue={facilityBookingColumns} />
       </div> */}
+      <Modal
+        width={600}
+        footer={null}
+        visible={deactiveModalOpen}
+        onOk={DeactiveHandleOk}
+        onCancel={() => setIsDeactiveModalOpen(false)}
+      >
+        <div className="d-flex my-3 flex-column w-75">
+          <h4 className="mb-4">Sure you want to deactivate staff?</h4>
+          <h5>Staff ID #TC-1234 will be deleted from system</h5>
+        </div>
+        <div
+          style={{ gap: "10px" }}
+          className="mt-5 d-flex justify-content-end"
+        >
+          <Button
+            className="px-4 font-weight-semibold"
+            onClick={() => setIsDeactiveModalOpen(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            className="px-4 font-weight-semibold text-white bg-info"
+            onClick={() => {
+              DeactiveHandleOk();
+            }}
+          >
+            Yes, confirm
+          </Button>
+        </div>
+      </Modal>
       <Modal
         width={600}
         footer={null}
