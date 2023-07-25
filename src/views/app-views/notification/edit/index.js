@@ -29,7 +29,7 @@ const Edit = () => {
       setNotiTit('')
       history.goBack()
     }
-    console.log(res1);
+    message.success(res1.data.msg);
     return
     }
     const res1 = await axios.post("http://18.140.159.50:3333/api/notifications",data);

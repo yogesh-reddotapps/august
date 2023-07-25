@@ -142,7 +142,7 @@ function FacilityBooking() {
                     </span>
                   </Menu.Item>
                   <Menu.Item>
-                    <Link to={`lesson_details/add_new_assignment?batchId=${batchId}&lessonId=${lessonId}&courseId=${courseId}&classId=${classId}&subjectId=${subjectId}&assignmentId=${record.id}`} className="d-flex align-items-center">
+                    <Link to={`lesson_details/edit_assignment?batchId=${batchId}&lessonId=${lessonId}&courseId=${courseId}&classId=${classId}&subjectId=${subjectId}&assignmentId=${record.id}`} className="d-flex align-items-center">
                       <CustomIcon className="mr-2" svg={Edit} />
                       Edit
                     </Link>

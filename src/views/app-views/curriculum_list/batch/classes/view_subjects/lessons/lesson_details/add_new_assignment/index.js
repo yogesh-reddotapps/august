@@ -11,11 +11,11 @@ import {
   Switch,
   message,
 } from "antd";
-import { PlusOutlined ,CloseCircleOutlined} from "@ant-design/icons";
+import { PlusOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { AssessQue, BasicDet, UploadFileIcon } from "assets/svg/icon";
 import uploadImage from "middleware/uploadImage";
 import axios from "axios";
-import { API_BASE_URL } from 'constants/ApiConstant';
+import { API_BASE_URL } from "constants/ApiConstant";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { useEffect } from "react";
 function convertData(data) {
@@ -47,15 +47,15 @@ function convertData(data) {
 }
 const AddNew = () => {
   const [form] = Form.useForm();
-  const history = useHistory()
-  const [assignmentData, setAssignmentData] = useState({})
+  const history = useHistory();
+  const [assignmentData, setAssignmentData] = useState({});
   const searchParams = new URLSearchParams(document.location.search);
   const assignmentId = searchParams.get("assignmentId");
   const lessonId = searchParams.get("lessonId");
   const courseId = searchParams.get("courseId");
   const batchId = searchParams.get("batchId");
   const classId = searchParams.get("classId");
-  const subjectId = searchParams.get("subjectId")
+  const subjectId = searchParams.get("subjectId");
   const { TabPane } = Tabs;
   const { TextArea } = Input;
   const [textareaVal, setTextareaVal] = useState("");
@@ -64,6 +64,7 @@ const AddNew = () => {
   const [assType, setAssType] = useState("mcq");
   const [activeTab, setActiveTab] = useState("1");
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [filesUrl, setFilesUrl] = useState([]);
   const [addQue, setAddQue] = useState([
     {
       Question: "",
@@ -128,70 +129,90 @@ const AddNew = () => {
     setSelectedFiles([...selectedFiles, newSelectedFiles[0]]);
   }
 
-  const onFinish =async (e) => {
+  const onFinish = async (e) => {
     // return
-    if (e.assignment_type==='txt') {
-      var url = assignmentId ? assignmentData.url :[]
-    for(let i = 0 ;i<selectedFiles.length;i++){
-      const img = await uploadImage(selectedFiles[i]);
-      url.push(img)
-    }
-      const data = {
-        batch_id:batchId,
-        class_id:classId,
-        course_id:courseId,
-        subject_id:subjectId,
-        lesson_id:lessonId,
-        status:1,
-        description:adtextareaVal,
-        url:url,
-        assignment_name:e.name,
-        assignment_type:e.assignment_type,
-        assignment_questions:0,
-        assignment_details:textareaVal
+    if (e.assignment_type === "txt") {
+      var url = assignmentId ? filesUrl : [];
+      for (let i = 0; i < selectedFiles.length; i++) {
+        const img = await uploadImage(selectedFiles[i]);
+        url.push(img);
       }
+      const data = {
+        batch_id: batchId,
+        class_id: classId,
+        course_id: courseId,
+        subject_id: subjectId,
+        lesson_id: lessonId,
+        status: 1,
+        description: adtextareaVal,
+        url: url,
+        assignment_name: e.name,
+        assignment_type: e.assignment_type,
+        assignment_questions: 0,
+        assignment_details: textareaVal,
+      };
       // console.log(data)
       if (assignmentId) {
-        const res1 = await axios.put(`${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,data)
-        console.log(res1);
-        return
+        const res1 = await axios.put(
+          `${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,
+          data
+        );
+        if (res1.status === 201) {
+          console.log(res1.data.msg);
+          message.success(res1.data.msg);
+          history.goBack();
+        }
+        return;
       }
-      const res1 = await axios.post(`${API_BASE_URL}/subjects/lessons/assignments`,data)
-      if (res1.status===201) {
+      const res1 = await axios.post(
+        `${API_BASE_URL}/subjects/lessons/assignments`,
+        data
+      );
+      if (res1.status === 201) {
         console.log(res1.data.msg);
-      message.success(res1.data.msg)
-      history.goBack()
+        message.success(res1.data.msg);
+        history.goBack();
+      }
+      return;
     }
-      return
-    }
-   
-    const convertedData = convertData(addQue)
+
+    const convertedData = convertData(addQue);
     const data = {
-      batch_id:batchId,
-      class_id:classId,
-      course_id:courseId,
-      subject_id:subjectId,
-      lesson_id:lessonId,
-      status:1,
-      description:convertedData,
-      assignment_name:e.name,
-      assignment_type:e.assignment_type,
-      assignment_questions:convertedData.length,
-      assignment_details:textareaVal
-    }
+      batch_id: batchId,
+      class_id: classId,
+      course_id: courseId,
+      subject_id: subjectId,
+      lesson_id: lessonId,
+      status: 1,
+      description: convertedData,
+      assignment_name: e.name,
+      assignment_type: e.assignment_type,
+      assignment_questions: convertedData.length,
+      assignment_details: textareaVal,
+    };
     if (assignmentId) {
       console.log(data);
-      // const res1 = await axios.put(`${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,data)
-      // console.log(res1);
-      return
+      const res1 = await axios.put(
+        `${API_BASE_URL}/subjects/lessons/assignments/${assignmentId}`,
+        data
+      );
+      if (res1.status === 201) {
+        console.log(res1);
+        message.success(res1.data.msg);
+        history.goBack();
+      }
+      return;
     }
-    const res1 = await axios.post(`${API_BASE_URL}/subjects/lessons/assignments`,data)
-    if (res1.status===201) {
+    const res1 = await axios.post(
+      `${API_BASE_URL}/subjects/lessons/assignments`,
+      data
+    );
+    if (res1.status === 201) {
       console.log(res1.data.msg);
-    message.success(res1.data.msg)
-    history.goBack()
-  }
-};
+      message.success(res1.data.msg);
+      history.goBack();
+    }
+  };
   function handleNextClick() {
     if (activeTab >= 0 && activeTab <= 1) {
       let actnum = Number(activeTab) + 1;
@@ -303,18 +324,21 @@ const AddNew = () => {
     console.log(`selected ${value}`);
   };
   const delUplFile = (i) => {
-    let AfterDeleteFile = selectedFiles.filter((elem,index)=>{
-      return index!==i
-    })
+    let AfterDeleteFile = selectedFiles.filter((elem, index) => {
+      return index !== i;
+    });
     setSelectedFiles(AfterDeleteFile);
-  }
+  };
   const getAssignment = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/subjects/lessons/assignments/${id}`)
+    const res1 = await axios.get(
+      `http://18.140.159.50:3333/api/subjects/lessons/assignments/${id}`
+    );
     setAssignmentData(res1.data);
-    setTextareaVal(res1.data.assignment_details)
-    setAdTextareaVal(res1.data.descriptive_content)
-    if (res1.data.assignment_type==="mcq") {
-      const des = JSON.parse(res1.data.description)
+    setFilesUrl(JSON.parse(res1.data.url));
+    setTextareaVal(res1.data.assignment_details);
+    setAdTextareaVal(res1.data.descriptive_content);
+    if (res1.data.assignment_type === "mcq") {
+      const des = JSON.parse(res1.data.description);
       const convertedData = des.map((item) => {
         const newData = {
           Question: item.title,
@@ -326,24 +350,30 @@ const AddNew = () => {
           OptionSwitchB: "",
           OptionSwitchC: "",
           OptionSwitchD: "",
-          correctOption: item.correct_option
+          correctOption: item.correct_option,
         };
         return newData;
       });
-      setAddQue(convertedData)
+      setAddQue(convertedData);
     }
-    setAssType(res1.data.assignment_type==="mcq"?"mcq":"txt")
+    setAssType(res1.data.assignment_type === "mcq" ? "mcq" : "txt");
     form.setFieldsValue({
-      name:res1.data.assignment_name,
-      assignment_type:res1.data.assignment_type==="mcq"?"mcq":"txt"
-    })
+      name: res1.data.assignment_name,
+      assignment_type: res1.data.assignment_type === "mcq" ? "mcq" : "txt",
+    });
+  };
+  const delUrlFile = (i) => {
+     const newurl = filesUrl.filter((elem, ind) => {
+        return i !== ind;
+      });
+      setFilesUrl(newurl)
   }
   useEffect(() => {
     if (assignmentId) {
       getAssignment(assignmentId);
     }
-  }, [])
-  
+  }, []);
+
   return (
     <div className="tabbarWhite">
       <Form
@@ -354,12 +384,15 @@ const AddNew = () => {
         name="control-hooks"
       >
         <Tabs activeKey={activeTab} onTabClick={handleTabClick}>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <BasicDet className="mr-2 " />
-          <span className="ml-2">Basic Details</span>
-        </div>
-      )} key="1">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <BasicDet className="mr-2 " />
+                <span className="ml-2">Basic Details</span>
+              </div>
+            }
+            key="1"
+          >
             <div className="border rounded p-3 bg-white">
               <div style={{ gap: "60px" }} className="d-flex ">
                 <div style={{ width: "45%" }}>
@@ -383,12 +416,15 @@ const AddNew = () => {
               </div>
             </div>
           </TabPane>
-          <TabPane tab={(
-        <div className="d-flex justify-content-center">
-          <AssessQue className="mr-2 " />
-          <span className="ml-2">Assignment Questions</span>
-        </div>
-      )} key="2">
+          <TabPane
+            tab={
+              <div className="d-flex justify-content-center">
+                <AssessQue className="mr-2 " />
+                <span className="ml-2">Assignment Questions</span>
+              </div>
+            }
+            key="2"
+          >
             <div className="border rounded p-3 mt-4 bg-white">
               <div className="my-3 w-50">
                 <Form.Item
@@ -436,10 +472,7 @@ const AddNew = () => {
                     </Form.Item>
                   </div> */}
                   <div className="my-3 w-50">
-                    <Form.Item
-                      className="w-75"
-                      label={`Assessment Details`}
-                    >
+                    <Form.Item className="w-75" label={`Assessment Details`}>
                       <TextArea
                         rows={4}
                         placeholder="Type Here ..."
@@ -499,26 +532,53 @@ const AddNew = () => {
                     />
                   </div>
                   <div className="mt-4">
-                    {
-                      assignmentData.url && <ul className="p-0" style={{width:'40%'}}>
-                      {/* {selectedFiles.map((file,i) => ( */}
-                        <li className="my-3" style={styles.files}>
-                          <a href={assignmentData.url} target="_blank" rel='noreferrer'>
-                          <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">File 1 </span>  </div>
-                          </a>
-                        </li>
-                      {/* ))} */}
-                    </ul>
-                    }
+                    {filesUrl.length !== 0 && (
+                      <ul className="p-0" style={{ width: "40%" }}>
+                        {filesUrl.map((file, i) => (
+                          <li className="my-3" style={styles.files}>
+                            <a href={file} target="_blank" rel="noreferrer">
+                            <div className="d-flex align-items-center">
+                              
+                                <UploadFileIcon />{" "}
+                                <span className="ml-2">File 1 </span>{" "}
+                            </div>
+                              </a>
+                            <span
+                              style={{ cursor: "pointer" }}
+                              onClick={() => {
+                                delUrlFile(i)
+                              }}
+                            >
+                              {" "}
+                              <CloseCircleOutlined />{" "}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                     {selectedFiles.length > 0 && (
-                      <ul className="p-0" style={{width:'40%'}}>
-                      {selectedFiles.map((file,i) => (
-                        <li key={file.name} className="my-3" style={styles.files}>
-                          {" "}
-                          <div className="d-flex align-items-center"><UploadFileIcon /> <span className="ml-2">{file.name} </span>  </div><span style={{cursor:'pointer'}} onClick={()=>delUplFile(i)}> <CloseCircleOutlined /> </span>
-                        </li>
-                      ))}
-                    </ul>
+                      <ul className="p-0" style={{ width: "40%" }}>
+                        {selectedFiles.map((file, i) => (
+                          <li
+                            key={file.name}
+                            className="my-3"
+                            style={styles.files}
+                          >
+                            {" "}
+                            <div className="d-flex align-items-center">
+                              <UploadFileIcon />{" "}
+                              <span className="ml-2">{file.name} </span>{" "}
+                            </div>
+                            <span
+                              style={{ cursor: "pointer" }}
+                              onClick={() => delUplFile(i)}
+                            >
+                              {" "}
+                              <CloseCircleOutlined />{" "}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
                     )}
                   </div>
                 </div>
@@ -629,96 +689,98 @@ const AddNew = () => {
                         </div>
                       </div> */}
                       <div className="border rounded p-3 mt-4 bg-white">
-                    <div className="my-3 w-50">
-                      <Form.Item
-                        className="w-75"
-                        // name={`Question${ind + 1}`}
-                        label={`Question ${ind + 1}`}
-                      >
-                        <Input
-                          placeholder="Type here"
-                          value={elem.Question}
+                        <div className="my-3 w-50">
+                          <Form.Item
+                            className="w-75"
+                            // name={`Question${ind + 1}`}
+                            label={`Question ${ind + 1}`}
+                          >
+                            <Input
+                              placeholder="Type here"
+                              value={elem.Question}
+                              onChange={(e) =>
+                                queData("Question", ind, e.target.value)
+                              }
+                            />
+                          </Form.Item>
+                        </div>
+                        <Radio.Group
+                          className="d-flex flex-column my-3 w-50"
+                          value={elem.correctOption}
                           onChange={(e) =>
-                            queData("Question", ind, e.target.value)
+                            queData("correctOption", ind, e.target.value)
                           }
-                        />
-                      </Form.Item>
-                    </div>
-                    <Radio.Group
-                      className="d-flex flex-column my-3 w-50"
-                      value={elem.correctOption}
-                      onChange={(e) => queData("correctOption", ind, e.target.value)}
-                    >
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Form.Item
-                          className="w-75"
-                          // name={`OptionA${ind + 1}`}
-                          label="Option A"
                         >
-                          <Input
-                            className="w-100"
-                            placeholder="Type here"
-                            value={elem.OptionA}
-                            onChange={(e) =>
-                              queData("OptionA", ind, e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Radio value={addQue[ind].OptionA} />
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Form.Item
+                              className="w-75"
+                              // name={`OptionA${ind + 1}`}
+                              label="Option A"
+                            >
+                              <Input
+                                className="w-100"
+                                placeholder="Type here"
+                                value={elem.OptionA}
+                                onChange={(e) =>
+                                  queData("OptionA", ind, e.target.value)
+                                }
+                              />
+                            </Form.Item>
+                            <Radio value={addQue[ind].OptionA} />
+                          </div>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Form.Item
+                              className="w-75"
+                              // name={`OptionB${ind + 1}`}
+                              label="Option B"
+                            >
+                              <Input
+                                className="w-100"
+                                placeholder="Type here"
+                                value={elem.OptionB}
+                                onChange={(e) =>
+                                  queData("OptionB", ind, e.target.value)
+                                }
+                              />
+                            </Form.Item>
+                            <Radio value={addQue[ind].OptionB} />
+                          </div>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Form.Item
+                              className="w-75"
+                              // name={`OptionC${ind + 1}`}
+                              label="Option C"
+                            >
+                              <Input
+                                className="w-100"
+                                placeholder="Type here"
+                                value={elem.OptionC}
+                                onChange={(e) =>
+                                  queData("OptionC", ind, e.target.value)
+                                }
+                              />
+                            </Form.Item>
+                            <Radio value={addQue[ind].OptionC} />
+                          </div>
+                          <div className="d-flex align-items-center justify-content-between">
+                            <Form.Item
+                              className="w-75"
+                              // name={`OptionD${ind + 1}`}
+                              label="Option D"
+                            >
+                              <Input
+                                className="w-100"
+                                placeholder="Type here"
+                                value={elem.OptionD}
+                                onChange={(e) =>
+                                  queData("OptionD", ind, e.target.value)
+                                }
+                              />
+                            </Form.Item>
+                            <Radio value={addQue[ind].OptionD} />
+                          </div>
+                        </Radio.Group>
                       </div>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Form.Item
-                          className="w-75"
-                          // name={`OptionB${ind + 1}`}
-                          label="Option B"
-                        >
-                          <Input
-                            className="w-100"
-                            placeholder="Type here"
-                            value={elem.OptionB}
-                            onChange={(e) =>
-                              queData("OptionB", ind, e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Radio value={addQue[ind].OptionB} />
-                      </div>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Form.Item
-                          className="w-75"
-                          // name={`OptionC${ind + 1}`}
-                          label="Option C"
-                        >
-                          <Input
-                            className="w-100"
-                            placeholder="Type here"
-                            value={elem.OptionC}
-                            onChange={(e) =>
-                              queData("OptionC", ind, e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Radio value={addQue[ind].OptionC} />
-                      </div>
-                      <div className="d-flex align-items-center justify-content-between">
-                        <Form.Item
-                          className="w-75"
-                          // name={`OptionD${ind + 1}`}
-                          label="Option D"
-                        >
-                          <Input
-                            className="w-100"
-                            placeholder="Type here"
-                            value={elem.OptionD}
-                            onChange={(e) =>
-                              queData("OptionD", ind, e.target.value)
-                            }
-                          />
-                        </Form.Item>
-                        <Radio value={addQue[ind].OptionD} />
-                      </div>
-                    </Radio.Group>
-                  </div>
                     </>
                   );
                 })}
