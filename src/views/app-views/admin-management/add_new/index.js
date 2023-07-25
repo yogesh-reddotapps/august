@@ -15,6 +15,7 @@ import uploadImage from "middleware/uploadImage";
 export default function AddNew() {
   const { TabPane } = Tabs;
   const history = useHistory();
+  const [statu, setStatu] = useState("")
   const [activeTab, setActiveTab] = useState("1");
   const [isChangeStudModalOpen, setIsChangeStudModalOpen] = useState(false);
   const [deactiveModalOpen, setIsDeactiveModalOpen] = useState(false);
@@ -170,6 +171,16 @@ export default function AddNew() {
     setImageUrl([
       data.profile_pic
     ])
+  }
+  const sendStatus = async (status) => {
+    const res1 = await axios.put(`http://18.140.159.50:3333/api/admin-change-status/${id}`,{status:status});
+    console.log(res1);
+    setIsChangeStudModalOpen(false);
+    setSuccesmodaltext({
+      title: "Staff Status Change Successfully!",
+      text: "Staff status changed to terminated.",
+    });
+    setSuccessModal(true);
   }
  useEffect(() => {
   if (id) {
@@ -440,7 +451,7 @@ export default function AddNew() {
           <Select
             placeholder="Select"
             optionFilterProp="children"
-            onChange={(val) => console.log(`selected ${val}`)}
+            onChange={(val) => setStatu(val)}
             filterOption={(input, option) =>
               (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
             }
@@ -477,12 +488,11 @@ export default function AddNew() {
           <Button
             className="px-4 font-weight-semibold text-white bg-info"
             onClick={() => {
-              setIsChangeStudModalOpen(false);
-              setSuccesmodaltext({
-                title: "Staff Status Change Successfully!",
-                text: "Staff status changed to terminated.",
-              });
-              setSuccessModal(true);
+              if (statu==='') {
+                message.error(`Please select status first !`)
+                return
+              }
+              sendStatus(statu)
             }}
           >
             Save

@@ -43,42 +43,45 @@ function Submission() {
       dataIndex: "id",
     },
     {
-      dataIndex: "avatar",
+      dataIndex: "profile_pic",
       render: (avatar) => {
-        return <img src={`${avatar}`} />;
+        return <img style={{width:'50px',height:"50px",borderRadius:"50%"}} src={`${avatar}`} alt="..." />;
       },
     },
     {
       title: "Student Name",
-      dataIndex: "applicant_name",
+      dataIndex: "student_name",
     },
     {
       title: "Batch ID",
-      dataIndex: "result",
-      render: (text) => {
-        return <div>#W1-B2</div>;
-      },
+      dataIndex: "batch_name",
     },
     {
       title: "Verified On",
-      dataIndex: "event_time",
+      dataIndex: "verified_on",
+      render:(date)=>{
+        return moment(date).format("DD-MM-YYYY")
+      }
     },
     {
       title: "Submission On",
-      dataIndex: "event_time",
+      dataIndex: "submitted_at",
+      render:(date)=>{
+        return moment(date).format("DD-MM-YYYY")
+      }
     },
     {
       title: "Result",
-      dataIndex: "result",
-      render: (text) => {
-        return <div>20/25</div>;
-      },
+      // dataIndex: "score"
+      render:(data)=>{
+        return <>{data.score}/{JSON.parse(data.description).length}</>
+      }
     },
     {
       title: "Status",
-      dataIndex: "result",
+      dataIndex: "status",
       render: (text) => {
-        return <div>Pending</div>;
+        return <div>{text}</div>;
       },
     },
     {
@@ -91,7 +94,7 @@ function Submission() {
               menu={
                 <Menu>
                   <Menu.Item>
-                    <Link to="submission/view-submission">
+                    <Link to={`submission/view-submission?studentId=${record.student_id}&assId=${record.assessment_id}`}>
                       {" "}
                       <div className="d-flex align-items-center">
                         <AssessQue color={"#455560"} className="mr-2 " />
@@ -336,8 +339,8 @@ function Submission() {
   }
   const getIdVerified = async (id) => {
     const res1 = await axios.get(`http://18.140.159.50:3333/api/verified-student/${id}`)
-    // setmembershipRequestData(res1.data.data);
-    console.log(res1.data.data);
+    setmembershipRequestData(res1.data.data);
+    // console.log(res1.data.data);
   }
 
   useEffect(() => {

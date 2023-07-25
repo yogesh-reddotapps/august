@@ -1,8 +1,11 @@
-import { Radio, Space, Divider } from "antd";
+import { Radio, Space, Divider, message } from "antd";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
+import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import axios from "axios";
+import { json } from "d3-fetch";
 let styles = {
     files: {
       listStyle: "none",
@@ -52,20 +55,25 @@ const selectedFiles =[
     }
 ]
 function Submission() {
-  const [assignmentType, setAssignmentType] = useState("MCQ");
+  const location = useLocation();
+  const history = useHistory()
+  const queryParams = new URLSearchParams(location.search);
+  const studentId = queryParams.get("studentId");
+  const assId = queryParams.get("assId");
+  const [assignmentType, setAssignmentType] = useState("mcq");
   const [question, setQuestion] = useState([
-    {
-      question:
-        "1. What is the leading cause of construction workh5lace fatalities?",
-      options: ["Option A", "Option B", "Option C", "Option D"],
-      value: "Option A",
-    },
-    {
-      question:
-        "1. What is the leading cause of construction workh5lace fatalities?",
-      options: ["Option A", "Option B", "Option C", "Option D"],
-      value: "Option B",
-    },
+    // {
+    //   question:
+    //     "1. What is the leading cause of construction workh5lace fatalities?",
+    //   options: ["Option A", "Option B", "Option C", "Option D"],
+    //   value: "Option A",
+    // },
+    // {
+    //   question:
+    //     "1. What is the leading cause of construction workh5lace fatalities?",
+    //   options: ["Option A", "Option B", "Option C", "Option D"],
+    //   value: "Option B",
+    // },
   ]);
   const onChange = (ind, e) => {
     const updatedQuestions = [...question];
@@ -75,6 +83,26 @@ function Submission() {
     };
     setQuestion(updatedQuestions);
   };
+  const getResult = async (stuId,assId) => {
+    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-submission/${assId}/${stuId}`)
+    if (res1.data.data.length===0) {
+      history.goBack()
+      message.info("Data is empty !")
+      return
+    }
+    if (res1.data.data[0].submission_type==='mcq') {
+      setQuestion(JSON.parse(res1?.data?.data[0]?.description));
+    }
+    setAssignmentType(res1.data.data[0].submission_type)
+  }
+  useEffect(() => {
+    if (studentId&&assId) {
+      getResult(studentId,assId);
+    } else {
+      history.goBack()
+    }
+  }, [])
+  
 
   return (
     <div>
@@ -163,7 +191,7 @@ function Submission() {
           </div>
         </div>
       </div>
-      {assignmentType === "MCQ" &&
+      {assignmentType === "mcq" &&
         question.map((elem, ind) => {
           return (
             <div className="border rounded mb-4 bg-white">
@@ -179,20 +207,20 @@ function Submission() {
                 <h5 style={{ margin: 0 }}>Mark : 1</h5>
               </div>
               <div className="p-3">
-                <h5>{elem.question}</h5>
+                <h5>{elem.title}</h5>
               </div>
               <div className="px-4 pb-3">
                 <Radio.Group
                   style={{ width: "600px" }}
                   onChange={(e) => onChange(ind, e)}
-                  value={elem.value}
+                  value={elem.choosen_option}
                 >
                   <Space className="w-100" direction="vertical">
                     {elem.options.map((eleme, i) => {
                       return (
                         <div
                           className={
-                            elem.value === eleme ? "correctOpt" : "normalOpt"
+                            elem.correct_option === eleme ? "correctOpt" : "normalOpt"
                           }
                         >
                           <Radio disabled className="p-2" value={eleme}>
@@ -202,7 +230,7 @@ function Submission() {
                             {i === 3 && <span className="customCircle">D</span>}
                             <h5>
                               {eleme}
-                              {elem.value === eleme && (
+                              {elem.correct_option === eleme && (
                                 <span className="tick">
                                   <CheckCircleFilled
                                     style={{ color: "#048B4A" }}

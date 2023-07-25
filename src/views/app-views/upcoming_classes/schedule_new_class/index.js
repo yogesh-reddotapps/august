@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Form, Select, DatePicker, Button, Input } from "antd";
+import { Form, Select, DatePicker, Button, Input, TimePicker } from "antd";
 import axios from "axios";
 import moment from "moment";
 import {
@@ -40,8 +40,11 @@ const ScheduleNewClass = () => {
         history.goBack();
       }
     } else {
-      const res1 = await axios.post('http://18.140.159.50:3333/api/students/course/classes',sendData)
-      if(res1.status===201){
+      const res1 = await axios.post(
+        "http://18.140.159.50:3333/api/students/course/classes",
+        sendData
+      );
+      if (res1.status === 201) {
         history.goBack();
       }
     }
@@ -118,6 +121,9 @@ const ScheduleNewClass = () => {
       subject: data.subject_id,
       batch: data.batch_id,
       venue: data.venue_id,
+      class_date: moment(data.class_date),
+      start_time:moment(data.start_time, "HH:mm:ss"),
+      end_time:moment(data.end_time, "HH:mm:ss")
     });
   };
   useEffect(() => {
@@ -253,19 +259,27 @@ const ScheduleNewClass = () => {
           />
         </Form.Item>
         <Form.Item className="w-75" name="start_time" label="Start Time">
-          <DatePicker
+          {/* <DatePicker
             className="w-100"
             showTime
             onOk={(value) => console.log("onOk: ", value)}
             onChange={(date, dateString) => console.log(date, dateString)}
+          /> */}
+          <TimePicker
+            className="w-100"
+            onChange={(time, timeString) => console.log(time, timeString)}
           />
         </Form.Item>
         <Form.Item className="w-75" name="end_time" label="End Time">
-          <DatePicker
+          {/* <DatePicker
             className="w-100"
             showTime
             onOk={(value) => console.log("onOk: ", value)}
             onChange={(date, dateString) => console.log(date, dateString)}
+          /> */}
+          <TimePicker
+            className="w-100"
+            onChange={(time, timeString) => console.log(time, timeString)}
           />
         </Form.Item>
       </div>

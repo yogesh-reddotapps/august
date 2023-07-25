@@ -123,11 +123,19 @@ useEffect(()=>{
 useEffect(()=>{
   let nAllUsersData = leaveApp
   leaveApp&&nAllUsersData && nAllUsersData.map((item)=>{
+    let upstatus;
+    if (item.status===0) {
+      upstatus="pending"
+    }else if (item.status===1) {
+      upstatus="accept"
+    }else{
+      upstatus="rejected"
+    }
     item.class_date=formatDate(item.class_date);
     item.start_time=moment(item.start_time,"HH:mm:ss").format("h A");
     item.end_time = moment(item.end_time,"HH:mm:ss").format("h A");
     item.date_of_application= formatDate(item.date_of_application);
-    item.status = item.status?"Active":"InActive";
+    item.status = upstatus;
   })
   setNewAllLeaveApplication(nAllUsersData)
 },[leaveApp])
@@ -297,17 +305,17 @@ useEffect(()=>{
       render: (text) => {
         return (
           <>
-            {text === 0 && (
+            {text === "pending" && (
               <div className={`text-warning`}>
                 <Tag color="warning">Pending</Tag>
               </div>
             )}
-            {text === 1 && (
+            {text === "accept" && (
               <div className={`text-success`}>
                 <Tag color="success">Accepted</Tag>
               </div>
             )}
-            {text === 2 && (
+            {text === "rejected" && (
               <div className={`text-danges`}>
                 <Tag color="error">Rejected</Tag>
               </div>
