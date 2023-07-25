@@ -493,6 +493,7 @@ const AddNew = () => {
                     <input
                       style={styles.uploadFile}
                       className="uploadFile"
+                      accept="image/*, .mp4, audio/* , .pdf, .doc, .docx"
                       type="file"
                       multiple
                       onChange={handleFileSelect}
