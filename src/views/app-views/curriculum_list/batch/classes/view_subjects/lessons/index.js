@@ -28,6 +28,7 @@ import { Option } from "antd/lib/mentions";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { headersForLesson } from "views/app-views/Export/Headers";
 import ExportButton from "views/app-views/Export/ExportButton";
+import { API_BASE_URL } from "constants/ApiConstant";
 const subjectArray = [
     {
         "Sr_No": 1,
@@ -189,7 +190,7 @@ function FacilityBooking() {
   ];
   const getLessons = async (subjectId) => {
     const res1 = await axios.get(
-      `http://18.140.159.50:3333/api/view-lessons-by-subject/${subjectId}`
+      `${API_BASE_URL}/view-lessons-by-subject/${subjectId}`
     );
     setLessonList(res1.data.map((elem,i)=>{
       return {...elem,sr:i+1}

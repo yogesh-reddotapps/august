@@ -22,7 +22,7 @@ const AddNewLesson = () => {
     console.log(subjectName);
     if(!id){
     const response = await axios.post(
-      "http://18.140.159.50:3333/api/admin-new-subject",
+      `${API_BASE_URL}/admin-new-subject`,
       {
         subject_name: subjectName,
         board_id: "0",
@@ -45,7 +45,7 @@ const AddNewLesson = () => {
   }
   else{
     const response = await axios.post(
-      "http://18.140.159.50:3333/api/admin-edit-subjects",
+      `${API_BASE_URL}/admin-edit-subjects`,
       {
         subject_id:id,
         subject_name: subjectName,

@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useLocation} from "react-router-dom/cjs/react-router-dom";
 import { useHistory } from 'react-router-dom';
 import uploadImage from "middleware/uploadImage";
+import { API_BASE_URL } from "constants/ApiConstant";
 export default function AddNew() {
   const { TabPane } = Tabs;
   const history = useHistory();
@@ -59,7 +60,7 @@ export default function AddNew() {
   const onFinish = async (values) => {
     const image = await uploadImage(fileList);
     if (id) {
-      let updateRes = await axios.post('http://18.140.159.50:3333/api/update-admins',{
+      let updateRes = await axios.post(`${ API_BASE_URL }/update-admins`,{
         "name": values.name,
         "email": values.email,
         "phone_number":values.phone_number,
@@ -155,7 +156,7 @@ export default function AddNew() {
     </div>
   );
   const fetchAdmin = async (id) => {
-    let res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-by-id',{
+    let res1 = await axios.post(`${API_BASE_URL}/get-admin-by-id`,{
         "user_id": id
     })
     let data = res1.data[0];
@@ -173,7 +174,7 @@ export default function AddNew() {
     ])
   }
   const sendStatus = async (status) => {
-    const res1 = await axios.put(`http://18.140.159.50:3333/api/admin-change-status/${id}`,{status:status});
+    const res1 = await axios.put(`${API_BASE_URL}/admin-change-status/${id}`,{status:status});
     console.log(res1);
     setIsChangeStudModalOpen(false);
     setSuccesmodaltext({

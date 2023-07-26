@@ -6,6 +6,7 @@ import {
   useHistory,
   useLocation,
 } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
 const { Option } = Select;
 const ScheduleNewClass = () => {
   const history = useHistory();
@@ -33,7 +34,7 @@ const ScheduleNewClass = () => {
     };
     if (id) {
       const res1 = await axios.put(
-        `http://18.140.159.50:3333/api/students/course/classes/${id}`,
+        `${API_BASE_URL}/students/course/classes/${id}`,
         sendData
       );
       if (res1.status === 201) {
@@ -41,7 +42,7 @@ const ScheduleNewClass = () => {
       }
     } else {
       const res1 = await axios.post(
-        "http://18.140.159.50:3333/api/students/course/classes",
+        `${API_BASE_URL}/students/course/classes`,
         sendData
       );
       if (res1.status === 201) {
@@ -82,37 +83,37 @@ const ScheduleNewClass = () => {
   const courseHandleChange = async (val) => {
     console.log(val);
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/admin-subjects",
+      `${API_BASE_URL}/admin-subjects`,
       { course_id: val }
     );
     setSubjectList(res1.data);
     const res2 = await axios.post(
-      "http://18.140.159.50:3333/api/get-batches-course-id",
+      `${API_BASE_URL}/get-batches-course-id`,
       { course_id: val }
     );
     setBatcheslist(res2.data.data);
   };
   const getSelectOptionsData = async () => {
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/admin-category"
+      `${API_BASE_URL}/admin-category`
     );
     setCourseCatelist(res1.data.data);
     const res2 = await axios.get(
-      "http://18.140.159.50:3333/api/get-all-courses"
+      `${API_BASE_URL}/get-all-courses`
     );
     setCourseslist(res2.data);
     setCourseslistdummy(res2.data);
     const res3 = await axios.post(
-      "http://18.140.159.50:3333/api/get-batches-course-id",
+      `${API_BASE_URL}/get-batches-course-id`,
       { course_id: 22 }
     );
     setBatcheslist(res3.data.data);
-    const res4 = await axios.post("http://18.140.159.50:3333/api/admin-venues");
+    const res4 = await axios.post(`${API_BASE_URL}/admin-venues`);
     setVenueslist(res4.data.data);
   };
   const getClassById = async (id) => {
     const res1 = await axios.get(
-      `http://18.140.159.50:3333/api/students/course/classes/${id}`
+      `${API_BASE_URL}/students/course/classes/${id}`
     );
     const data = res1.data[0];
     form.setFieldsValue({

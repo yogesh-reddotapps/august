@@ -15,7 +15,7 @@ import { Option } from "antd/lib/mentions";
 import { formatDate } from "constants/DateConstant";
 import ExportButton from "../Export/ExportButton";
 import { headersForTeachers } from "../Export/Headers";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const teacherArray = [
   {
     value: "Teacher 1",
@@ -153,7 +153,7 @@ function TeacherManagement() {
       user_id:Oid
     };
     const response = await axios.post(
-      "http://18.140.159.50:3333/api/delete-teacher",
+      `${API_BASE_URL}/delete-teacher`,
       data,
       {
         headers: {
@@ -295,7 +295,7 @@ useEffect(()=>{
       "class_id": e.class,
       "teacher_ids": e.teachers
     }
-    const res1 = axios.post('http://18.140.159.50:3333/api/send-classes-invitaion',data)
+    const res1 = axios.post('${API_BASE_URL}/send-classes-invitaion',data)
     console.log(res1);
     form.resetFields()
   };
@@ -311,11 +311,11 @@ useEffect(()=>{
     transition: "all 0.5s ease 0s",
   };
   const handleCourseChange = async (id) => {
-    let res1 = await axios.post('http://18.140.159.50:3333/api/get-batches-course-id',{ "course_id": id})
+    let res1 = await axios.post('${API_BASE_URL}/get-batches-course-id',{ "course_id": id})
     setBatchesOpt(res1.data.data);
   }
   const handleBatchChange = async (id) => {
-    let res1 = await axios.post('http://18.140.159.50:3333/api/get-classes-By-batch-id',{ "batch_id": id})
+    let res1 = await axios.post('${API_BASE_URL}/get-classes-By-batch-id',{ "batch_id": id})
     setClassOpt(res1.data.data);
   }
 
@@ -336,7 +336,7 @@ useEffect(()=>{
   };
   const getCourses = () => {
     axios
-      .get("http://18.140.159.50:3333/api/courses-list", {
+      .get(`${API_BASE_URL}/courses-list`, {
         headers: {
           "Content-Type": "application/json",
         },

@@ -1,1 +1,2 @@
-export const API_BASE_URL = 'http://18.140.159.50:3333/api'
+// export const API_BASE_URL = '${API_BASE_URL}'
+export const API_BASE_URL = process.env.API_BASE_URL

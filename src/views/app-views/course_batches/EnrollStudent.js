@@ -7,6 +7,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
+import { API_BASE_URL } from "constants/ApiConstant";
 function findUniqueValues(arr1, arr2) {
   // Convert the arrays to sets to efficiently find unique values
   const setArr1 = new Set(arr1);
@@ -30,7 +31,7 @@ const EnrollStudent = () => {
     console.log(e.students,enrolledStu);
     const result = findUniqueValues(e.students, enrolledStu)
     console.log(result);
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/batches/enroll-students`,{
+    const res1 = await axios.post(`${API_BASE_URL}/batches/enroll-students`,{
       "batch_id":batchId,
       "student_ids":result,
       "enrollment_date":moment(e.enrollmentDate).format('YYYY-MM-DD')
@@ -41,7 +42,7 @@ const EnrollStudent = () => {
     }
   };
   const getCoursesNameAndId = async () => {
-    let res = await axios.get("http://18.140.159.50:3333/api/courses-list");
+    let res = await axios.get(`${API_BASE_URL}/courses-list`);
     setCoursenameid(
       res.data.data.map((elem, i) => {
         return {
@@ -54,7 +55,7 @@ const EnrollStudent = () => {
   const getStudent = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/get-students",
+        `${API_BASE_URL}/get-students`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -70,7 +71,7 @@ const EnrollStudent = () => {
       });
   };
   const getStudentEnroll = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}/enrolled-students`)
+    const res1 = await axios.get(`${API_BASE_URL}/batches/${id}/enrolled-students`)
     const enrolled = res1.data.data.students.map((elem)=>{
       return elem.student_id
     })

@@ -216,7 +216,7 @@ const AddNewLesson = () => {
 
     // console.log("dataObject",dataObject);
     let res1 = await axios.post(
-      "http://18.140.159.50:3333/api/admin-new-lesson",
+      `${API_BASE_URL}/admin-new-lesson`,
       formData
     );
     console.log(res1);
@@ -241,7 +241,7 @@ const AddNewLesson = () => {
     }, 1200);
   };
   const getLesson = async (lesson_id,subject_id) => {
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/view-lesson`,{
+    const res1 = await axios.post(`${API_BASE_URL}/view-lesson`,{
       "lesson_id": lesson_id,
       "subject_id": subject_id
   })

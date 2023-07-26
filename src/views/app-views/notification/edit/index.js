@@ -4,6 +4,7 @@ import "react-quill/dist/quill.snow.css";
 import { Button, Input, message } from "antd";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
+import { API_BASE_URL } from "constants/ApiConstant";
 const Edit = () => {
   const searchParams = new URLSearchParams(document.location.search);
   const id = searchParams.get("id");
@@ -23,7 +24,7 @@ const Edit = () => {
       type: "system",
     };
     if (id) {
-      const res1 = await axios.put(`http://18.140.159.50:3333/api/notifications/${id}`,data);
+      const res1 = await axios.put(`${API_BASE_URL}/notifications/${id}`,data);
     if (res1.status===201) {
       setNotiText('');
       setNotiTit('')
@@ -32,7 +33,7 @@ const Edit = () => {
     message.success(res1.data.msg);
     return
     }
-    const res1 = await axios.post("http://18.140.159.50:3333/api/notifications",data);
+    const res1 = await axios.post(`${API_BASE_URL}/notifications`,data);
     if (res1.status===201) {
       setNotiText('');
       setNotiTit('')
@@ -41,7 +42,7 @@ const Edit = () => {
     console.log(res1);
   };
   const getNotification = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/notifications/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/notifications/${id}`)
     console.log(res1.data[0]);
     setNotiTit(res1.data[0].notification_title)
     setNotiText(res1.data[0].description)

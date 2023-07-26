@@ -27,6 +27,7 @@ import moment from "moment";
 import axios from "../../../axios";
 import { useHistory } from "react-router-dom";
 import uploadImage from "middleware/uploadImage";
+import { API_BASE_URL } from "constants/ApiConstant";
 const getBase64 = (file) =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -158,7 +159,7 @@ const getBase64 = (img, callback) => {
     const image = await uploadImage(fileList);
     if (id) {
       let updateRes = await axios.post(
-        "http://18.140.159.50:3333/api/edit-student",
+        `${API_BASE_URL}/edit-student`,
         {
           name: values.name,
           email: values.email,
@@ -244,7 +245,7 @@ const getBase64 = (img, callback) => {
   };
   const fetchStudent = async (id) => {
     let res1 = await axios.post(
-      "http://18.140.159.50:3333/api/get-student-by-id",
+      `${API_BASE_URL}/get-student-by-id`,
       {
         user_id: id,
       }

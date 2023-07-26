@@ -144,7 +144,7 @@ function FacilityBooking() {
     }
   ];
   const getSubmissions = async(id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-assignment-submission-by-id/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/view-assignment-submission-by-id/${id}`)
     setSubmissionList(res1.data.data);
   }
   useEffect(() => {

@@ -308,7 +308,7 @@ function FacilityBooking() {
     },
   ];
   const getSubjects = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-subject-by-class/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/get-subject-by-class/${id}`)
     setSubjectList(res1.data.data);
 
     const res2 = await axios.get(`${API_BASE_URL}/classes-rating/${id}`);

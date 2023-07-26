@@ -119,7 +119,7 @@ const MyForm = () => {
     }
      const url = await uploadImage(selectedFiles[0])
     if(!id){
-    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-new-course',{
+    let res1 = await axios.post('${API_BASE_URL}/admin-new-course',{
       "course_category": e.course_category,
       "course_name": e.course_name,
       "medium": langSplit[1],
@@ -141,7 +141,7 @@ const MyForm = () => {
     }, 1200);
   }
   else{
-    let res1 = await axios.post('http://18.140.159.50:3333/api/admin-update-course',{
+    let res1 = await axios.post('${API_BASE_URL}/admin-update-course',{
       "course_category": e.course_category,
       "course_name": e.course_name,
       "medium": langSplit[1],
@@ -172,7 +172,7 @@ const MyForm = () => {
   };
   async function getCourseCate() {
     try {
-      let res1 = await axios.post('http://18.140.159.50:3333/api/admin-category')
+      let res1 = await axios.post('${API_BASE_URL}/admin-category')
       setCoursecategorylist(res1.data.data);
     } catch (error) {
       console.log(error);
@@ -181,7 +181,7 @@ const MyForm = () => {
   
   async function getLanguage() {
     try {
-      let res1 = await axios.post('http://18.140.159.50:3333/api/admin-languages')
+      let res1 = await axios.post('${API_BASE_URL}/admin-languages')
       setLanguageslist(res1.data.data);
     } catch (error) {
       console.log(error);

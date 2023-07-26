@@ -17,7 +17,7 @@ import { AssessQue, BasicDet } from "assets/svg/icon";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import moment from "moment";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 function convertData(data) {
   const convertedData = [];
 
@@ -77,7 +77,7 @@ const AddNew = () => {
       try {
         const convertedData = convertData(addQue);
     
-        const res1 = await axios.put(`http://18.140.159.50:3333/api/assessments/${assessmentId}`, {
+        const res1 = await axios.put(`${API_BASE_URL}/assessments/${assessmentId}`, {
           course_id: courseId,
           assessment_title: e.name,
           assessment_details:textareaVal,
@@ -103,7 +103,7 @@ const AddNew = () => {
       const dateAfter10Days = moment().add(10, 'days').format('YYYY-MM-DD');
       const convertedData = convertData(addQue);
   
-      const res1 = await axios.post(`http://18.140.159.50:3333/api/assessments`, {
+      const res1 = await axios.post(`${API_BASE_URL}/assessments`, {
         course_id: courseId,
         assessment_title: e.name,
         assessment_details:textareaVal,
@@ -234,7 +234,7 @@ const AddNew = () => {
     console.log(addQue);
   };
   const getAssessment = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/assessments/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/assessments/${id}`)
     const data = res1.data[0]
     const des = JSON.parse(data.description)
     const convertedData = des.map((item) => {

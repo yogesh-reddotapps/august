@@ -26,7 +26,7 @@ import Search from "antd/lib/transfer/search";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import { headersForSubjectList } from "views/app-views/Export/Headers";
 import ExportButton from "views/app-views/Export/ExportButton";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const subjectArray = [
     {
         "Sr_No": 1,
@@ -197,7 +197,7 @@ const estimate =(lessons)=>{
     },
   ];
   const getSubject = async (classId)=>{
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-subject-by-class/${classId}`)
+    const res1 = await axios.get(`${API_BASE_URL}/get-subject-by-class/${classId}`)
     setSubjectList(res1.data.data.map((elem,i)=>{
       return {...elem,sr:i+1}
     }))

@@ -13,6 +13,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { headerForlessonModule } from "views/app-views/Export/Headers";
 import ExportButton from "views/app-views/Export/ExportButton";
+import { API_BASE_URL } from "constants/ApiConstant";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
@@ -145,7 +146,7 @@ useEffect(()=>{
     // }
   };
   const getSubject = async () => {
-    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-lessons-by-subject',{ subject_id:subject_id,board_id:2,course_id:course_id })
+    const res1 = await axios.post('${API_BASE_URL}/get-admin-lessons-by-subject',{ subject_id:subject_id,board_id:2,course_id:course_id })
     console.log(res1.data);
     setLessonList(res1.data);
   }
@@ -162,7 +163,7 @@ useEffect(()=>{
     };
     
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-delete-lesson",
+        `${API_BASE_URL}/admin-delete-lesson`,
         data,
         {
           headers: {

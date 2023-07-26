@@ -26,7 +26,7 @@ import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import moment from "moment";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 function Submission() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -127,7 +127,7 @@ function Submission() {
   };
   const sendStatus = async (status,student_id)=>{
     console.log(status,student_id);
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/accepet-or-reject-assessment/${assesmentId}`,{
+    const res1 = await axios.post(`${API_BASE_URL}/accepet-or-reject-assessment/${assesmentId}`,{
       student_id:student_id,
       status:status
     })
@@ -334,11 +334,11 @@ function Submission() {
   };
 
   const getSubmissions = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-submission/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/view-submission/${id}`)
     setFacilityBooking(res1.data.data);
   }
   const getIdVerified = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/verified-student/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/verified-student/${id}`)
     setmembershipRequestData(res1.data.data);
     // console.log(res1.data.data);
   }

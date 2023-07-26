@@ -331,7 +331,7 @@ const AddNew = () => {
   };
   const getAssignment = async (id) => {
     const res1 = await axios.get(
-      `http://18.140.159.50:3333/api/subjects/lessons/assignments/${id}`
+      `${API_BASE_URL}/subjects/lessons/assignments/${id}`
     );
     setAssignmentData(res1.data);
     setFilesUrl(JSON.parse(res1.data.url));

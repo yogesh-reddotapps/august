@@ -36,7 +36,7 @@ import { formatDate } from "constants/DateConstant";
 import { Option } from "antd/lib/mentions";
 import ExportButton from "../Export/ExportButton";
 import { headersForAssesment, headersForBatches, headersForCourseMaterial, headersForCourseStudent, headersForTeacherAssigned } from "../Export/Headers";
-
+// import { API_BASE_URL } from "constants/ApiConstant";
 
 let alertstyle = {
   position: "absolute",
@@ -261,7 +261,7 @@ useEffect(()=>{
 
   const handleOk = async () => {
     console.log(assigneNewTeachVal);
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/assign-teacher`,{
+    const res1 = await axios.post(`${API_BASE_URL}/assign-teacher`,{
       "course_id": location.state.id,
       "class_id": assigneNewTeachVal.class,
       "teacher_id": assigneNewTeachVal.teacher
@@ -272,7 +272,7 @@ useEffect(()=>{
     }, 1000);
   };
   const deleteAssessment = async (id) => {
-    const res1 = await axios.delete(`http://18.140.159.50:3333/api/assessments/${id}`)
+    const res1 = await axios.delete(`${API_BASE_URL}/assessments/${id}`)
     if(res1.status===200){
       message.success(res1.data.msg)
       getAssesment()
@@ -590,7 +590,7 @@ useEffect(()=>{
               menu={
                 <Menu>
                   <Menu.Item onClick={()=>{
-                    // axios.delete(`http://18.140.159.50:3333/api/course-curriculum/course-materials/${record.id}`).then((res)=>{
+                    // axios.delete(`${API_BASE_URL}/course-curriculum/course-materials/${record.id}`).then((res)=>{
                     //   console.log(res);
                     // }).catch((err)=>{
                     //   console.log(err);
@@ -895,7 +895,7 @@ useEffect(()=>{
   }
 
   const getClasses = async ()=> {
-    let res1 = await axios.get(`http://18.140.159.50:3333/api/get-classes-by-course/${location.state.id}`)
+    let res1 = await axios.get(`${API_BASE_URL}/get-classes-by-course/${location.state.id}`)
     setClasses(res1.data.data);
     // console.log(res1.data.data);
   }

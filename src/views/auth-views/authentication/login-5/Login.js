@@ -16,7 +16,7 @@ function Login() {
     
       await axios({
         method:"POST",
-        url:`http://18.140.159.50:3333/api/admin-login`,
+        url:`${API_BASE_URL}/admin-login`,
         data:{
           email:values.username,
           password:values.password,

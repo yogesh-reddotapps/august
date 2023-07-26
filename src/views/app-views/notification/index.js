@@ -17,7 +17,7 @@ import Icon from "@ant-design/icons";
 import { Tabs } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import moment from "moment";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
@@ -191,7 +191,7 @@ function FacilityBooking() {
   };
   const onStatusChange = async (check,record) => {
     console.log(check,record);
-    const res1 = await axios.put(`http://18.140.159.50:3333/api/notifications/active-inactive/${record.id}`,{status:check})
+    const res1 = await axios.put(`${API_BASE_URL}/notifications/active-inactive/${record.id}`,{status:check})
     console.log(res1);
   }
   const notificationArray = [
@@ -363,11 +363,17 @@ function FacilityBooking() {
       });
   };
   const getSysNotification = async () => {
-    const res1 = await axios.get('http://18.140.159.50:3333/api/notifications/system');
+    const res1 = await axios.get('${API_BASE_URL}/notifications/system');
     setSysNoti(res1.data);
+  }
+  const getBroadcastNotification = async () => {
+    const res1 = await axios.get(`${API_BASE_URL}/notifications/broadcast/data`)
+    console.log(res1);
+    setmembershipRequestData()
   }
   useEffect(() => {
   getSysNotification()
+  getBroadcastNotification()
   }, [])
   
   return (

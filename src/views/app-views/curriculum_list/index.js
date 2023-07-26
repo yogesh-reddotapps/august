@@ -19,7 +19,7 @@ import Filter from "components/shared-components/Filter";
 import Icon from "@ant-design/icons";
 import ExportButton from "../Export/ExportButton";
 import { headerForCurriculum } from "../Export/Headers";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
@@ -172,7 +172,7 @@ function FacilityBooking() {
       });
   };
   const getCurriculam = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-curriculum-list`)
+    const res1 = await axios.get(`${API_BASE_URL}/get-curriculum-list`)
     setCurriculamList(res1.data);
   }
   useEffect(() => {

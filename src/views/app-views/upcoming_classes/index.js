@@ -15,7 +15,7 @@ import { headerForUpcomingClasses } from "../Export/Headers";
 import axios from "axios";
 import moment from "moment";
 import { formatDate, formatTime } from "constants/DateConstant";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 
 function TeacherManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -171,7 +171,7 @@ useEffect(()=>{
   ];
   const deleteUpcomingClass = async (id) => {
     console.log(id);
-    const res1 = await axios.delete(`http://18.140.159.50:3333/api/students/course/classes/${id}`)
+    const res1 = await axios.delete(`${API_BASE_URL}/students/course/classes/${id}`)
     if(res1.status===200){
       window.location.reload()
     }
@@ -199,7 +199,7 @@ useEffect(()=>{
     transition:'all 0.5s ease 0s'
   };
   const getAllClasses = async () => {
-    const res1 = await axios.get('http://18.140.159.50:3333/api/admin-get-upcoming-classes');
+    const res1 = await axios.get('${API_BASE_URL}/admin-get-upcoming-classes');
     console.log(res1);
     setClassList(res1.data);
   }

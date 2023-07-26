@@ -23,6 +23,7 @@ import moment from "moment";
 import { headersForClasses } from "views/app-views/Export/Headers";
 import ExportButton from "views/app-views/Export/ExportButton";
 import { formatDate } from "constants/DateConstant";
+import { API_BASE_URL } from "constants/ApiConstant";
 const classArray = [
   {
     Class_ID: "001",
@@ -200,7 +201,7 @@ useEffect(()=>{
 
   const getClassDet = async () => {
     let res1 = await axios.post(
-      "http://18.140.159.50:3333/api/get-classes-By-batch-id",
+      `${API_BASE_URL}/get-classes-By-batch-id`,
       { batch_id: 4 }
     );
     console.log(res1);
@@ -209,12 +210,12 @@ useEffect(()=>{
 
   const fetchDet = async () => {
     const res3 = await axios.get(
-      `http://18.140.159.50:3333/api/get-admin-student-batches/12`
+      `${API_BASE_URL}/get-admin-student-batches/12`
     );
     // console.log(res3.data);
   };
   const getClassesByStudentId = async () => {
-    const res1 = await axios.post('http://18.140.159.50:3333/api/get-admin-classes-by-student',{ "student_id":student_id});
+    const res1 = await axios.post('${API_BASE_URL}/get-admin-classes-by-student',{ "student_id":student_id});
     setclassArr(res1.data.data);
   }
   useEffect(() => {

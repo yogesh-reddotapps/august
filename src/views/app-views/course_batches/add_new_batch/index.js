@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import Helper from "views/app-views/Helper"
 import {DeleteOutlined} from '@ant-design/icons'
+import { API_BASE_URL } from "constants/ApiConstant";
 const { Search } = Input;
 
 const MyForm = () => {
@@ -84,7 +85,7 @@ const MyForm = () => {
   ];
   const delEnrollStudent = async (studentId) => {
     console.log(studentId);
-    const res1 = await axios.delete(`http://18.140.159.50:3333/api/batches/${Id}/${studentId}/del-students`)
+    const res1 = await axios.delete(`${API_BASE_URL}/batches/${Id}/${studentId}/del-students`)
     if(res1.status===200){
       getStudentEnroll(Id)
     }
@@ -94,7 +95,7 @@ const MyForm = () => {
     let start_date = moment(values.startDate).format("YYYY-MM-DD");
     let end_date = moment(values.endDate).format("YYYY-MM-DD");
     console.log(values, start_date, end_date);
-    let data = await axios.post("http://18.140.159.50:3333/api/batches", {
+    let data = await axios.post(`${API_BASE_URL}/batches`, {
       course_name: course[1],
       course_id: course[0],
       start_date: start_date,
@@ -115,7 +116,7 @@ const MyForm = () => {
   };
 
   const getCoursesNameAndId = async () => {
-    let res = await axios.get("http://18.140.159.50:3333/api/courses-list");
+    let res = await axios.get(`${API_BASE_URL}/courses-list`);
     setCoursenameid(
       res.data.data.map((elem, i) => {
         return {
@@ -126,7 +127,7 @@ const MyForm = () => {
     );
   };
   const getSingleBatchById = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}`)
+    const res1 = await axios.get(`${API_BASE_URL}/batches/${id}`)
     const batch = res1.data[0]
     form.setFieldsValue({
       batchId:batch.batch_id,
@@ -144,7 +145,7 @@ const MyForm = () => {
     })
   }
   const getStudentEnroll = async (id) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/batches/${id}/enrolled-students`)
+    const res1 = await axios.get(`${API_BASE_URL}/batches/${id}/enrolled-students`)
     setStudentsList(res1.data.data.students);
   }
   useEffect(() => {

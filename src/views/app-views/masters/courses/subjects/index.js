@@ -12,6 +12,7 @@ import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { headersForSubjectColumn } from "views/app-views/Export/Headers";
 import ExportButton from "views/app-views/Export/ExportButton";
+import { API_BASE_URL } from "constants/ApiConstant";
 const ClassAttend = () => {
   const history = useHistory();
   const location = useLocation();
@@ -89,7 +90,7 @@ const ClassAttend = () => {
     };
     
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-delete-subject",
+        `${API_BASE_URL}/admin-delete-subject`,
         data,
         {
           headers: {
@@ -168,7 +169,7 @@ const ClassAttend = () => {
     }
   }
   const getSubjects = async () => {
-    const res1 = await axios.post('http://18.140.159.50:3333/api/admin-subjects',{ "course_id": id})
+    const res1 = await axios.post('${API_BASE_URL}/admin-subjects',{ "course_id": id})
     setSubjectList(res1.data);
     console.log(res1.data);
   }

@@ -26,7 +26,7 @@ import { Link } from "react-router-dom";
 import ExportButton from "../Export/ExportButton";
 import { headersForAdmin } from "../Export/Headers";
 import { formatDate } from "constants/DateConstant";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 export default function MembershipRequest() {
   const [membershipRequestData, setmembershipRequestData] =
     useState([]);
@@ -89,7 +89,7 @@ export default function MembershipRequest() {
       user_id:Oid
     };
     const response = await axios.post(
-      "http://18.140.159.50:3333/api/delete-admin",
+      `${API_BASE_URL}/delete-admin`,
       data,
       {
         headers: {

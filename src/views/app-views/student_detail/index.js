@@ -33,6 +33,7 @@ import moment from "moment";
 import { headersForAssesmentList, headersForBatchList, headersForCertificateList, headersForStudentEnroll } from "../Export/Headers";
 import ExportButton from "../Export/ExportButton";
 import { formatDate } from "constants/DateConstant";
+import { API_BASE_URL } from "constants/ApiConstant";
 const CertiArray = [
   {
     ID: "001",
@@ -532,7 +533,7 @@ useEffect(()=>{
   ];
 
   const  handleAssessmentStatus = async (id,status)=>{
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/accepet-or-reject-assessment/${id}`,{status:status})
+    const res1 = await axios.post(`${API_BASE_URL}/accepet-or-reject-assessment/${id}`,{status:status})
     console.log(res1);
   }
 
@@ -681,7 +682,7 @@ useEffect(()=>{
 
   const fetchStudent = async (id) => {
     let res1 = await axios.post(
-      "http://18.140.159.50:3333/api/get-student-by-id",
+      `${API_BASE_URL}/get-student-by-id`,
       {
         user_id: id,
       }
@@ -689,19 +690,19 @@ useEffect(()=>{
     let data = res1.data[0];
     setStudentData(data);
     const res2 = await axios.get(
-      `http://18.140.159.50:3333/api/get-admin-student-course-enroll/${data.id}`
+      `${API_BASE_URL}/get-admin-student-course-enroll/${data.id}`
     );
     setCourseEnroll(res2.data.batches);
     const res3 = await axios.get(
-      `http://18.140.159.50:3333/api/get-admin-student-batches/${data.id}`
+      `${API_BASE_URL}/get-admin-student-batches/${data.id}`
     );
     setBatchList(res3.data.batches);
     // const getCertificates = async () => {
-      const res4 = await axios.get(`http://18.140.159.50:3333/api/get-certificates/${data.id}`);
+      const res4 = await axios.get(`${API_BASE_URL}/get-certificates/${data.id}`);
       setCertificateList(res4.data);
     // }
     // const getAssessment = async () => {
-      const res5 = await axios.get(`http://18.140.159.50:3333/api/get-assessment-by-student/${data.id}`);
+      const res5 = await axios.get(`${API_BASE_URL}/get-assessment-by-student/${data.id}`);
       setAassessmentList(res5.data)
     // }
   };

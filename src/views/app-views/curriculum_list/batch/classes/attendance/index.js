@@ -22,7 +22,7 @@ import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import ExportButton from "views/app-views/Export/ExportButton";
 import { formatDate } from "constants/DateConstant";
 import { headersForAttendList } from "views/app-views/Export/Headers";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const students = [
     {
       ID: 1,
@@ -164,7 +164,7 @@ useEffect(()=>{
     setIsModalOpen(false);
   };
   const getAttendance = async (batchId,classId) => {
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/get-attendance`,{batch_id:batchId,class_id:classId})
+    const res1 = await axios.post(`${API_BASE_URL}/get-attendance`,{batch_id:batchId,class_id:classId})
     setAttendList(res1.data.data);
   }
   useEffect(() => {

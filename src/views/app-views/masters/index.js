@@ -22,7 +22,7 @@ import axios from "../../../axios";
 import { formatDate } from "constants/DateConstant";
 import ExportButton from "../Export/ExportButton";
 import { headersForMasterCourse, headersForMasterCourseCategory, headersForMasterLanguage, headersForMasterVenue } from "../Export/Headers";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const { Option } = Select;
 const languageArr = [
   {
@@ -418,7 +418,7 @@ useEffect(()=>{
     };
     if (type==='venue') {
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-delete-venues",
+        `${API_BASE_URL}/admin-delete-venues`,
         data,
         {
           headers: {
@@ -437,7 +437,7 @@ useEffect(()=>{
     }
     if (type==='language') {
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-delete-languages",
+        `${API_BASE_URL}/admin-delete-languages`,
         data,
         {
           headers: {
@@ -456,7 +456,7 @@ useEffect(()=>{
     }
     if (type==='category') {
       const response = await axios.post(
-        "http://18.140.159.50:3333/api/admin-delete-category",
+        `${API_BASE_URL}/admin-delete-category`,
         data,
         {
           headers: {
@@ -637,7 +637,7 @@ useEffect(()=>{
   const getAllCourses = () => {
     axios
       .get(
-        "http://18.140.159.50:3333/api/get-all-courses",
+        `${API_BASE_URL}/get-all-courses`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -655,7 +655,7 @@ useEffect(()=>{
   const getAllLanguage = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-languages",
+        `${API_BASE_URL}/admin-languages`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -673,7 +673,7 @@ useEffect(()=>{
   const getAllCourseCate = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-category",
+        `${API_BASE_URL}/admin-category`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -691,7 +691,7 @@ useEffect(()=>{
   const getAllVenues = () => {
     axios
       .post(
-        "http://18.140.159.50:3333/api/admin-venues",
+        `${API_BASE_URL}/admin-venues`,
         {
           headers: {
             "Content-Type": "application/json",

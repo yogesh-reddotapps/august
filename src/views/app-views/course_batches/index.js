@@ -15,7 +15,7 @@ import moment from "moment";
 import { headerForCourseBatches } from "../Export/Headers";
 import { formatDate } from "constants/DateConstant";
 import ExportButton from "../Export/ExportButton";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 function FacilityBooking() {
   const [facilityBooking, setFacilityBooking] = useState(
     membershipFacilityBooking
@@ -163,7 +163,7 @@ useEffect(()=>{
   };
 
   useEffect(() => {
-    axios.get("http://18.140.159.50:3333/api/batches").then((res)=>{
+    axios.get(`${API_BASE_URL}/batches`).then((res)=>{
       console.log("resm",res.data);
       setFacilityBooking(res.data)
     }).catch((err)=>{

@@ -31,6 +31,7 @@ import { Option } from "antd/lib/mentions";
 import moment from "moment";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import uploadImage from "middleware/uploadImage";
+import { API_BASE_URL } from "constants/ApiConstant";
 const managArray = [
   {
     value: "Manager 1",
@@ -248,7 +249,7 @@ const getBase64 = (img, callback) => {
   const onFinish = async (values) => {
     const image = await uploadImage(fileList);
     if (id) {
-      let updateRes = await axios.post('http://18.140.159.50:3333/api/edit-teacher-details',{
+      let updateRes = await axios.post('${API_BASE_URL}/edit-teacher-details',{
         "user_id": id,
         name:values.name,
         email: values.email,
@@ -406,7 +407,7 @@ const getBase64 = (img, callback) => {
     </div>
   );
   const fetchTeacher = async (id) => {
-    let res1 = await axios.post('http://18.140.159.50:3333/api/get-teacher-by-id',{
+    let res1 = await axios.post('${API_BASE_URL}/get-teacher-by-id',{
         "user_id": id
     })
     let data = res1.data[0];

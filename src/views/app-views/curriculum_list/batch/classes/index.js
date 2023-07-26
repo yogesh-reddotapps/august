@@ -23,6 +23,7 @@ import { formatDate } from "constants/DateConstant";
 import moment from "moment";
 import ExportButton from "views/app-views/Export/ExportButton";
 import { headersForClassBatch } from "views/app-views/Export/Headers";
+import { API_BASE_URL } from "constants/ApiConstant";
 const classArray = [
   {
     Class_ID: "001",
@@ -210,7 +211,7 @@ useEffect(()=>{
     },
   ];
   const getClassesByBatchId = async (id) => {
-    const res1 = await axios.post('http://18.140.159.50:3333/api/get-classes-By-batch-id',{batch_id : id})
+    const res1 = await axios.post(`${API_BASE_URL}/get-classes-By-batch-id`,{batch_id : id})
     console.log(res1.data.data);
     setClassList(res1.data.data)
   }

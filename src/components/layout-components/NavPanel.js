@@ -144,7 +144,7 @@ import { EditPro, HaveNoti, Noti, SignOut } from "assets/svg/icon";
 import { useEffect } from "react";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const NavPanel = ({ locale }) => {
   const [visible, setVisible] = useState(false);
   const userData = JSON.parse(localStorage.getItem("userData"))
@@ -170,7 +170,7 @@ const NavPanel = ({ locale }) => {
   };
 
   const signOut = async () => {
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/admin/logout`,{
+    const res1 = await axios.post(`${API_BASE_URL}/admin/logout`,{
       fcmToken:localStorage.getItem('token')
     })
     if(res1.status===200){

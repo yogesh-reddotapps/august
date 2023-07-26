@@ -6,6 +6,7 @@ import { UploadFileIcon } from "assets/svg/icon";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import axios from "axios";
 import { json } from "d3-fetch";
+import { API_BASE_URL } from "constants/ApiConstant";
 let styles = {
     files: {
       listStyle: "none",
@@ -84,7 +85,7 @@ function Submission() {
     setQuestion(updatedQuestions);
   };
   const getResult = async (stuId,assId) => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/view-submission/${assId}/${stuId}`)
+    const res1 = await axios.get(`${API_BASE_URL}/view-submission/${assId}/${stuId}`)
     if (res1.data.data.length===0) {
       history.goBack()
       message.info("Data is empty !")

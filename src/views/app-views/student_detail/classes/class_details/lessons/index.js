@@ -193,7 +193,7 @@ useEffect(()=>{
   ];
   const getLessons = async () => {
     const res1 = await axios.get(
-      `http://18.140.159.50:3333/api/view-lessons-by-subject/${id}`
+      `${API_BASE_URL}/view-lessons-by-subject/${id}`
     );
     setLessonList(res1.data);
   };

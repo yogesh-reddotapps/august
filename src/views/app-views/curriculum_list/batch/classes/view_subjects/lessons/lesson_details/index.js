@@ -22,6 +22,7 @@ import Search from "antd/lib/transfer/search";
 import CustomIcon from "components/util-components/CustomIcon";
 import ExportButton from "views/app-views/Export/ExportButton";
 import { headersForlessonDetailAssignment } from "views/app-views/Export/Headers";
+import { API_BASE_URL } from "constants/ApiConstant";
 const assignmentArray = [
   {
     ID: 1,
@@ -67,7 +68,7 @@ function FacilityBooking() {
   const classId = searchParams.get("classId");
   const subjectId = searchParams.get("subjectId");
   const delAssignment = async (record) => {
-    const res1 = await axios.delete(`http://18.140.159.50:3333/api/subjects/lessons/assignments/${record.id}`)
+    const res1 = await axios.delete(`${API_BASE_URL}/subjects/lessons/assignments/${record.id}`)
     if(res1.status===200){
     setIsDeactiveModalOpen(false);
     getAssignments()
@@ -228,11 +229,11 @@ function FacilityBooking() {
     },
   ];
   const getLessons = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/lessons/lesson-details/${lessonId}`);
+    const res1 = await axios.get(`${API_BASE_URL}/lessons/lesson-details/${lessonId}`);
     setLessonData(res1.data);
   }
   const getAssignments = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/admin/get-assignments-by-lesson/${lessonId}`)
+    const res1 = await axios.get(`${API_BASE_URL}/admin/get-assignments-by-lesson/${lessonId}`)
     setAssignments(res1.data);
   }
   useEffect(() => {

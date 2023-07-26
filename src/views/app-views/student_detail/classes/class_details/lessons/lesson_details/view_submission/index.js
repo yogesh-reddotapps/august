@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { UploadFileIcon } from "assets/svg/icon";
 import axios from "axios";
+import { API_BASE_URL } from "constants/ApiConstant";
 let styles = {
     files: {
       listStyle: "none",
@@ -82,7 +83,7 @@ function Submission() {
     setQuestion(updatedQuestions);
   };
   const getSubmission = async (student_id,ID) => {
-    const res1 = await axios.post(`http://18.140.159.50:3333/api/view-assignment-submission`,{
+    const res1 = await axios.post(`${API_BASE_URL}/view-assignment-submission`,{
       "assignment_id": ID,
       "student_id": student_id
   })

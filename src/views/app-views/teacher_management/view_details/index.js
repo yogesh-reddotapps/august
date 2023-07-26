@@ -143,7 +143,7 @@ useEffect(()=>{
   const acceptApp = async (record) => {
     console.log(record);
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/accept-reject-applications",
+      `${API_BASE_URL}/accept-reject-applications`,
       {
         leave_application_id: record.id,
         status: 1,
@@ -154,7 +154,7 @@ useEffect(()=>{
   const rejecttApp = async (record) => {
     console.log(record);
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/accept-reject-applications",
+      `${API_BASE_URL}/accept-reject-applications`,
       {
         leave_application_id: record.id,
         status: 2,
@@ -164,7 +164,7 @@ useEffect(()=>{
   };
   const sendAdminRate = async () => {
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/add-performance-rating",
+      `${API_BASE_URL}/add-performance-rating`,
       adminRating
     );
     if (res1.status === 201) {
@@ -606,7 +606,7 @@ useEffect(()=>{
   const handleChange=async(Oid,checked)=>{
     console.log(Oid);
    await axios.post(
-      "http://18.140.159.50:3333/api/teacher-course-access",
+      `${API_BASE_URL}/teacher-course-access`,
       {
         teacher_id: parseInt(teacherId),
         course_id: Oid
@@ -799,7 +799,7 @@ useEffect(()=>{
   };
   const getTeacherDetail = async () => {
     let res1 = await axios.post(
-      "http://18.140.159.50:3333/api/get-teacher-by-id",
+      `${API_BASE_URL}/get-teacher-by-id`,
       {
         user_id: id,
       }
@@ -807,7 +807,7 @@ useEffect(()=>{
     let data = res1.data[0];
     setTeacherData(data);
     const res2 = await axios.get(
-      `http://18.140.159.50:3333/api/get-performance-rating/${data.id}`
+      `${API_BASE_URL}/get-performance-rating/${data.id}`
     );
     console.log(res2.data);
     setAdminRatingsList(res2.data);
@@ -824,7 +824,7 @@ useEffect(()=>{
   }
   const getLeaveApp = async () => {
     const res1 = await axios.post(
-      "http://18.140.159.50:3333/api/leave-applications",
+      `${API_BASE_URL}/leave-applications`,
       { teacher_id: "1" }
     );
     console.log(res1.data.data);
@@ -832,12 +832,12 @@ useEffect(()=>{
   };
 
   const getClassInvites = async () => {
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-class-invites/${teacherId}`)
+    const res1 = await axios.get(`${API_BASE_URL}/get-class-invites/${teacherId}`)
     setmembershipRequestData(res1.data.data);
   }
   const getClassRating = async () => {
     // api/get-class-rating-by-teacher/2
-    const res1 = await axios.get(`http://18.140.159.50:3333/api/get-class-rating-by-teacher/${teacherId}`)
+    const res1 = await axios.get(`${API_BASE_URL}/get-class-rating-by-teacher/${teacherId}`)
     setClassRat(res1.data);
   }
   useEffect(() => {

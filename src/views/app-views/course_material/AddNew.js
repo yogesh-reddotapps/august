@@ -5,7 +5,7 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { useHistory, useLocation } from "react-router-dom/cjs/react-router-dom.min";
 import uploadImage from "middleware/uploadImage";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 const AddNew = () => {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const [courseTitle, setCourseTitle] = useState('')
@@ -81,7 +81,7 @@ const AddNew = () => {
       created_by:"Admin",
       status:1
     }
-    const res1 = await axios.post('http://18.140.159.50:3333/api/course-curriculum/course-materials',data)
+    const res1 = await axios.post(`${API_BASE_URL}/course-curriculum/course-materials`,data)
     // console.log(res1);
     history.goBack();
   }

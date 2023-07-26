@@ -24,7 +24,7 @@ import SearchBox from "components/shared-components/SearchBox";
 import Filter from "components/shared-components/Filter";
 import { headersForStudent } from "../Export/Headers";
 import ExportButton from "../Export/ExportButton";
-
+import { API_BASE_URL } from "constants/ApiConstant";
 export default function Events() {
   const [membershipRequestData, setmembershipRequestData] = useState(
     membershipEventBooking
@@ -123,7 +123,7 @@ useEffect(()=>{
       user_id:Oid
     };
     const response = await axios.post(
-      "http://18.140.159.50:3333/api/delete-student",
+      `${API_BASE_URL}/delete-student`,
       data,
       {
         headers: {
