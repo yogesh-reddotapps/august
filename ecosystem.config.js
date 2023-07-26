@@ -4,7 +4,7 @@ module.exports = {
       name: "aug-admin-prod",
 
       script: "npm",
-      args: "start",
+      args: "start --openssl-legacy-provider",
       env: {
         NODE_ENV: "production",
       },
